@@ -63,3 +63,8 @@ GUI should be used only for testing proposes. To launch GUI, run *bin/jalphanode
 You can select an optional configuration file before starting jalpahnode. To use the sample configuration file, just select the file **etc/jalphanode-config.xml** using the browse button, and push start.
 
 The GUI provides an efficient way to check the current members of the group.
+
+## Mailing lists
+
+JAlphaNode Users List: http://groups.google.com/group/jalphanode
+JAlphaNde Developers List: http://groups.google.com/group/jalphanode-dev

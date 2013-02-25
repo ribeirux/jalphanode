@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jalphanode xmlns="urn:jalphanode:config"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="urn:jalphanode:config http://jalphanode.googlecode.com/svn/schema/jalphanode-config.xsd">
+	xsi:schemaLocation="urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd">
     
     <tasks>
     	<task class="org.jalphanode.config.TestTask" taskName="TestName">
