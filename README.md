@@ -66,6 +66,5 @@ The GUI provides an efficient way to check the current members of the group.
 
 ## Mailing lists
 
-JAlphaNode Users List: http://groups.google.com/group/jalphanode
-
-JAlphaNde Developers List: http://groups.google.com/group/jalphanode-dev
+**Users List**: http://groups.google.com/group/jalphanode 
+**Developers List**: http://groups.google.com/group/jalphanode-dev
