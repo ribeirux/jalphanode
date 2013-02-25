@@ -10,3 +10,62 @@ JAlphaNode provides powerful characteristics such as:
 
 Requirements: JDK 6 compliant JVM.
 
+# Quick Start
+
+## Download
+
+Grab the latest binary distribution or checkout the last source code from the repository. Note that jalphanode requires JDK 1.6 or higher.
+
+Unzip the contents of the binary distribuition into a new folder.
+
+The most important contents of this folder are:
+* bin: Contains administration scripts.
+* etc: Contains the configuration files
+* jalphanode-core.jar: Core functionality
+* jalphanode-ui.jar: User interface functionality
+* schema: Contains the configuration file schema
+
+## Configuration
+
+Jalphanode offers both declaratively and programmatically configuration approaches. Declarative configuration comes in a form of XML document (the XML structure is define on schema: schema/jalphanode-config.xsd). Every aspect of jalphanode that can be configured declaratively can also be configured programmatically (through the class JAlphaNodeConfigBuilder).
+
+There are four main configuration abstractions in jalphanode:
+* tasks: You should specify here all the tasks to run (the classes should implement the Task interface) and a cron expression.
+* taskScheduler: Configuration of the scheduler thread pool used to execute the tasks.
+* asyncExecutor: Configuration of the thread pool used for asynchronous notifications
+* membership: In this configuration you can define the name of the cluster to connect, the current node name, and an optional JGroups configuration file (currently, JGroups is used for reliable multicast communication)
+
+To run jalphanode, you can start with the sample configuration file etc/jalphanode-config.xml and change it. If you not specify a configuration file, the default configuration will be used.
+
+To reload the configuration, you should restart jalphanode.
+
+## Show me what I like
+
+You can launch jalphanode as a service, or for testing proposes, from a command line interface (CLI) or a graphical user interface (GUI).
+
+When the application is started, a log folder is automatically created with all log files. You can check through the log files, the current members of the cluster, the running tasks, etc...
+
+If you want to start several instances on the same machine, you should copy the distribution folder, and use this copy to start a new instance.
+
+### Service
+
+To run as a service, just execute the script: bin/jalphanode-service. This script by default uses the sample configuration file (etc/jalphanode-config.xml). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
+
+By default the script shows all available options.
+
+### CLI
+
+CLI should be used only for testing proposes. To launch CLI, just execute the script: bin/jalphanode
+
+By default the script shows all available options.
+
+To start jalphanode through the CLI using the sample configuration file, just run:
+* bin/jalphanode -s etc/jalphanode-config.xml (the configuration file is optional)
+
+### GUI
+
+GUI should be used only for testing proposes. To launch GUI, run: bin/jalphanode -g
+
+You can select an optional configuration file before starting jalpahnode. To use the sample configuration file, just select the file **etc/jalphanode-config.xml** using the browse button, and push start.
+
+The GUI provides an efficient way to check the current members of the group.
