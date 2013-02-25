@@ -1,6 +1,7 @@
 # Quick Start
 
-JAlphaNode is a clustered timer that can survive to node failures, written entirely in Java. The propose of JAlphaNode is to provide a reliable mechanism of task scheduling, which can be deployed on several nodes connected to each other. When JAlphaNode starts, one of the nodes is elected as the master, and only that node can execute the scheduled tasks. If this node fails, another one is elected as the master, which continues the work. Using a cluster ensures that as long as one of the node in the cluster is available, the scheduled task has a high-availability characteristic and will be executed.
+JAlphaNode is a clustered cron job scheduler that can survive to node failures, written entirely in Java. The propose of JAlphaNode is to provide a reliable mechanism of task scheduling, which can be deployed on several nodes connected to each other.  
+When JAlphaNode starts, one of the nodes is elected as the master, and only that node can execute the scheduled tasks. If this node fails, another one is elected as the master, which continues the work. Using a cluster ensures that as long as one of the node in the cluster is available, the scheduled task has a high-availability characteristic and will be executed.
 
 JAlphaNode provides powerful characteristics such as:
 
@@ -47,22 +48,17 @@ If you want to start several instances on the same machine, you should copy the 
 
 ### Service
 
-To run as a service, just execute the script: bin/jalphanode-service. This script by default uses the sample configuration file (etc/jalphanode-config.xml). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
-
-By default the script shows all available options.
+To run as a service, just execute the script **bin/jalphanode-service**. This script by default uses the sample configuration file (etc/jalphanode-config.xml). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
 
 ### CLI
 
-CLI should be used only for testing proposes. To launch CLI, just execute the script: bin/jalphanode
+CLI should be used only for testing proposes. To launch CLI, just execute the script **bin/jalphanode**. By default the script shows all available options.
 
-By default the script shows all available options.
-
-To start jalphanode through the CLI using the sample configuration file, just run:
-* bin/jalphanode -s etc/jalphanode-config.xml (the configuration file is optional)
+To start jalphanode through the CLI using the sample configuration file, just run **bin/jalphanode -s etc/jalphanode-config.xml** (configuration file is optional)
 
 ### GUI
 
-GUI should be used only for testing proposes. To launch GUI, run: bin/jalphanode -g
+GUI should be used only for testing proposes. To launch GUI, run *bin/jalphanode -g*
 
 You can select an optional configuration file before starting jalpahnode. To use the sample configuration file, just select the file **etc/jalphanode-config.xml** using the browse button, and push start.
 
