@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.jalphanode</groupId>
+		<artifactId>jalphanode</artifactId>
+		<version>0.5.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>jalphanode-dist</artifactId>
+	<packaging>pom</packaging>
+	<name>JAlphanode Distribution</name>
+	<description>JAlphaNode distribution module</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jalphanode</groupId>
+			<artifactId>jalphanode-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jalphanode</groupId>
+			<artifactId>jalphanode-ui</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/main/resources/assembly/bin.xml</descriptor>
+								<descriptor>src/main/resources/assembly/src.xml</descriptor>
+							</descriptors>
+							<finalName>${project.parent.artifactId}-${project.version}</finalName>
+                     		<workDirectory>${project.build.directory}/assembly/work</workDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

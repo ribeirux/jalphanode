@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jalphanode xmlns="urn:jalphanode:config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:jalphanode:config http://jalphanode.googlecode.com/svn/schema/jalphanode-config.xsd">
+    
+    <tasks>
+    	<task class="org.jalphanode.task.NoTask" taskName="Name">
+    		<trigger>
+    			<expression>*/1 * * * * ?</expression>
+    			<timezone>Europe/Lisbon</timezone>
+    		</trigger>
+    		<properties>
+            	<property name="name" value="value" />
+        	</properties>
+   	 	</task>
+    </tasks>
+    
+    <tasks>
+    </tasks>
+    
+    <taskScheduler corePoolSize="5">
+    	<properties>
+    		<property name="threadPrefix" value="task-pool" />
+    		<property name="threadPriority" value="5" />
+    	</properties>
+    </taskScheduler>
+    
+    <asyncExecutor corePoolSize="5">
+    	<properties>
+            <property name="threadNamePrefix" value="async-pool" />
+            <property name="threadPriority" value="5" />
+        </properties>
+    </asyncExecutor>
+    
+    <membership nodeName="nodeName" clusterName="clusterName">
+        <properties>
+            <property name="configurationFile" value="jgroups-udp.xml" />
+        </properties>
+    </membership>
+</jalphanode>
