@@ -17,7 +17,7 @@ Grab the latest binary distribution or checkout the last source code from the re
 
 Unzip the contents of the binary distribuition into a new folder.
 
-![folder structure](img/folder-structure.png)
+![folder structure](https://raw.github.com/wiki/ribeirux/jalphanode/img/folder-structure.png)
 
 The most important contents of this folder are:
 * bin: Contains administration scripts.
