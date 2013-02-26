@@ -52,9 +52,13 @@ If you want to start several instances on the same machine, you should copy the 
 
 To run as a service, just execute the script **bin/jalphanode-service**. This script by default uses the sample configuration file (etc/jalphanode-config.xml). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
 
+![service](https://raw.github.com/wiki/ribeirux/jalphanode/img/service.png)
+
 ### CLI
 
 CLI should be used only for testing proposes. To launch CLI, just execute the script **bin/jalphanode**. By default the script shows all available options.
+
+![ui](https://raw.github.com/wiki/ribeirux/jalphanode/img/ui.png)
 
 To start jalphanode through the CLI using the sample configuration file, just run **bin/jalphanode -s etc/jalphanode-config.xml** (configuration file is optional)
 
@@ -64,9 +68,6 @@ GUI should be used only for testing proposes. To launch GUI, run *bin/jalphanode
 
 You can select an optional configuration file before starting jalpahnode. To use the sample configuration file, just select the file **etc/jalphanode-config.xml** using the browse button, and push start.
 
+![gui](https://raw.github.com/wiki/ribeirux/jalphanode/img/gui.png)
+
 The GUI provides an efficient way to check the current members of the group.
-
-## Mailing lists
-
-**Users List**: http://groups.google.com/group/jalphanode  
-**Developers List**: http://groups.google.com/group/jalphanode-dev
