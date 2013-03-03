@@ -11,15 +11,15 @@ JAlphaNode provides powerful characteristics such as:
 
 **Requirements: JDK 6 compliant JVM.**
 
-## Building jalpahnode distribution
+## Building jalphanode distribution
 
-Jalphanode uses [Maven](http://maven.apache.org/) as a buil tool. Make sure you have Maven 2.1.0 or higher installed.
-Note that jalphanode requires JDK 1.6 or higher.
+Jalphanode uses [Maven](http://maven.apache.org/) as a build tool. Make sure you have Maven 2.1.0 or higher installed.
 
-To build jalpjhanode:
+To build jalphanode:
+
 1. Download the source from [here](https://github.com/ribeirux/jalphanode/archive/master.zip).  
 2. Unzip the contents and in the project root directory execute: `mvn clean install`. This will build jalphanode and run all tests. To skip the tests when building execute `mvn clean install -DskipTests`
-3. Grab the jalphanode distribution located in dist/target/jalphanode-${version}-bin.zip and unzip the contents into a new folder.
+3. Grab the jalphanode distribution located in **dist/target/jalphanode-${version}-bin.zip** and unzip the contents into a new folder.
 
 ![folder structure](https://raw.github.com/wiki/ribeirux/jalphanode/img/folder-structure.png)
 
@@ -32,7 +32,7 @@ The most important contents of this folder are:
 
 ## Configuration
 
-Jalphanode offers both declaratively and programmatically configuration approaches. Declarative configuration comes in a form of XML document (the XML structure is define on schema: schema/jalphanode-config.xsd). Every aspect of jalphanode that can be configured declaratively can also be configured programmatically (through the class JAlphaNodeConfigBuilder).
+Jalphanode offers both declaratively and programmatically configuration approaches. Declarative configuration comes in a form of XML document (the XML structure is define on schema: **schema/jalphanode-config.xsd**). Every aspect of jalphanode that can be configured declaratively can also be configured programmatically (through the class JAlphaNodeConfigBuilder).
 
 There are four main configuration abstractions in jalphanode:
 * tasks: You should specify here all the tasks to run (the classes should implement the Task interface) and a cron expression.
@@ -40,7 +40,7 @@ There are four main configuration abstractions in jalphanode:
 * asyncExecutor: Configuration of the thread pool used for asynchronous notifications
 * membership: In this configuration you can define the name of the cluster to connect, the current node name, and an optional JGroups configuration file (currently, JGroups is used for reliable multicast communication)
 
-To run jalphanode, you can start with the sample configuration file etc/jalphanode-config.xml and change it. If you not specify a configuration file, the default configuration will be used.
+To run jalphanode, you can start with the sample configuration file **etc/jalphanode-config.xml** and change it. If you not specify a configuration file, the default configuration will be used.
 
 To reload the configuration, you should restart jalphanode.
 
@@ -54,21 +54,21 @@ If you want to start several instances on the same machine, you should copy the 
 
 ### Service
 
-To run as a service, just execute the script **bin/jalphanode-service**. This script by default uses the sample configuration file (etc/jalphanode-config.xml). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
+To run as a service, just execute the script `bin/jalphanode-service`. This script by default uses the sample configuration file (**etc/jalphanode-config.xml**). You can change some configurations of this script, for instance, change the path of the configuration file, enable JMX (disabled by default), add JVM parameters, etc..
 
 ![service](https://raw.github.com/wiki/ribeirux/jalphanode/img/service.png)
 
 ### CLI
 
-CLI should be used only for testing proposes. To launch CLI, just execute the script **bin/jalphanode**. By default the script shows all available options.
+CLI should be used only for testing proposes. To launch CLI, just execute the script `bin/jalphanode`. By default the script shows all available options.
 
 ![ui](https://raw.github.com/wiki/ribeirux/jalphanode/img/ui.png)
 
-To start jalphanode through the CLI using the sample configuration file, just run **bin/jalphanode -s etc/jalphanode-config.xml** (configuration file is optional)
+To start jalphanode through the CLI using the sample configuration file, just run `bin/jalphanode -s etc/jalphanode-config.xml` (configuration file is optional)
 
 ### GUI
 
-GUI should be used only for testing proposes. To launch GUI, run *bin/jalphanode -g*
+GUI should be used only for testing proposes. To launch GUI, run `bin/jalphanode -g`
 
 You can select an optional configuration file before starting jalpahnode. To use the sample configuration file, just select the file **etc/jalphanode-config.xml** using the browse button, and push start.
 
