@@ -11,11 +11,15 @@ JAlphaNode provides powerful characteristics such as:
 
 **Requirements: JDK 6 compliant JVM.**
 
-## Download
+## Building jalpahnode distribution
 
-Grab the latest binary distribution or checkout the last source code from the repository. Note that jalphanode requires JDK 1.6 or higher.
+Jalphanode uses [Maven](http://maven.apache.org/) as a buil tool. Make sure you have Maven 2.1.0 or higher installed.
+Note that jalphanode requires JDK 1.6 or higher.
 
-Unzip the contents of the binary distribuition into a new folder.
+To build jalpjhanode:
+1. Download the source from [here](https://github.com/ribeirux/jalphanode/archive/master.zip).  
+2. Unzip the contents and in the project root directory execute: `mvn clean install`. This will build jalphanode and run all tests. To skip the tests when building execute `mvn clean install -DskipTests`
+3. Grab the jalphanode distribution located in dist/target/jalphanode-${version}-bin.zip and unzip the contents into a new folder.
 
 ![folder structure](https://raw.github.com/wiki/ribeirux/jalphanode/img/folder-structure.png)
 
