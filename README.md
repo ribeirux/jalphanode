@@ -13,7 +13,7 @@ JAlphaNode provides powerful characteristics such as:
 
 ### Requirements
 
-* [Maven](http://maven.apache.org/) or above
+* [Maven](http://maven.apache.org/) 2.1.0 or above
 * Java 6 or above
 
 To build jalphanode:
