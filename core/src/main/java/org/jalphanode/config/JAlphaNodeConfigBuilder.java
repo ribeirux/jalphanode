@@ -22,12 +22,12 @@ package org.jalphanode.config;
 
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.task.Task;
 import org.jalphanode.util.ConfigurationUtils;
 
 import com.google.common.base.Preconditions;
+import com.google.common.io.Closeables;
 
 /**
  * JAlphanode configuration builder.
@@ -131,7 +131,7 @@ public class JAlphaNodeConfigBuilder {
             schemaIS = ConfigurationUtils.findInputStream(ResourceKeys.SCHEMA_LOCATION.getValue());
             return ConfigurationUtils.unmarshall(configStream, schemaIS, JAlphaNodeType.class);
         } finally {
-            IOUtils.closeQuietly(schemaIS);
+        	Closeables.closeQuietly(schemaIS);
         }
     }
 
@@ -164,8 +164,8 @@ public class JAlphaNodeConfigBuilder {
 
             return ConfigurationUtils.unmarshall(configIS, schemaIS, JAlphaNodeType.class);
         } finally {
-            IOUtils.closeQuietly(configIS);
-            IOUtils.closeQuietly(schemaIS);
+        	Closeables.closeQuietly(configIS);
+        	Closeables.closeQuietly(schemaIS);
         }
     }
 

@@ -29,13 +29,14 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jalphanode.DefaultTaskManager;
 import org.jalphanode.TaskManager;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeConfigBuilder;
+
+import com.google.common.base.Strings;
 
 /**
  * JalphaNodeCli UI class.
@@ -99,7 +100,7 @@ public class JalphaNodeCli {
 
         JAlphaNodeConfig config = null;
         try {
-            if (StringUtils.isNotEmpty(path)) {
+            if (!Strings.isNullOrEmpty(path)) {
                 config = JAlphaNodeConfigBuilder.buildFromFile(path);
             }
             final TaskManager manager = new DefaultTaskManager(config);

@@ -18,7 +18,7 @@ Jalphanode uses [Maven](http://maven.apache.org/) as a build tool. Make sure you
 To build jalphanode:
 
 1. Download the source from [here](https://github.com/ribeirux/jalphanode/archive/master.zip).  
-2. Unzip the contents and in the project root directory execute: `mvn clean install`. This will build jalphanode and run all tests. To skip the tests when building execute `mvn clean install -DskipTests`
+2. Unzip the contents and in the project root directory execute: `mvn clean install -Pdistribution`. This will build jalphanode and run all tests. To skip the tests when building execute `mvn clean install -Pdistribution -DskipTests`
 3. Grab the jalphanode distribution located in **dist/target/jalphanode-${version}-bin.zip** and unzip the contents into a new folder.
 
 ![folder structure](https://raw.github.com/wiki/ribeirux/jalphanode/img/folder-structure.png)

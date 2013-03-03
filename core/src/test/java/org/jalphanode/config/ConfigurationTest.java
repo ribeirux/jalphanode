@@ -25,11 +25,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.io.IOUtils;
 import org.jalphanode.scheduler.SchedulerParseException;
 import org.jalphanode.scheduler.iterator.CronIterator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.google.common.io.Closeables;
 
 /**
  * Configuration tests.
@@ -141,7 +142,7 @@ public class ConfigurationTest {
             final JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromStream(is);
             this.validateConfig(config);
         } finally {
-            IOUtils.closeQuietly(is);
+        	Closeables.closeQuietly(is);
         }
     }
 

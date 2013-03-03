@@ -30,7 +30,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.scheduler.SchedulerParseException;
 
@@ -264,7 +263,7 @@ public class CronIterator implements ScheduleIterator {
      * Parse the given pattern expression.
      */
     private void parse(final String expression) throws SchedulerParseException {
-        final String[] fields = StringUtils.split(expression, " ");
+        final String[] fields = expression.split(" ");
 
         if (fields.length != 6) {
             throw new SchedulerParseException(String.format(
@@ -291,12 +290,11 @@ public class CronIterator implements ScheduleIterator {
      * @return a new string with the values from the list replaced
      */
     private String replaceOrdinals(final String value, final String commaSeparatedList) {
-        final String[] list = StringUtils.split(commaSeparatedList, ",");
-        String result = value;
+        final String[] list = commaSeparatedList.toUpperCase().split(",");
+        String result = value.toUpperCase();
 
         for (int i = 0; i < list.length; i++) {
-            final String item = list[i].toUpperCase();
-            result = StringUtils.replace(result.toUpperCase(), item, String.valueOf(i));
+            result = result.replaceAll(list[i], String.valueOf(i));
         }
 
         return result;
@@ -333,7 +331,7 @@ public class CronIterator implements ScheduleIterator {
 
     private void setNumberHits(final BitSet bits, final String value, final int min, final int max)
             throws SchedulerParseException {
-        final String[] fields = StringUtils.split(value, ",");
+        final String[] fields = value.split(",");
 
         for (final String field : fields) {
             if (!field.contains("/")) {
@@ -341,7 +339,7 @@ public class CronIterator implements ScheduleIterator {
                 final int[] range = this.getRange(field, min, max);
                 bits.set(range[0], range[1] + 1);
             } else {
-                final String[] split = StringUtils.split(field, "/");
+                final String[] split = field.split("/");
                 if (split.length > 2) {
                     throw new SchedulerParseException("Incrementer has more than two fields: " + field);
                 }
@@ -369,7 +367,7 @@ public class CronIterator implements ScheduleIterator {
                 result[0] = Integer.valueOf(field);
                 result[1] = result[0];
             } else {
-                final String[] split = StringUtils.split(field, "-");
+                final String[] split = field.split("-");
                 if (split.length > 2) {
                     throw new SchedulerParseException("Range has more than two fields: " + field);
                 }

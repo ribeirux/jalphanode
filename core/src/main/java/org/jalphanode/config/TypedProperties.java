@@ -23,11 +23,11 @@ package org.jalphanode.config;
 import java.text.MessageFormat;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 /**
  * Properties configuration.
@@ -235,7 +235,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         String result = null;
 
-        if (StringUtils.isNotEmpty(value)) {
+        if (!Strings.isNullOrEmpty(value)) {
             value = value.trim();
             String property = null;
             if (resolveSysProp) {

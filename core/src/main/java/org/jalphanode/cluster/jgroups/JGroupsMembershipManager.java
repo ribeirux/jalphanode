@@ -25,13 +25,11 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.math3.random.RandomData;
-import org.apache.commons.math3.random.RandomDataImpl;
 import org.jalphanode.cluster.AbstractMembershipManager;
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.MembershipException;
@@ -133,8 +131,9 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
 
         JGroupsMembershipManager.LOG.info("Starting JGroups Channel...");
 
-        final RandomData randomData = new RandomDataImpl();
-        final long randomInRange = randomData.nextLong(1, Short.MAX_VALUE);
+        
+        final int randomInRange = new Random().nextInt();
+
         this.channel.setName(this.getConfig().getMembership().getNodeName() + "-" + randomInRange);
         this.channel.setReceiver(this);
 
@@ -169,7 +168,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
 
         final List<Address> newMembers = newView.getMembers();
 
-        if (CollectionUtils.isNotEmpty(newMembers)) {
+        if (!newMembers.isEmpty()) {
             // no need for synchronization because this method is invoked sequentially.
             // Instance variable "members" cannot change concurrently
             final List<NodeAddress> oldMembers = this.members;

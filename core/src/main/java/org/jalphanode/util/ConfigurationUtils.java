@@ -33,7 +33,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.commons.io.IOUtils;
 import org.jalphanode.config.ClassNotAssignableException;
 import org.jalphanode.config.ConfigBindingException;
 import org.jalphanode.config.ConfigClassNotFoundException;
@@ -45,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Preconditions;
+import com.google.common.io.Closeables;
 
 /**
  * Utility methods for configurations.
@@ -178,7 +178,7 @@ public final class ConfigurationUtils {
         } catch (final Exception e) {
             throw new ConfigBindingException(e);
         } finally {
-            IOUtils.closeQuietly(bais);
+        	Closeables.closeQuietly(bais);
         }
     }
 

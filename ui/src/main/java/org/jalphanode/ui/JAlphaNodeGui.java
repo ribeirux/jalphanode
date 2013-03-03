@@ -43,7 +43,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jalphanode.DefaultTaskManager;
@@ -57,6 +56,8 @@ import org.jalphanode.config.JAlphaNodeConfigBuilder;
 import org.jalphanode.config.JAlphaNodeType;
 import org.jalphanode.notification.ViewChangedEvent;
 
+import com.google.common.base.Strings;
+
 /**
  * JAlphaNode GUI.
  * 
@@ -67,8 +68,6 @@ import org.jalphanode.notification.ViewChangedEvent;
 public class JAlphaNodeGui {
 
     private static final Log LOG = LogFactory.getLog(JAlphaNodeGui.class);
-
-    private static final int BORDER_GAP = 2;
 
     private JFrame frmTaskManager;
 
@@ -189,7 +188,8 @@ public class JAlphaNodeGui {
             final String fileLocation = this.configFile.getText();
             try {
                 JAlphaNodeConfig config = null;
-                if (StringUtils.isNotEmpty(fileLocation)) {
+                
+                if (!Strings.isNullOrEmpty(fileLocation)) {
                     config = JAlphaNodeConfigBuilder.buildFromFile(fileLocation);
                 }
 
