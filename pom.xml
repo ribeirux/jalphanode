@@ -394,12 +394,11 @@
 	<modules>
 		<module>core</module>
 		<module>ui</module>
-		<module>dist</module>
 	</modules>
 
 	<profiles>
 		<profile>
-			<id>doc</id>
+			<id>distribution</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -440,8 +439,11 @@
 							</execution>
 						</executions>
 					</plugin>
-				</plugins>
+				</plugins> 
 			</build>
+      <modules>
+        <module>dist</module>
+      </modules>     
 		</profile>
 	</profiles>
 </project>
