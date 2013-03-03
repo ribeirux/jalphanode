@@ -9,11 +9,12 @@ JAlphaNode provides powerful characteristics such as:
  - Listener API, where clients can be notified when events take place.
  - UI module which includes a CLI and a GUI.
 
-**Requirements: JDK 6 compliant JVM.**
-
 ## Building jalphanode distribution
 
-Jalphanode uses [Maven](http://maven.apache.org/) as a build tool. Make sure you have Maven 2.1.0 or higher installed.
+### Requirements
+
+* [Maven](http://maven.apache.org/) or above
+* Java 6 or above
 
 To build jalphanode:
 
