@@ -68,7 +68,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
 
     private volatile List<NodeAddress> members = Collections.emptyList();
 
-    private final CountDownLatch connectedLatch = new CountDownLatch(1);;
+    private final CountDownLatch connectedLatch = new CountDownLatch(1);
 
     /**
      * Creates a new membership manager.
@@ -131,7 +131,6 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
 
         JGroupsMembershipManager.LOG.info("Starting JGroups Channel...");
 
-        
         final int randomInRange = new Random().nextInt();
 
         this.channel.setName(this.getConfig().getMembership().getNodeName() + "-" + randomInRange);
