@@ -26,31 +26,32 @@ import com.google.common.base.Preconditions;
 
 /**
  * Basic reflection utilities to enhance what the JDK provides.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public final class ReflectionUtil {
 
-    private ReflectionUtil() {
-    }
+    private ReflectionUtil() { }
 
     /**
      * Inspects the class passed in for the class level annotation specified. If the annotation is not available, this
      * method recursively inspects super classes and interfaces until it finds the required annotation.
-     * <p/>
-     * Returns null if the annotation cannot be found.
-     * 
-     * @param <T> annotation type
-     * @param clazz class to inspect
-     * @param annotation annotation to search for. Must be a class-level annotation.
-     * @return the annotation instance, or null
+     *
+     * <p/>Returns null if the annotation cannot be found.
+     *
+     * @param   <T>         annotation type
+     * @param   clazz       class to inspect
+     * @param   annotation  annotation to search for. Must be a class-level annotation.
+     *
+     * @return  the annotation instance, or null
      */
     public static <T extends Annotation> T getAnnotation(final Class<?> clazz, final Class<T> annotation) {
         Class<?> tmpClazz = Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
 
         while (true) {
+
             // first check class
             T a = tmpClazz.getAnnotation(annotation);
             if (a != null) {

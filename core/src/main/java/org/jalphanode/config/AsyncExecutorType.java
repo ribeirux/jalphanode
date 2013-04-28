@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Async executor configuration.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "asyncExecutorType")
@@ -53,8 +53,8 @@ public class AsyncExecutorType extends AbstractPropertiesContainer implements As
 
     /**
      * Gets the corePoolSize property.
-     * 
-     * @return the corePoolSize property
+     *
+     * @return  the corePoolSize property
      */
     @Override
     public Integer getCorePoolSize() {
@@ -63,8 +63,8 @@ public class AsyncExecutorType extends AbstractPropertiesContainer implements As
 
     /**
      * Sets the corePoolSize property.
-     * 
-     * @param corePoolSize the corePoolSize to set
+     *
+     * @param  corePoolSize  the corePoolSize to set
      */
     public void setCorePoolSize(final Integer corePoolSize) {
         this.corePoolSize = corePoolSize;

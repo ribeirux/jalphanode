@@ -24,8 +24,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
@@ -35,26 +37,27 @@ import com.google.common.base.Preconditions;
 
 /**
  * Holds the logic of looking up a file, in the following sequence:
+ *
  * <ol>
- * <li>try to load it with the current thread's context ClassLoader</li>
- * <li>if fails, try to load it as a file from the disk</li>
+ *   <li>try to load it with the current thread's context ClassLoader</li>
+ *   <li>if fails, try to load it as a file from the disk</li>
  * </ol>
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public final class FileUtils {
 
     private static final Log LOG = LogFactory.getLog(FileUtils.class);
 
-    private FileUtils() {
-    }
+    private FileUtils() { }
 
     /**
      * Looks up the file, see : {@link FileUtils}.
-     * 
-     * @param filename might be the name of the file (too look it up in the class path) or an url to a file.
-     * @return an input stream to the file or null if nothing found through all lookup steps.
+     *
+     * @param   filename  might be the name of the file (too look it up in the class path) or an url to a file.
+     *
+     * @return  an input stream to the file or null if nothing found through all lookup steps.
      */
     public static InputStream lookupFile(final String filename) {
         Preconditions.checkNotNull(filename, "filename");
@@ -69,8 +72,8 @@ public final class FileUtils {
             try {
                 stream = new FileInputStream(filename);
             } catch (final FileNotFoundException e) {
-                FileUtils.LOG.warn(
-                        MessageFormat.format("The file {0} was not found: {1}", filename, e.getLocalizedMessage()), e);
+                FileUtils.LOG.warn(MessageFormat.format("The file {0} was not found: {1}", filename,
+                        e.getLocalizedMessage()), e);
             }
         }
 
@@ -79,9 +82,10 @@ public final class FileUtils {
 
     /**
      * Looks up the file, see : {@link FileUtils}.
-     * 
-     * @param filename might be the name of the file (too look it up in the class path) or an url to a file.
-     * @return an {@link URL} to the file or null if nothing found through all lookup steps.
+     *
+     * @param   filename  might be the name of the file (too look it up in the class path) or an url to a file.
+     *
+     * @return  an {@link URL} to the file or null if nothing found through all lookup steps.
      */
     public static URL lookupFileLocation(final String filename) {
         Preconditions.checkNotNull(filename, "filename");

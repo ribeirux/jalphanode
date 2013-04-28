@@ -25,9 +25,9 @@ import org.jalphanode.JAlphaNodeException;
 /**
  * Scheduler exception. Thrown if something wrong happens in the scheduler. All specific scheduler exception must extend
  * this exception.
- * 
- * @author ribeirux
- * @version $Revision: 93 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 93 $
  */
 public class SchedulerException extends JAlphaNodeException {
 
@@ -42,9 +42,9 @@ public class SchedulerException extends JAlphaNodeException {
 
     /**
      * Constructs a new exception with the specified detail message.
-     * 
-     * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
-     *            method.
+     *
+     * @param  message  the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
+     *                  method.
      */
     public SchedulerException(final String message) {
         super(message);
@@ -52,10 +52,10 @@ public class SchedulerException extends JAlphaNodeException {
 
     /**
      * Constructs a new exception with the specified detail message and cause.
-     * 
-     * @param message the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  message  the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
+     * @param  cause    the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>
+     *                  null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public SchedulerException(final String message, final Throwable cause) {
         super(message, cause);
@@ -63,9 +63,9 @@ public class SchedulerException extends JAlphaNodeException {
 
     /**
      * Constructs a new exception with the specified cause.
-     * 
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     *                value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public SchedulerException(final Throwable cause) {
         super(cause);

@@ -22,16 +22,16 @@ package org.jalphanode;
 
 /**
  * Time period.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface Period {
 
     /**
      * Period field type.
-     * 
-     * @author ribeirux
+     *
+     * @author  ribeirux
      */
     public enum PeriodField {
 
@@ -76,20 +76,20 @@ public interface Period {
 
         /**
          * Gets the period index.
-         * 
-         * @return the period index
+         *
+         * @return  the period index
          */
         public int getIndex() {
             return this.index;
         }
-
     }
 
     /**
      * Gets the time associated to the specified field.
-     * 
-     * @param field the period field
-     * @return the time of the associated to the specified field
+     *
+     * @param   field  the period field
+     *
+     * @return  the time of the associated to the specified field
      */
     int getPeriodField(PeriodField field);
 

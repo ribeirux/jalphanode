@@ -21,52 +21,53 @@
 package org.jalphanode.notification;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
 import org.jalphanode.annotation.AfterTask;
 import org.jalphanode.annotation.BeforeTask;
 import org.jalphanode.annotation.ViewChanged;
+
 import org.jalphanode.cluster.NodeAddress;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 
 import com.google.inject.Inject;
 
 /**
  * Notifier implementation.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class NotifierImpl extends AbstractListener implements Notifier {
 
-    private final List<ListenerInvocation> viewChangedListeners;
+    private final List<ListenerInvocation> viewChangedListeners = Lists.newCopyOnWriteArrayList();
+    private final List<ListenerInvocation> beforeTaskRunListeners = Lists.newCopyOnWriteArrayList();
+    private final List<ListenerInvocation> afterTaskRunListeners = Lists.newCopyOnWriteArrayList();
 
-    private final List<ListenerInvocation> beforeTaskRunListeners;
+    private final Map<Class<? extends Annotation>, Class<?>> allowedListeners = ImmutableMap
+            .<Class<? extends Annotation>, Class<?>>of(    //
+                ViewChanged.class, ViewChangedEvent.class, //
+                BeforeTask.class, Event.class,             //
+                AfterTask.class, Event.class);
 
-    private final List<ListenerInvocation> afterTaskRunListeners;
-
-    private final Map<Class<? extends Annotation>, Class<?>> allowedListeners;
-
-    private final Map<Class<? extends Annotation>, List<ListenerInvocation>> listeners;
+    private final Map<Class<? extends Annotation>, List<ListenerInvocation>> listeners = ImmutableMap.of(
+            ViewChanged.class, this.viewChangedListeners,  //
+            BeforeTask.class, this.beforeTaskRunListeners, //
+            AfterTask.class, this.afterTaskRunListeners);
 
     /**
      * Creates a new notifier.
-     * 
-     * @param asyncExecutor asynchronous executor
+     *
+     * @param  asyncExecutor  asynchronous executor
      */
     @Inject
     public NotifierImpl(final ExecutorService asyncExecutor) {
-
         super(asyncExecutor);
-        this.viewChangedListeners = new CopyOnWriteArrayList<ListenerInvocation>();
-        this.beforeTaskRunListeners = new CopyOnWriteArrayList<ListenerInvocation>();
-        this.afterTaskRunListeners = new CopyOnWriteArrayList<ListenerInvocation>();
-        this.allowedListeners = this.buildAllowedListeners();
-        this.listeners = this.buildListeners();
     }
 
     @Override
@@ -88,7 +89,6 @@ public class NotifierImpl extends AbstractListener implements Notifier {
                 isMaster);
 
         this.invokeListeners(this.viewChangedListeners, event);
-
     }
 
     @Override
@@ -99,28 +99,6 @@ public class NotifierImpl extends AbstractListener implements Notifier {
     @Override
     public void afterTask(final String taskName) {
         this.dispatchTask(taskName, this.afterTaskRunListeners);
-    }
-
-    private Map<Class<? extends Annotation>, Class<?>> buildAllowedListeners() {
-        final Map<Class<? extends Annotation>, Class<?>> allowedBuilder = new HashMap<Class<? extends Annotation>, Class<?>>();
-
-        allowedBuilder.put(ViewChanged.class, ViewChangedEvent.class);
-        allowedBuilder.put(BeforeTask.class, Event.class);
-        allowedBuilder.put(AfterTask.class, Event.class);
-
-        return Collections.unmodifiableMap(allowedBuilder);
-    }
-
-    private Map<Class<? extends Annotation>, List<ListenerInvocation>> buildListeners() {
-
-        final Map<Class<? extends Annotation>, List<ListenerInvocation>> listenersBuilder = new HashMap<Class<? extends Annotation>, List<ListenerInvocation>>();
-
-        listenersBuilder.put(ViewChanged.class, this.viewChangedListeners);
-        listenersBuilder.put(BeforeTask.class, this.beforeTaskRunListeners);
-        listenersBuilder.put(AfterTask.class, this.afterTaskRunListeners);
-
-        return Collections.unmodifiableMap(listenersBuilder);
-
     }
 
     private void dispatchTask(final String taskName, final List<ListenerInvocation> listeners) {

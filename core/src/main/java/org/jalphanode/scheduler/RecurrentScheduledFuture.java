@@ -21,6 +21,7 @@
 package org.jalphanode.scheduler;
 
 import java.text.MessageFormat;
+
 import java.util.Date;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
@@ -32,15 +33,19 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Reschedules every time each task n task is executed.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 class RecurrentScheduledFuture implements ScheduledFuture<Object>, Runnable {
 
     private static final Log LOG = LogFactory.getLog(RecurrentScheduledFuture.class);
+
+    private final Object schedulerLock = new Object();
 
     private final Runnable command;
 
@@ -48,31 +53,28 @@ class RecurrentScheduledFuture implements ScheduledFuture<Object>, Runnable {
 
     private final ScheduledExecutorService executor;
 
-    private final Object schedulerLock;
-
     private volatile ScheduledFuture<?> currentFuture;
 
     private volatile Date scheduledExecutionTime;
 
     /**
      * Creates a new instance with specified fields.
-     * 
-     * @param command task to run
-     * @param scheduleIterator schedule iterator
-     * @param executor executor
+     *
+     * @param  command           task to run
+     * @param  scheduleIterator  schedule iterator
+     * @param  executor          executor
      */
     public RecurrentScheduledFuture(final Runnable command, final ScheduleIterator scheduleIterator,
             final ScheduledExecutorService executor) {
-        this.command = command;
-        this.scheduleIterator = scheduleIterator;
-        this.executor = executor;
-        this.schedulerLock = new Object();
+        this.command = Preconditions.checkNotNull(command, "command");
+        this.scheduleIterator = Preconditions.checkNotNull(scheduleIterator, "scheduleIterator");
+        this.executor = Preconditions.checkNotNull(executor, "executor");
     }
 
     /**
      * Starts the scheduler.
-     * 
-     * @return the scheduled future
+     *
+     * @return  the scheduled future
      */
     public ScheduledFuture<Object> schedule() {
         return this.scheduleInternal(new Date());
@@ -184,7 +186,7 @@ class RecurrentScheduledFuture implements ScheduledFuture<Object>, Runnable {
      */
     @Override
     public Object get(final long timeout, final TimeUnit unit) throws InterruptedException, ExecutionException,
-            TimeoutException {
+        TimeoutException {
         return this.currentFuture.get(timeout, unit);
     }
 

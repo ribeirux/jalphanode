@@ -24,17 +24,18 @@ import java.util.List;
 
 /**
  * Decides witch node in the cluster should be the master node.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface MasterNodeElectionPolicy {
 
     /**
      * Elects the master node from the current cluster.
-     * 
-     * @param nodes the current nodes of the cluster
-     * @return the address of the master node.
+     *
+     * @param   nodes  the current nodes of the cluster
+     *
+     * @return  the address of the master node.
      */
     NodeAddress elect(List<NodeAddress> nodes);
 

@@ -22,16 +22,16 @@ package org.jalphanode.config;
 
 /**
  * Task scheduler configuration.
- * 
- * @author ribeirux
- * @version $Revision: 143 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 143 $
  */
 public interface TaskSchedulerConfig extends PropertiesContainerConfig {
 
     /**
      * Gets the executor core pool size.
-     * 
-     * @return the core pool size
+     *
+     * @return  the core pool size
      */
     Integer getCorePoolSize();
 

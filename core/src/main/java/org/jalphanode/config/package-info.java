@@ -18,9 +18,11 @@
  *
  * $Id$
  *******************************************************************************/
-@XmlSchema(namespace = "urn:jalphanode:config", elementFormDefault = XmlNsForm.QUALIFIED, attributeFormDefault = XmlNsForm.UNQUALIFIED)
+@XmlSchema(
+    namespace = "urn:jalphanode:config", elementFormDefault = XmlNsForm.QUALIFIED,
+    attributeFormDefault = XmlNsForm.UNQUALIFIED
+)
 package org.jalphanode.config;
 
 import javax.xml.bind.annotation.XmlNsForm;
 import javax.xml.bind.annotation.XmlSchema;
-

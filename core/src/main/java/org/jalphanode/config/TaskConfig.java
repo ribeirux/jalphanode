@@ -23,35 +23,36 @@ package org.jalphanode.config;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.jalphanode.scheduler.ScheduleIterator;
+
 import org.jalphanode.task.Task;
 
 /**
  * Task configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlJavaTypeAdapter(TaskType.Adapter.class)
 public interface TaskConfig extends PropertiesContainerConfig {
 
     /**
      * Gets the task name.
-     * 
-     * @return the task name
+     *
+     * @return  the task name
      */
     String getTaskName();
 
     /**
      * Gets the task to run.
-     * 
-     * @return the task to run
+     *
+     * @return  the task to run
      */
     Task getTask();
 
     /**
      * Gets the schedule iterator.
-     * 
-     * @return the schedule iterator
+     *
+     * @return  the schedule iterator
      */
     ScheduleIterator getScheduleIterator();
 }

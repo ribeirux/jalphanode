@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Membership configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "membershipType")
@@ -62,8 +62,8 @@ public class MembershipType extends AbstractPropertiesContainer implements Membe
 
     /**
      * Gets the nodeName property.
-     * 
-     * @return the nodeName property
+     *
+     * @return  the nodeName property
      */
     @Override
     public String getNodeName() {
@@ -72,8 +72,8 @@ public class MembershipType extends AbstractPropertiesContainer implements Membe
 
     /**
      * Sets the nodeName property.
-     * 
-     * @param nodeName the nodeName to set
+     *
+     * @param  nodeName  the nodeName to set
      */
     public void setNodeName(final String nodeName) {
         this.nodeName = nodeName;
@@ -81,8 +81,8 @@ public class MembershipType extends AbstractPropertiesContainer implements Membe
 
     /**
      * Gets the value of the clusterName property.
-     * 
-     * @return possible object is {@link String }
+     *
+     * @return  possible object is {@link String }
      */
     @Override
     public String getClusterName() {
@@ -91,8 +91,8 @@ public class MembershipType extends AbstractPropertiesContainer implements Membe
 
     /**
      * Sets the value of the clusterName property.
-     * 
-     * @param clusterName allowed object is {@link String }
+     *
+     * @param  clusterName  allowed object is {@link String }
      */
     public void setClusterName(final String clusterName) {
         this.clusterName = clusterName;

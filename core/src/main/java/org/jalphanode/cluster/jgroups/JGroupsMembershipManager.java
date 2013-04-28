@@ -22,7 +22,9 @@ package org.jalphanode.cluster.jgroups;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.text.MessageFormat;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -30,13 +32,18 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.jalphanode.cluster.AbstractMembershipManager;
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.MembershipException;
 import org.jalphanode.cluster.NodeAddress;
+
 import org.jalphanode.config.JAlphaNodeConfig;
+
 import org.jalphanode.notification.Notifier;
+
 import org.jalphanode.scheduler.TaskScheduler;
+
 import org.jgroups.Address;
 import org.jgroups.Channel;
 import org.jgroups.Message;
@@ -46,38 +53,35 @@ import org.jgroups.View;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+
 import com.google.inject.Inject;
 
 /**
  * An encapsulation of a JGroups membership manager.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class JGroupsMembershipManager extends AbstractMembershipManager implements Receiver {
 
     private static final Log LOG = LogFactory.getLog(JGroupsMembershipManager.class);
 
-    private final Channel channel;
-
-    private volatile boolean master = false;
-
-    private volatile NodeAddress address;
-
-    private volatile NodeAddress masterAddress;
-
-    private volatile List<NodeAddress> members = Collections.emptyList();
-
     private final CountDownLatch connectedLatch = new CountDownLatch(1);
+
+    private final Channel channel;
+    private volatile boolean master = false;
+    private volatile NodeAddress address;
+    private volatile NodeAddress masterAddress;
+    private volatile List<NodeAddress> members = Collections.emptyList();
 
     /**
      * Creates a new membership manager.
-     * 
-     * @param config configuration
-     * @param channel jgroups channel
-     * @param masterNodeElectionPolicy master node election policy
-     * @param notifier notifier instance
-     * @param taskScheduler task executor
+     *
+     * @param  config                    configuration
+     * @param  channel                   jgroups channel
+     * @param  masterNodeElectionPolicy  master node election policy
+     * @param  notifier                  notifier instance
+     * @param  taskScheduler             task executor
      */
     @Inject
     public JGroupsMembershipManager(final JAlphaNodeConfig config, final Channel channel,
@@ -168,6 +172,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
         final List<Address> newMembers = newView.getMembers();
 
         if (!newMembers.isEmpty()) {
+
             // no need for synchronization because this method is invoked sequentially.
             // Instance variable "members" cannot change concurrently
             final List<NodeAddress> oldMembers = this.members;
@@ -189,7 +194,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
             this.members = this.fromJGroupsAddressList(newMembers);
 
             // the list of members is immutable, thus, thread safe
-            this.masterAddress = this.getMasNodeElectionPolicy().elect(this.members);
+            this.masterAddress = this.getMasterNodeElectionPolicy().elect(this.members);
 
             this.master = this.masterAddress.equals(this.address);
 
@@ -197,6 +202,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
             if (oldMembers.isEmpty()) {
                 this.connectedLatch.countDown();
             }
+
             this.topologyChanged(this.members, oldMembers, this.getNodeAddress(), this.masterAddress, this.master);
         }
     }

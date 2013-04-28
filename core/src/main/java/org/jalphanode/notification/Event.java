@@ -22,16 +22,16 @@ package org.jalphanode.notification;
 
 /**
  * Generic event.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface Event {
 
     /**
      * Gets the component name.
-     * 
-     * @return the component name
+     *
+     * @return  the component name
      */
     String getComponentName();
 

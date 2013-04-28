@@ -31,9 +31,9 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Handles XML validation events.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class XMLEventHandler implements ValidationEventHandler {
 
@@ -41,14 +41,15 @@ public class XMLEventHandler implements ValidationEventHandler {
 
     /**
      * Validates and event.
-     * <p>
-     * The validation only continues if the there are a warning, otherwise it is stopped.
-     * 
-     * @param event the encapsulated validation event information. It is a provider error if this parameter is null.
-     * @return true if the JAXB Provider should attempt to continue the current unmarshal, validate, or marshal
-     *         operation after handling this warning/error, false if the provider should terminate the current operation
-     *         with the appropriate <tt>UnmarshalException</tt>, <tt>ValidationException</tt>, or
-     *         <tt>MarshalException</tt>.
+     *
+     * <p>The validation only continues if the there are a warning, otherwise it is stopped.
+     *
+     * @param   event  the encapsulated validation event information. It is a provider error if this parameter is null.
+     *
+     * @return  true if the JAXB Provider should attempt to continue the current unmarshal, validate, or marshal
+     *          operation after handling this warning/error, false if the provider should terminate the current
+     *          operation with the appropriate <tt>UnmarshalException</tt>, <tt>ValidationException</tt>, or <tt>
+     *          MarshalException</tt>.
      */
     @Override
     public boolean handleEvent(final ValidationEvent event) {

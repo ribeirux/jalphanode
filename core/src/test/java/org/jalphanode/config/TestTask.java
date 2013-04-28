@@ -23,17 +23,19 @@ package org.jalphanode.config;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.jalphanode.task.Task;
 
 /**
  * Dummy task.
- * 
- * @author ribeirux
- * @version $Revision: 149 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 149 $
  */
 public final class TestTask implements Task {
 

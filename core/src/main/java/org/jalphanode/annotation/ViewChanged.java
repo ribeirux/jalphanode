@@ -28,16 +28,17 @@ import java.lang.annotation.Target;
 /**
  * This annotation should be used on methods that need to be notified when the topology changes (i.e., a member joins or
  * leaves the cluster).
- * <p/>
- * Methods annotated with this annotation should accept a single parameter, a
+ *
+ * <p/>Methods annotated with this annotation should accept a single parameter, a
  * {@link org.jalphanode.notification.ViewChangedEvent} otherwise a
  * {@link org.jalphanode.notification.ListenerMethodException} will be thrown when registering your listener.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
- * @see org.jalphanode.annotation.Listener
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
+ * @see      org.jalphanode.annotation.Listener
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ViewChanged {
+    // no fields
 }

@@ -31,8 +31,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.jalphanode.DefaultTaskManager;
 import org.jalphanode.TaskManager;
+
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeConfigBuilder;
 
@@ -40,9 +42,9 @@ import com.google.common.base.Strings;
 
 /**
  * JalphaNodeCli UI class.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class JalphaNodeCli {
 
@@ -58,13 +60,15 @@ public class JalphaNodeCli {
          * Path to the configuration file.
          */
         CONFIG_PATH(OptionBuilder.hasOptionalArg().withArgName(Messages.getString("cli.option.config.arg"))
-                .withDescription(Messages.getString("cli.option.config.description"))
-                .create(Messages.getString("cli.option.config"))),
+                .withDescription(Messages.getString("cli.option.config.description")).create(
+                Messages.getString("cli.option.config"))),
+
         /**
-         * Starts the GUI
+         * Starts the GUI.
          */
         GUI(OptionBuilder.withDescription(Messages.getString("cli.option.gui.description")).create(
                 Messages.getString("cli.option.gui"))),
+
         /**
          * Print help message.
          */
@@ -103,17 +107,18 @@ public class JalphaNodeCli {
             if (!Strings.isNullOrEmpty(path)) {
                 config = JAlphaNodeConfigBuilder.buildFromFile(path);
             }
+
             final TaskManager manager = new DefaultTaskManager(config);
 
             manager.start();
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
 
-                @Override
-                public void run() {
-                    manager.shutdown();
-                }
-            });
+                    @Override
+                    public void run() {
+                        manager.shutdown();
+                    }
+                });
 
         } catch (final Exception e) {
             JalphaNodeCli.LOG.error(e.getMessage(), e);
@@ -141,8 +146,8 @@ public class JalphaNodeCli {
 
     /**
      * Starts the ui.
-     * 
-     * @param args
+     *
+     * @param  args
      */
     public static void main(final String[] args) {
         final JalphaNodeCli jalphaNodeCli = new JalphaNodeCli();

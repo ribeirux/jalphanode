@@ -25,9 +25,9 @@ import org.jalphanode.JAlphaNodeRuntimeException;
 /**
  * Membership exception. Thrown if something wrong happens while connecting to the group. All checked membership
  * exceptions must extend this.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class MembershipException extends JAlphaNodeRuntimeException {
 
@@ -42,9 +42,9 @@ public class MembershipException extends JAlphaNodeRuntimeException {
 
     /**
      * Constructs a new exception with the specified detail message.
-     * 
-     * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
-     *            method.
+     *
+     * @param  message  the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
+     *                  method.
      */
     public MembershipException(final String message) {
         super(message);
@@ -52,10 +52,10 @@ public class MembershipException extends JAlphaNodeRuntimeException {
 
     /**
      * Constructs a new exception with the specified detail message and cause.
-     * 
-     * @param message the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  message  the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
+     * @param  cause    the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>
+     *                  null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public MembershipException(final String message, final Throwable cause) {
         super(message, cause);
@@ -63,9 +63,9 @@ public class MembershipException extends JAlphaNodeRuntimeException {
 
     /**
      * Constructs a new exception with the specified cause.
-     * 
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     *                value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public MembershipException(final Throwable cause) {
         super(cause);

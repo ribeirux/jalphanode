@@ -20,7 +20,6 @@
  *******************************************************************************/
 package org.jalphanode.config;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,14 +28,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.collect.Lists;
+
 /**
  * Properties configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "properties", propOrder = { "property" })
+@XmlType(name = "properties", propOrder = {"property"})
 public class PropertiesType {
 
     @XmlElement(required = true)
@@ -46,13 +47,13 @@ public class PropertiesType {
      * Initializes internal structure.
      */
     public PropertiesType() {
-        this.property = new ArrayList<PropertyType>();
+        this.property = Lists.newLinkedList();
     }
 
     /**
      * Gets the {@link List} of properties.
-     * 
-     * @return the {@link List} of properties
+     *
+     * @return  the {@link List} of properties
      */
     public List<PropertyType> getProperty() {
         return Collections.unmodifiableList(this.property);
@@ -60,8 +61,8 @@ public class PropertiesType {
 
     /**
      * Adds a new property.
-     * 
-     * @param propertyType property to add
+     *
+     * @param  propertyType  property to add
      */
     public void addProperty(final PropertyType propertyType) {
         this.property.add(propertyType);
@@ -69,8 +70,8 @@ public class PropertiesType {
 
     /**
      * Removes the specified property.
-     * 
-     * @param propertyType property to remove
+     *
+     * @param  propertyType  property to remove
      */
     public void removeProperty(final PropertyType propertyType) {
         this.property.remove(propertyType);
@@ -78,8 +79,8 @@ public class PropertiesType {
 
     /**
      * Removes the property with the specified index.
-     * 
-     * @param index index of the property to remove.
+     *
+     * @param  index  index of the property to remove.
      */
     public void removeProperty(final int index) {
         this.property.remove(index);

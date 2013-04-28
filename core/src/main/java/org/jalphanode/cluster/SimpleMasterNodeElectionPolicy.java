@@ -26,12 +26,15 @@ import com.google.common.base.Preconditions;
 
 /**
  * Elects the first node of the cluster as the master node.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public class SimpleMasterNodeElectionPolicy implements MasterNodeElectionPolicy {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public NodeAddress elect(final List<NodeAddress> nodes) {
         Preconditions.checkNotNull(nodes, "nodes");

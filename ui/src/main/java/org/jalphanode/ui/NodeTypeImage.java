@@ -21,6 +21,7 @@
 package org.jalphanode.ui;
 
 import java.net.URL;
+
 import java.text.MessageFormat;
 
 import javax.swing.Icon;
@@ -30,9 +31,9 @@ import org.jalphanode.util.FileUtils;
 
 /**
  * Node images.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public enum NodeTypeImage {
 

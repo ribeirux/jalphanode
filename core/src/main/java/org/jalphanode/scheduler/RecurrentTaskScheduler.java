@@ -25,22 +25,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import org.jalphanode.AbstractConfigHolder;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.TaskSchedulerConfig;
 import org.jalphanode.config.TypedPropertiesConfig;
+
 import org.jalphanode.util.DaemonThreadFactory;
 
 import com.google.common.base.Preconditions;
+
 import com.google.inject.Inject;
 
 /**
  * Recurrent task scheduler.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
-public class RecurrentTaskScheduler extends AbstractConfigHolder implements TaskScheduler {
+public class RecurrentTaskScheduler implements TaskScheduler {
 
     private static final String DEFAULT_THREAD_PREFIX = "task-pool";
     private static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
@@ -49,12 +50,11 @@ public class RecurrentTaskScheduler extends AbstractConfigHolder implements Task
 
     /**
      * Creates a new schedule.
-     * 
-     * @param config the configuration
+     *
+     * @param  config  the configuration
      */
     @Inject
     public RecurrentTaskScheduler(final JAlphaNodeConfig config) {
-        super(config);
         this.scheduler = this.buildScheduledExecutor(config);
     }
 
@@ -92,8 +92,9 @@ public class RecurrentTaskScheduler extends AbstractConfigHolder implements Task
         final TaskSchedulerConfig taskSchedulerConfig = config.getTaskScheduler();
         final TypedPropertiesConfig props = taskSchedulerConfig.getProperties();
 
-        return new ScheduledThreadPoolExecutor(taskSchedulerConfig.getCorePoolSize(), DaemonThreadFactory.newInstance(
-                props.getProperty("threadNamePrefix", RecurrentTaskScheduler.DEFAULT_THREAD_PREFIX),
-                props.getIntProperty("threadPriority", RecurrentTaskScheduler.DEFAULT_THREAD_PRIORITY)));
+        return new ScheduledThreadPoolExecutor(taskSchedulerConfig.getCorePoolSize(),
+                DaemonThreadFactory.newInstance(
+                    props.getProperty("threadNamePrefix", RecurrentTaskScheduler.DEFAULT_THREAD_PREFIX),
+                    props.getIntProperty("threadPriority", RecurrentTaskScheduler.DEFAULT_THREAD_PRIORITY)));
     }
 }

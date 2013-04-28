@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Task scheduler configuration.
- * 
- * @author ribeirux
- * @version $Revision: 148 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 148 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "taskSchedulerType")
@@ -53,8 +53,8 @@ public class TaskSchedulerType extends AbstractPropertiesContainer implements Ta
 
     /**
      * Gets the corePoolSize property.
-     * 
-     * @return the corePoolSize property
+     *
+     * @return  the corePoolSize property
      */
     @Override
     public Integer getCorePoolSize() {
@@ -63,8 +63,8 @@ public class TaskSchedulerType extends AbstractPropertiesContainer implements Ta
 
     /**
      * Sets the corePoolSize property.
-     * 
-     * @param corePoolSize the corePoolSize to set
+     *
+     * @param  corePoolSize  the corePoolSize to set
      */
     public void setCorePoolSize(final Integer corePoolSize) {
         this.corePoolSize = corePoolSize;

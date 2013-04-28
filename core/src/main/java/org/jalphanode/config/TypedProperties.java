@@ -21,6 +21,7 @@
 package org.jalphanode.config;
 
 import java.text.MessageFormat;
+
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -31,9 +32,9 @@ import com.google.common.base.Strings;
 
 /**
  * Properties configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class TypedProperties extends Properties implements TypedPropertiesConfig {
 
@@ -55,8 +56,8 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Copy constructor.
-     * 
-     * @param properties properties instance to from. If null, then it is treated as an empty Properties instance.
+     *
+     * @param  properties  properties instance to from. If null, then it is treated as an empty Properties instance.
      */
     public TypedProperties(final Properties properties) {
         super();
@@ -67,10 +68,11 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a boolean property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key           property key
+     * @param   defaultValue  default value
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public boolean getBooleanProperty(final String key, final boolean defaultValue) {
@@ -79,11 +81,12 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a boolean property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @param resolveSysProp if true checks if the property value exists as system property
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key             property key
+     * @param   defaultValue    default value
+     * @param   resolveSysProp  if true checks if the property value exists as system property
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public boolean getBooleanProperty(final String key, final boolean defaultValue, final boolean resolveSysProp) {
@@ -111,10 +114,11 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets an int property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key           property key
+     * @param   defaultValue  default value
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public int getIntProperty(final String key, final int defaultValue) {
@@ -123,11 +127,12 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets an int property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @param resolveSysProp if true checks if the property value exists as system property
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key             property key
+     * @param   defaultValue    default value
+     * @param   resolveSysProp  if true checks if the property value exists as system property
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public int getIntProperty(final String key, final int defaultValue, final boolean resolveSysProp) {
@@ -155,10 +160,11 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a long property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key           property key
+     * @param   defaultValue  default value
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public long getLongProperty(final String key, final long defaultValue) {
@@ -167,11 +173,12 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a long property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @param resolveSysProp if true checks if the property value exists as system property
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key             property key
+     * @param   defaultValue    default value
+     * @param   resolveSysProp  if true checks if the property value exists as system property
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public long getLongProperty(final String key, final long defaultValue, final boolean resolveSysProp) {
@@ -199,11 +206,12 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a string property.
-     * 
-     * @param key property key
-     * @param defaultValue default value
-     * @param resolveSysProp if true checks if the property value exists as system property
-     * @return if the key property exists, then its value is returned otherwise returns the default value
+     *
+     * @param   key             property key
+     * @param   defaultValue    default value
+     * @param   resolveSysProp  if true checks if the property value exists as system property
+     *
+     * @return  if the key property exists, then its value is returned otherwise returns the default value
      */
     @Override
     public String getProperty(final String key, final String defaultValue, final boolean resolveSysProp) {
@@ -223,10 +231,11 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
     /**
      * Gets a property for specified <code>key</code>.
-     * 
-     * @param key property key
-     * @param resolveSysProp if true checks if the property value exists as system property
-     * @return property value
+     *
+     * @param   key             property key
+     * @param   resolveSysProp  if true checks if the property value exists as system property
+     *
+     * @return  property value
      */
     @Override
     public String getProperty(final String key, final boolean resolveSysProp) {
@@ -237,10 +246,12 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         if (!Strings.isNullOrEmpty(value)) {
             value = value.trim();
+
             String property = null;
             if (resolveSysProp) {
                 property = System.getProperty(value);
             }
+
             result = (property == null ? value : property);
         }
 

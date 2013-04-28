@@ -21,14 +21,15 @@
 package org.jalphanode.ui;
 
 import java.beans.Beans;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
  * UI properties.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public final class Messages {
 
@@ -36,7 +37,7 @@ public final class Messages {
         // do not instantiate
     }
 
-    private static final String BUNDLE_NAME = "jalphanode-ui"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "jalphanode-ui"; // $NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = Messages.loadBundle();
 

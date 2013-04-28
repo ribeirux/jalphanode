@@ -27,6 +27,8 @@ set UI_JAR=jalphanode-ui.jar
 
 set LOG_DIR=%SCRIPT_FOLDER%\..\log
 set MAIN_CLASS=org.jalphanode.ui.JalphaNodeCli
+
+@rem JGroups bind address -Djgroups.bind_addr=1.2.3.4.
 set JVM_PARAMS=-Djava.net.preferIPv4Stack=true -Dlog4j.logDir=%LOG_DIR%
 
 set CP=%SCRIPT_FOLDER%\..\etc

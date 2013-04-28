@@ -23,36 +23,38 @@ package org.jalphanode.notification;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import org.jalphanode.annotation.Listener;
+
 import org.jalphanode.util.ReflectionUtil;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Generic listener.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public abstract class AbstractListener {
 
     private final ExecutorService asyncExecutor;
-
     private final ExecutorService syncExecutor;
 
     /**
      * Initializes internal fields.
-     * 
-     * @param asyncExecutor asynchronous executor
+     *
+     * @param  asyncExecutor  asynchronous executor
      */
     public AbstractListener(final ExecutorService asyncExecutor) {
         this.asyncExecutor = Preconditions.checkNotNull(asyncExecutor, "asyncExecutor");
@@ -61,8 +63,8 @@ public abstract class AbstractListener {
 
     /**
      * Adds a new listener.
-     * 
-     * @param listener listener to add
+     *
+     * @param  listener  listener to add
      */
     public void addListener(final Object listener) {
         this.validateAndAddListenerInvocation(listener);
@@ -70,9 +72,10 @@ public abstract class AbstractListener {
 
     /**
      * Gets all listeners with specified annotation.
-     * 
-     * @param annotation annotation class
-     * @return a collection of listeners with specified annotation
+     *
+     * @param   annotation  annotation class
+     *
+     * @return  a collection of listeners with specified annotation
      */
     public List<ListenerInvocation> getListenerCollectionForAnnotation(final Class<? extends Annotation> annotation) {
         return this.getListenersMap().get(Preconditions.checkNotNull(annotation, "annotation"));
@@ -80,18 +83,18 @@ public abstract class AbstractListener {
 
     /**
      * Gets all listeners.
-     * 
-     * @return all listeners
+     *
+     * @return  all listeners
      */
     public Set<Object> getListeners() {
-        final Set<Object> result = new HashSet<Object>();
+        final ImmutableSet.Builder<Object> builder = new ImmutableSet.Builder<Object>();
         for (final List<ListenerInvocation> list : this.getListenersMap().values()) {
             for (final ListenerInvocation li : list) {
-                result.add(li.getTarget());
+                builder.add(li.getTarget());
             }
         }
 
-        return Collections.unmodifiableSet(result);
+        return builder.build();
     }
 
     /**
@@ -107,10 +110,12 @@ public abstract class AbstractListener {
 
     /**
      * Removes specified listener.
-     * 
-     * @param listener listener to remove
+     *
+     * @param  listener  listener to remove
      */
     public void removeListener(final Object listener) {
+        Preconditions.checkNotNull(listener, "listener");
+
         for (final Class<? extends Annotation> annotation : this.getAllowedMethodAnnotations().keySet()) {
             this.removeListenerInvocation(annotation, listener);
         }
@@ -118,37 +123,41 @@ public abstract class AbstractListener {
 
     /**
      * Remove the listener with specified annotation.
-     * 
-     * @param annotation listener annotation
-     * @param listener listener to remove
+     *
+     * @param  annotation  listener annotation
+     * @param  listener    listener to remove
      */
     public void removeListenerInvocation(final Class<? extends Annotation> annotation, final Object listener) {
-
-        final List<ListenerInvocation> listeners = this.getListenerCollectionForAnnotation(annotation);
+        Preconditions.checkNotNull(annotation, "annotation");
         Preconditions.checkNotNull(listener, "listener");
 
-        final Set<Object> markedForRemoval = new HashSet<Object>();
+        final List<ListenerInvocation> listeners = this.getListenerCollectionForAnnotation(annotation);
+
+        final Set<Object> markedForRemoval = Sets.newHashSet();
         for (final ListenerInvocation li : listeners) {
             if (listener.equals(li.getTarget())) {
                 markedForRemoval.add(li);
             }
         }
+
         listeners.removeAll(markedForRemoval);
     }
 
     /**
      * Tests if a class is properly annotated with Listener and returns whether callbacks on this class should be
      * invoked synchronously or asynchronously.
-     * 
-     * @param listenerClass class to inspect
-     * @return true if callbacks on this class should use the syncProcessor or false if it should use the
-     *         asyncProcessor.
+     *
+     * @param   listenerClass  class to inspect
+     *
+     * @return  true if callbacks on this class should use the syncProcessor or false if it should use the
+     *          asyncProcessor.
      */
     protected boolean testListenerClassValidity(final Class<?> listenerClass) {
         final Listener listener = ReflectionUtil.getAnnotation(listenerClass, Listener.class);
         if (listener == null) {
             throw new ListenerMethodException("Listener class should be annotated with listener annotation");
         }
+
         if (!Modifier.isPublic(listenerClass.getModifiers())) {
             throw new ListenerMethodException("Listener modifiers should be public!");
         }
@@ -158,10 +167,10 @@ public abstract class AbstractListener {
 
     /**
      * Tests if the listener method is valid.
-     * 
-     * @param method method to test
-     * @param allowedParameter allowed parameter
-     * @param annotationName method annotation
+     *
+     * @param  method            method to test
+     * @param  allowedParameter  allowed parameter
+     * @param  annotationName    method annotation
      */
     protected void testListenerMethodValidity(final Method method, final Class<?> allowedParameter,
             final String annotationName) {
@@ -182,8 +191,8 @@ public abstract class AbstractListener {
     /**
      * Loops through all valid methods on the object passed in, and caches the relevant methods as
      * {@link ListenerInvocation} for invocation by reflection.
-     * 
-     * @param listener object to be considered as a listener.
+     *
+     * @param  listener  object to be considered as a listener.
      */
     private void validateAndAddListenerInvocation(final Object listener) {
 
@@ -196,6 +205,7 @@ public abstract class AbstractListener {
 
         // now try all methods on the listener for anything that we like. Note that only PUBLIC methods are scanned.
         for (final Method m : listener.getClass().getMethods()) {
+
             // loop through all valid method annotations
             for (final Map.Entry<Class<? extends Annotation>, Class<?>> annotationEntry : allowedListeners.entrySet()) {
                 final Class<? extends Annotation> key = annotationEntry.getKey();
@@ -212,7 +222,7 @@ public abstract class AbstractListener {
         if (!foundMethods) {
             throw new ListenerMethodException(MessageFormat.format(
                     "Attempted to register listener of class {0} , but no valid public methods "
-                            + "annotated with method-level event annotations found!", listener.getClass()));
+                        + "annotated with method-level event annotations found!", listener.getClass()));
         }
     }
 
@@ -229,15 +239,15 @@ public abstract class AbstractListener {
 
     /**
      * Gets allowed method annotations.
-     * 
-     * @return all allowed method annotations
+     *
+     * @return  all allowed method annotations
      */
     public abstract Map<Class<? extends Annotation>, Class<?>> getAllowedMethodAnnotations();
 
     /**
      * Gets all listeners.
-     * 
-     * @return all listeners
+     *
+     * @return  all listeners
      */
     protected abstract Map<Class<? extends Annotation>, List<ListenerInvocation>> getListenersMap();
 

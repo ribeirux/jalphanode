@@ -22,37 +22,37 @@ package org.jalphanode.config;
 
 /**
  * Configuration root.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface JAlphaNodeConfig {
 
     /**
      * Gets tasks configuration.
-     * 
-     * @return tasks configuration
+     *
+     * @return  tasks configuration
      */
     TasksConfig getTasks();
 
     /**
      * Gets task scheduler configuration.
-     * 
-     * @return task scheduler configuration
+     *
+     * @return  task scheduler configuration
      */
     TaskSchedulerConfig getTaskScheduler();
 
     /**
      * Gets async executor configuration.
-     * 
-     * @return async executor configuration
+     *
+     * @return  async executor configuration
      */
     AsyncExecutorConfig getAsyncExecutor();
 
     /**
      * Gets membership configuration.
-     * 
-     * @return membership configuration
+     *
+     * @return  membership configuration
      */
     MembershipConfig getMembership();
 }

@@ -26,51 +26,51 @@ import org.jalphanode.cluster.NodeAddress;
 
 /**
  * This event is passed in to any method annotated with {@link org.jalphanode.annotation.ViewChanged}.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface ViewChangedEvent extends Event {
 
     /**
      * Gets the cluster name.
-     * 
-     * @return the cluster name
+     *
+     * @return  the cluster name
      */
     String getClusterName();
 
     /**
      * Gets the local address.
-     * 
-     * @return the local address
+     *
+     * @return  the local address
      */
     NodeAddress getLocalAddress();
 
     /**
      * Gets the master address.
-     * 
-     * @return the master address
+     *
+     * @return  the master address
      */
     NodeAddress getMasterAddress();
 
     /**
      * Gets the new members of the view.
-     * 
-     * @return the new view associated with this view change.
+     *
+     * @return  the new view associated with this view change.
      */
     List<NodeAddress> getNewMembers();
 
     /**
      * Gets the old members of the view.
-     * 
-     * @return the old members of the view
+     *
+     * @return  the old members of the view
      */
     List<NodeAddress> getOldMembers();
 
     /**
      * Checks if the current node is the master node.
-     * 
-     * @return true if the current node is the master node, otherwise false
+     *
+     * @return  true if the current node is the master node, otherwise false
      */
     Boolean isMaster();
 }

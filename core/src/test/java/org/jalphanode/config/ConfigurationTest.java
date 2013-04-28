@@ -22,21 +22,24 @@ package org.jalphanode.config;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
 import java.util.List;
 import java.util.TimeZone;
 
+import org.jalphanode.scheduler.CronIterator;
 import org.jalphanode.scheduler.SchedulerParseException;
-import org.jalphanode.scheduler.iterator.CronIterator;
+
 import org.testng.Assert;
+
 import org.testng.annotations.Test;
 
 import com.google.common.io.Closeables;
 
 /**
  * Configuration tests.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class ConfigurationTest {
 
@@ -47,6 +50,7 @@ public class ConfigurationTest {
         // tasks
         final TasksConfig tasksConfig = config.getTasks();
         Assert.assertNotNull(tasksConfig);
+
         final List<TaskConfig> tasks = tasksConfig.getTask();
         Assert.assertNotNull(tasks);
         Assert.assertEquals(tasks.size(), 0);
@@ -119,7 +123,8 @@ public class ConfigurationTest {
     @Test
     public void testInputStreamConfig() throws ConfigException {
 
-        final String xml = "<jalphanode xmlns=\"urn:jalphanode:config\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+        final String xml =
+            "<jalphanode xmlns=\"urn:jalphanode:config\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
                 + "xsi:schemaLocation=\"urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd\">"
                 + "<tasks><task class=\"org.jalphanode.config.TestTask\" "
                 + "taskName=\"TestName\"><trigger><expression>10 1 * * * ?</expression>"
@@ -142,7 +147,7 @@ public class ConfigurationTest {
             final JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromStream(is);
             this.validateConfig(config);
         } finally {
-        	Closeables.closeQuietly(is);
+            Closeables.closeQuietly(is);
         }
     }
 
@@ -156,17 +161,24 @@ public class ConfigurationTest {
     public void testBuilderConfig() throws SchedulerParseException {
 
         final JAlphaNodeConfig config = new JAlphaNodeConfigBuilder().addTask(new TestTask()).withName("TestName")
-                .withScheduler(new CronIterator("10 1 * * * ?", TimeZone.getTimeZone("Europe/Lisbon")))
-                .addProperty("name", "value").scheduler().withCorePoolSize(5)
-                .addProperty("threadNamePrefix", "task-pool").addProperty("threadPriority", "5").asyncExecutor()
-                .withCorePoolSize(5).addProperty("threadNamePrefix", "async-pool").addProperty("threadPriority", "5")
-                .membership().withNodeName("nodeName").withClusterName("clusterName")
-                .addProperty("configurationFile", "jgroups-udp.xml").build();
+                                                                     .withScheduler(new CronIterator("10 1 * * * ?",
+                                                                             TimeZone.getTimeZone("Europe/Lisbon")))
+                                                                     .addProperty("name", "value").scheduler()
+                                                                     .withCorePoolSize(5)
+                                                                     .addProperty("threadNamePrefix", "task-pool")
+                                                                     .addProperty("threadPriority", "5").asyncExecutor()
+                                                                     .withCorePoolSize(5)
+                                                                     .addProperty("threadNamePrefix", "async-pool")
+                                                                     .addProperty("threadPriority", "5").membership()
+                                                                     .withNodeName("nodeName")
+                                                                     .withClusterName("clusterName")
+                                                                     .addProperty("configurationFile",
+                "jgroups-udp.xml").build();
 
         this.validateConfig(config);
     }
 
-    @Test(expectedExceptions = { ConfigException.class })
+    @Test(expectedExceptions = {ConfigException.class})
     public void testBadFileConfig() throws ConfigException {
         final JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromFile("bad-jalphanode-config.xml");
     }

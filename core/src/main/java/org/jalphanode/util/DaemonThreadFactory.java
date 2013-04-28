@@ -21,6 +21,7 @@
 package org.jalphanode.util;
 
 import java.text.MessageFormat;
+
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,9 +29,9 @@ import com.google.common.base.Preconditions;
 
 /**
  * Default thread factory.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class DaemonThreadFactory implements ThreadFactory {
 
@@ -41,9 +42,9 @@ public class DaemonThreadFactory implements ThreadFactory {
 
     /**
      * Creates a new thread factory.
-     * 
-     * @param threadNamePrefix thread name prefix
-     * @param threadPrio thread priority
+     *
+     * @param  threadNamePrefix  thread name prefix
+     * @param  threadPrio        thread priority
      */
     public DaemonThreadFactory(final String threadNamePrefix, final int threadPrio) {
         this.threadNamePrefix = Preconditions.checkNotNull(threadNamePrefix, "threadNamePrefix");
@@ -52,8 +53,8 @@ public class DaemonThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(final Runnable target) {
-        final Thread thread = new Thread(target, MessageFormat.format("{0}-{1}", this.threadNamePrefix,
-                DaemonThreadFactory.COUNTER.getAndIncrement()));
+        final Thread thread = new Thread(target,
+                MessageFormat.format("{0}-{1}", this.threadNamePrefix, DaemonThreadFactory.COUNTER.getAndIncrement()));
 
         thread.setDaemon(true);
         thread.setPriority(this.threadPrio);
@@ -63,10 +64,11 @@ public class DaemonThreadFactory implements ThreadFactory {
 
     /**
      * Creates a new thread factory.
-     * 
-     * @param threadNamePrefix thread name prefix
-     * @param threadPrio thread priority
-     * @return a new thread factory
+     *
+     * @param   threadNamePrefix  thread name prefix
+     * @param   threadPrio        thread priority
+     *
+     * @return  a new thread factory
      */
     public static ThreadFactory newInstance(final String threadNamePrefix, final int threadPrio) {
         return new DaemonThreadFactory(threadNamePrefix, threadPrio);

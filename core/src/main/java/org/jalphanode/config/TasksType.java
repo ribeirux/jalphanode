@@ -20,7 +20,6 @@
  *******************************************************************************/
 package org.jalphanode.config;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,11 +28,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.google.common.collect.Lists;
+
 /**
  * Scheduler configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "tasksType")
@@ -46,13 +47,13 @@ public class TasksType implements TasksConfig {
      * Initializes internal fields.
      */
     public TasksType() {
-        this.task = new ArrayList<TaskConfig>();
+        this.task = Lists.newArrayList();
     }
 
     /**
      * Gets the {@link List} of properties.
-     * 
-     * @return the {@link List} of properties
+     *
+     * @return  the {@link List} of properties
      */
     @Override
     public List<TaskConfig> getTask() {
@@ -61,8 +62,8 @@ public class TasksType implements TasksConfig {
 
     /**
      * Adds a new task.
-     * 
-     * @param taskConfig task to add
+     *
+     * @param  taskConfig  task to add
      */
     public void addTask(final TaskConfig taskConfig) {
         this.task.add(taskConfig);
@@ -70,8 +71,8 @@ public class TasksType implements TasksConfig {
 
     /**
      * Removes the specified task.
-     * 
-     * @param taskConfig task to remove
+     *
+     * @param  taskConfig  task to remove
      */
     public void removeTask(final TaskConfig taskConfig) {
         this.task.remove(taskConfig);
@@ -79,8 +80,8 @@ public class TasksType implements TasksConfig {
 
     /**
      * Removes the task with the specified index.
-     * 
-     * @param index index of the task to remove.
+     *
+     * @param  index  index of the task to remove.
      */
     public void removeTask(final int index) {
         this.task.remove(index);

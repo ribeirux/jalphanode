@@ -21,14 +21,17 @@
 package org.jalphanode;
 
 import org.jalphanode.Period.PeriodField;
+
 import org.joda.time.DateTime;
+
 import org.testng.Assert;
+
 import org.testng.annotations.Test;
 
 /**
  * Period test.
- * 
- * @author ribeirux
+ *
+ * @author  ribeirux
  */
 public class PeriodTest {
 

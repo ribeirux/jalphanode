@@ -21,84 +21,59 @@
 package org.jalphanode.cluster.jgroups;
 
 import java.net.URL;
+
 import java.text.MessageFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jalphanode.AbstractConfigHolder;
+
 import org.jalphanode.cluster.MembershipException;
+
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.TypedPropertiesConfig;
+
 import org.jalphanode.util.ConfigurationUtils;
 import org.jalphanode.util.FileUtils;
+
 import org.jgroups.Channel;
 import org.jgroups.JChannel;
+
+import com.google.common.base.Preconditions;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
  * Creates a new channel according to the jalphanode configuration.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
-public class ChannelProvider extends AbstractConfigHolder implements Provider<Channel> {
+public class ChannelProvider implements Provider<Channel> {
 
     private static final Log LOG = LogFactory.getLog(ChannelProvider.class);
 
-    /**
-     * JGroups properties.
-     * 
-     * @author ribeirux
-     */
-    public enum JGroupsProperties {
-
-        /**
-         * File path.
-         */
-        CONFIGURATION_FILE("configurationFile"),
-        /**
-         * XMl document.
-         */
-        CONFIGURATION_XML("configurationXML"),
-        /**
-         * String content.
-         */
-        CONFIGURATION_STRING("configurationString");
-
-        private final String key;
-
-        private JGroupsProperties(final String key) {
-            this.key = key;
-        }
-
-        /**
-         * Gets property key.
-         * 
-         * @return property key
-         */
-        public String getKey() {
-            return this.key;
-        }
-    }
+    private final JAlphaNodeConfig config;
 
     /**
      * Creates a new channel provider instance with specified configuration.
-     * 
-     * @param config the configuration
+     *
+     * @param  config  the configuration
      */
     @Inject
     public ChannelProvider(final JAlphaNodeConfig config) {
-        super(config);
+        this.config = Preconditions.checkNotNull(config, "config");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Channel get() {
 
         Channel channel = null;
 
-        final TypedPropertiesConfig props = this.getConfig().getMembership().getProperties();
+        final TypedPropertiesConfig props = this.config.getMembership().getProperties();
 
         if (props.containsKey(JGroupsProperties.CONFIGURATION_FILE.getKey())) {
             final String value = props.getProperty(JGroupsProperties.CONFIGURATION_FILE.getKey());
@@ -149,4 +124,39 @@ public class ChannelProvider extends AbstractConfigHolder implements Provider<Ch
         return channel;
     }
 
+    /**
+     * JGroups properties.
+     *
+     * @author  ribeirux
+     */
+    public enum JGroupsProperties {
+
+        /**
+         * File path.
+         */
+        CONFIGURATION_FILE("configurationFile"),
+        /**
+         * XMl document.
+         */
+        CONFIGURATION_XML("configurationXML"),
+        /**
+         * String content.
+         */
+        CONFIGURATION_STRING("configurationString");
+
+        private final String key;
+
+        private JGroupsProperties(final String key) {
+            this.key = key;
+        }
+
+        /**
+         * Gets property key.
+         *
+         * @return  property key
+         */
+        public String getKey() {
+            return this.key;
+        }
+    }
 }

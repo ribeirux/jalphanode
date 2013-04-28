@@ -24,17 +24,21 @@ import java.util.Date;
 
 import org.jalphanode.annotation.Listener;
 import org.jalphanode.annotation.ViewChanged;
+
 import org.jalphanode.config.ConfigException;
+
 import org.jalphanode.notification.ListenerMethodException;
 import org.jalphanode.notification.ViewChangedEvent;
+
 import org.testng.Assert;
+
 import org.testng.annotations.Test;
 
 /**
  * Default task manager tests.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class DefaultTaskManagerTest {
 
@@ -50,6 +54,7 @@ public class DefaultTaskManagerTest {
 
         final Period period = taskManager.getRunningTime();
         Assert.assertNotNull(period, period.toString());
+
         final Date startDate = taskManager.getStartDate();
         Assert.assertNotNull(startDate, startDate.toString());
         Assert.assertEquals(taskManager.getStatus(), Status.RUNNING);
@@ -76,8 +81,8 @@ public class DefaultTaskManagerTest {
 
         /**
          * Gets the assertError property.
-         * 
-         * @return the assertError property
+         *
+         * @return  the assertError property
          */
         public boolean isExecuted() {
             return this.executed;
@@ -85,8 +90,8 @@ public class DefaultTaskManagerTest {
 
         /**
          * Sets the assertError property.
-         * 
-         * @param assertError the assertError to set
+         *
+         * @param  assertError  the assertError to set
          */
         public void setAssertError(final boolean assertError) {
             this.assertError = assertError;
@@ -94,8 +99,7 @@ public class DefaultTaskManagerTest {
 
     }
 
-    public class ListenerTestChild extends ListenerTest {
-    }
+    public class ListenerTestChild extends ListenerTest { }
 
     @Test
     public void testListener() throws ConfigException {
@@ -130,7 +134,7 @@ public class DefaultTaskManagerTest {
         taskManager.shutdown();
     }
 
-    @Test(expectedExceptions = { ListenerMethodException.class })
+    @Test(expectedExceptions = {ListenerMethodException.class})
     public void testListenerException() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();
@@ -142,11 +146,10 @@ public class DefaultTaskManagerTest {
     public class MethodTest {
 
         @ViewChanged
-        void viewChanged(final ViewChangedEvent event) {
-        }
+        void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = { ListenerMethodException.class })
+    @Test(expectedExceptions = {ListenerMethodException.class})
     public void testListenerMethod() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();
@@ -158,11 +161,10 @@ public class DefaultTaskManagerTest {
     class ClassTest {
 
         @ViewChanged
-        public void viewChanged(final ViewChangedEvent event) {
-        }
+        public void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = { ListenerMethodException.class })
+    @Test(expectedExceptions = {ListenerMethodException.class})
     public void testListenerPublicModifier() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();

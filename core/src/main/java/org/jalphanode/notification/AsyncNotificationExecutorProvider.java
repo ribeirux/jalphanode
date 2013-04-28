@@ -24,21 +24,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import org.jalphanode.AbstractConfigHolder;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.TypedPropertiesConfig;
+
 import org.jalphanode.util.DaemonThreadFactory;
+
+import com.google.common.base.Preconditions;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
  * Default asynchronous executor.
- * 
- * @author ribeirux
- * @version $Revision: 149 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 149 $
  */
-public class AsyncNotificationExecutorProvider extends AbstractConfigHolder implements Provider<ExecutorService> {
+public class AsyncNotificationExecutorProvider implements Provider<ExecutorService> {
 
     private static final String THREAD_PRIORITY_PROPERTY = "threadPriority";
 
@@ -47,6 +49,8 @@ public class AsyncNotificationExecutorProvider extends AbstractConfigHolder impl
     private static final String DEFAULT_THREAD_PREFIX = "async-pool";
 
     private static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
+
+    private final JAlphaNodeConfig config;
 
     private ThreadFactory createThreadFactory(final JAlphaNodeConfig config) {
         final TypedPropertiesConfig props = config.getAsyncExecutor().getProperties();
@@ -62,19 +66,17 @@ public class AsyncNotificationExecutorProvider extends AbstractConfigHolder impl
 
     /**
      * Creates a new asynchronous notification executor provider.
-     * 
-     * @param config the configuration
+     *
+     * @param  config  the configuration
      */
     @Inject
     public AsyncNotificationExecutorProvider(final JAlphaNodeConfig config) {
-        super(config);
+        this.config = Preconditions.checkNotNull(config, "config");
     }
 
     @Override
     public ExecutorService get() {
-
-        final JAlphaNodeConfig config = this.getConfig();
-        final Integer poolSize = config.getAsyncExecutor().getCorePoolSize();
+        final Integer poolSize = this.config.getAsyncExecutor().getCorePoolSize();
 
         return Executors.newScheduledThreadPool(poolSize, this.createThreadFactory(config));
     }

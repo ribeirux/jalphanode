@@ -27,16 +27,17 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation should be used on methods that need to be notified after the task has been executed.
- * <p/>
- * Methods annotated with this annotation should accept a single parameter, a {@link org.jalphanode.notification.Event}
- * otherwise a {@link org.jalphanode.notification.ListenerMethodException} will be thrown when registering your
- * listener.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
- * @see org.jalphanode.annotation.Listener
+ *
+ * <p/>Methods annotated with this annotation should accept a single parameter, a
+ * {@link org.jalphanode.notification.Event} otherwise a {@link org.jalphanode.notification.ListenerMethodException}
+ * will be thrown when registering your listener.
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
+ * @see      org.jalphanode.annotation.Listener
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AfterTask {
+    // no fields
 }

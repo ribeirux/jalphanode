@@ -29,12 +29,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Trigger configuration.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "triggerType", propOrder = { "expression", "timezone" })
+@XmlType(name = "triggerType", propOrder = {"expression", "timezone"})
 public class TriggerType {
 
     private static final String DEFAULT_EXPRESSION = "*/1 * * * * ?";
@@ -57,8 +57,8 @@ public class TriggerType {
 
     /**
      * Gets the expression property.
-     * 
-     * @return the expression property
+     *
+     * @return  the expression property
      */
     public String getExpression() {
         return this.expression;
@@ -66,8 +66,8 @@ public class TriggerType {
 
     /**
      * Sets the expression property.
-     * 
-     * @param expression the expression to set
+     *
+     * @param  expression  the expression to set
      */
     public void setExpression(final String expression) {
         this.expression = expression;
@@ -75,8 +75,8 @@ public class TriggerType {
 
     /**
      * Gets the timezone property.
-     * 
-     * @return the timezone property
+     *
+     * @return  the timezone property
      */
     public String getTimezone() {
         return this.timezone;
@@ -84,8 +84,8 @@ public class TriggerType {
 
     /**
      * Sets the timezone property.
-     * 
-     * @param timezone the timezone to set
+     *
+     * @param  timezone  the timezone to set
      */
     public void setTimezone(final String timezone) {
         this.timezone = timezone;

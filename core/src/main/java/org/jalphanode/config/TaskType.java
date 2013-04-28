@@ -29,17 +29,18 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.jalphanode.scheduler.ScheduleIterator;
+
 import org.jalphanode.task.NoTask;
 import org.jalphanode.task.Task;
 
 /**
  * Task configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "taskType", propOrder = { "scheduleIterator" })
+@XmlType(name = "taskType", propOrder = {"scheduleIterator"})
 public class TaskType extends AbstractPropertiesContainer implements TaskConfig {
 
     private static final String DEFAULT_TASK_NAME = "NoTask";
@@ -72,8 +73,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Gets the taskName property.
-     * 
-     * @return the taskName property
+     *
+     * @return  the taskName property
      */
     @Override
     public String getTaskName() {
@@ -82,8 +83,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Sets the taskName property.
-     * 
-     * @param taskName the taskName to set
+     *
+     * @param  taskName  the taskName to set
      */
     public void setTaskName(final String taskName) {
         this.taskName = taskName;
@@ -91,8 +92,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Gets the task property.
-     * 
-     * @return the task property
+     *
+     * @return  the task property
      */
     @Override
     public Task getTask() {
@@ -101,8 +102,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Sets the task property.
-     * 
-     * @param task the task to set
+     *
+     * @param  task  the task to set
      */
     public void setTask(final Task task) {
         this.task = task;
@@ -110,8 +111,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Gets the scheduleIterator property.
-     * 
-     * @return the scheduleIterator property
+     *
+     * @return  the scheduleIterator property
      */
     @Override
     public ScheduleIterator getScheduleIterator() {
@@ -120,8 +121,8 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
 
     /**
      * Sets the scheduleIterator property.
-     * 
-     * @param scheduleIterator the scheduleIterator to set
+     *
+     * @param  scheduleIterator  the scheduleIterator to set
      */
     public void setScheduleIterator(final ScheduleIterator scheduleIterator) {
         this.scheduleIterator = scheduleIterator;

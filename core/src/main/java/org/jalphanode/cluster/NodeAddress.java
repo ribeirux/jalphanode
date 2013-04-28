@@ -22,10 +22,8 @@ package org.jalphanode.cluster;
 
 /**
  * A destination for an command or operation.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
-public interface NodeAddress {
-
-}
+public interface NodeAddress { }

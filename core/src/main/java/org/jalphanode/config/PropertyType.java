@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Property config.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "property")
@@ -43,8 +43,8 @@ public class PropertyType {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return possible object is {@link String }
+     *
+     * @return  possible object is {@link String }
      */
     public String getName() {
         return this.name;
@@ -52,8 +52,8 @@ public class PropertyType {
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return possible object is {@link String }
+     *
+     * @return  possible object is {@link String }
      */
     public String getValue() {
         return this.value;
@@ -61,8 +61,8 @@ public class PropertyType {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param name allowed object is {@link String }
+     *
+     * @param  name  allowed object is {@link String }
      */
     public void setName(final String name) {
         this.name = name;
@@ -70,8 +70,8 @@ public class PropertyType {
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value allowed object is {@link String }
+     *
+     * @param  value  allowed object is {@link String }
      */
     public void setValue(final String value) {
         this.value = value;

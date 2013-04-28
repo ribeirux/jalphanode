@@ -20,74 +20,76 @@
  *******************************************************************************/
 package org.jalphanode.cluster;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-import org.jalphanode.AbstractConfigHolder;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.MembershipConfig;
 import org.jalphanode.config.TaskConfig;
+
 import org.jalphanode.notification.Notifier;
+
 import org.jalphanode.scheduler.TaskScheduler;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 /**
  * Abstract membership manager.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
-public abstract class AbstractMembershipManager extends AbstractConfigHolder {
+public abstract class AbstractMembershipManager {
 
+    private final JAlphaNodeConfig config;
     private final Notifier notifier;
-    private final MasterNodeElectionPolicy masNodeElectionPolicy;
+    private final MasterNodeElectionPolicy masterNodeElectionPolicy;
     private final TaskScheduler taskScheduler;
     private final List<ScheduledFuture<?>> runningTasks;
 
     /**
      * Initializes internal instance variables.
-     * 
-     * @param config the configuration
-     * @param masNodeElectionPolicy the master node election policy
-     * @param notifier the notifier
-     * @param taskScheduler task scheduler
+     *
+     * @param  config                 the configuration
+     * @param  masNodeElectionPolicy  the master node election policy
+     * @param  notifier               the notifier
+     * @param  taskScheduler          task scheduler
      */
     public AbstractMembershipManager(final JAlphaNodeConfig config,
             final MasterNodeElectionPolicy masNodeElectionPolicy, final Notifier notifier,
             final TaskScheduler taskScheduler) {
-        super(config);
+        this.config = Preconditions.checkNotNull(config, "config");
         this.notifier = Preconditions.checkNotNull(notifier, "notifier");
-        this.masNodeElectionPolicy = Preconditions.checkNotNull(masNodeElectionPolicy, "masNodeElectionPolicy");
+        this.masterNodeElectionPolicy = Preconditions.checkNotNull(masNodeElectionPolicy, "masNodeElectionPolicy");
         this.taskScheduler = Preconditions.checkNotNull(taskScheduler, "taskExecutor");
-        this.runningTasks = new ArrayList<ScheduledFuture<?>>();
+        this.runningTasks = Lists.newLinkedList();
     }
 
     /**
      * Gets the masNodeElectionPolicy property.
-     * 
-     * @return the masNodeElectionPolicy property
+     *
+     * @return  the masNodeElectionPolicy property
      */
-    protected MasterNodeElectionPolicy getMasNodeElectionPolicy() {
-        return this.masNodeElectionPolicy;
+    protected MasterNodeElectionPolicy getMasterNodeElectionPolicy() {
+        return this.masterNodeElectionPolicy;
     }
 
     /**
      * This method should be called when the topology changes. Accesses to this method should be synchronized.
-     * 
-     * @param members new members of the group
-     * @param oldMembers old members of the group
-     * @param nodeAddress address of the current node
-     * @param masterAddress address of the master node
-     * @param isMasterNode true if the current node is the master, otherwise false
+     *
+     * @param  members        new members of the group
+     * @param  oldMembers     old members of the group
+     * @param  nodeAddress    address of the current node
+     * @param  masterAddress  address of the master node
+     * @param  isMasterNode   true if the current node is the master, otherwise false
      */
     protected void topologyChanged(final List<NodeAddress> members, final List<NodeAddress> oldMembers,
             final NodeAddress nodeAddress, final NodeAddress masterAddress, final boolean isMasterNode) {
 
         if (isMasterNode) {
             if (this.runningTasks.isEmpty()) {
-                final List<TaskConfig> tasks = this.getConfig().getTasks().getTask();
+                final List<TaskConfig> tasks = this.config.getTasks().getTask();
                 for (final TaskConfig taskConfig : tasks) {
                     final Runnable decoratedTask = this.decorateTask(taskConfig);
                     final ScheduledFuture<?> scheduledTask = this.taskScheduler.schedule(decoratedTask,
@@ -106,10 +108,10 @@ public abstract class AbstractMembershipManager extends AbstractConfigHolder {
             this.runningTasks.clear();
         }
 
-        final MembershipConfig membershipConfs = this.getConfig().getMembership();
+        final MembershipConfig membershipConfs = this.config.getMembership();
 
         this.notifier.notifyViewChange(membershipConfs.getNodeName(), membershipConfs.getClusterName(), members,
-                oldMembers, nodeAddress, masterAddress, isMasterNode);
+            oldMembers, nodeAddress, masterAddress, isMasterNode);
     }
 
     private Runnable decorateTask(final TaskConfig taskConfig) {
@@ -129,11 +131,20 @@ public abstract class AbstractMembershipManager extends AbstractConfigHolder {
 
     /**
      * Gets the cluster name.
-     * 
-     * @return the name of the cluster. Null if running in local mode.
+     *
+     * @return  the name of the cluster. Null if running in local mode.
      */
     public String getClusterName() {
-        return this.getConfig().getMembership().getClusterName();
+        return this.config.getMembership().getClusterName();
+    }
+
+    /**
+     * Gets the configuration.
+     *
+     * @return  the configuration
+     */
+    public JAlphaNodeConfig getConfig() {
+        return config;
     }
 
     /**
@@ -148,29 +159,29 @@ public abstract class AbstractMembershipManager extends AbstractConfigHolder {
 
     /**
      * Gets the node address.
-     * 
-     * @return then node address
+     *
+     * @return  then node address
      */
     public abstract NodeAddress getNodeAddress();
 
     /**
      * Gets the master node address.
-     * 
-     * @return the master node address
+     *
+     * @return  the master node address
      */
     public abstract NodeAddress getMasterNodeAddress();
 
     /**
      * Checks if this node is a master node.
-     * 
-     * @return true if the node is a master node, otherwise false
+     *
+     * @return  true if the node is a master node, otherwise false
      */
     public abstract boolean isMasterNode();
 
     /**
      * Gets the members of the cluster.
-     * 
-     * @return the members of the cluster
+     *
+     * @return  the members of the cluster
      */
     public abstract List<NodeAddress> getMembers();
 

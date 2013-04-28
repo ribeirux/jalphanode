@@ -22,9 +22,9 @@ package org.jalphanode.config;
 
 /**
  * Thrown if a configuration class was not found.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class ConfigClassNotFoundException extends ConfigException {
 
@@ -39,9 +39,9 @@ public class ConfigClassNotFoundException extends ConfigException {
 
     /**
      * Constructs a new exception with the specified detail message.
-     * 
-     * @param message the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
-     *            method.
+     *
+     * @param  message  the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
+     *                  method.
      */
     public ConfigClassNotFoundException(final String message) {
         super(message);
@@ -49,10 +49,10 @@ public class ConfigClassNotFoundException extends ConfigException {
 
     /**
      * Constructs a new exception with the specified detail message and cause.
-     * 
-     * @param message the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  message  the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
+     * @param  cause    the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>
+     *                  null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public ConfigClassNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
@@ -60,9 +60,9 @@ public class ConfigClassNotFoundException extends ConfigException {
 
     /**
      * Constructs a new exception with the specified cause.
-     * 
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
-     *            value is permitted, and indicates that the cause is nonexistent or unknown.)
+     *
+     * @param  cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     *                value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public ConfigClassNotFoundException(final Throwable cause) {
         super(cause);

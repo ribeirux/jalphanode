@@ -21,21 +21,22 @@
 package org.jalphanode.config;
 
 import java.text.MessageFormat;
+
 import java.util.TimeZone;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+import org.jalphanode.scheduler.CronIterator;
 import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.scheduler.SchedulerParseException;
-import org.jalphanode.scheduler.iterator.CronIterator;
 
 import com.google.common.base.Preconditions;
 
 /**
  * Converts a trigger into a Schedule iterator.
- * 
- * @author ribeirux
- * @version $Revision: 118 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 118 $
  */
 public class CronTriggerAdapter extends XmlAdapter<TriggerType, ScheduleIterator> {
 
@@ -59,8 +60,8 @@ public class CronTriggerAdapter extends XmlAdapter<TriggerType, ScheduleIterator
 
     /**
      * Creates default scheduler iterator.
-     * 
-     * @return the default schedule iterator
+     *
+     * @return  the default schedule iterator
      */
     public static ScheduleIterator buildDefaultScheduleIterator() {
 

@@ -26,60 +26,61 @@ import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.jalphanode.cluster.AbstractMembershipManager;
+
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeType;
+
 import org.jalphanode.notification.Notifier;
+
 import org.jalphanode.scheduler.TaskScheduler;
+
 import org.joda.time.DateTime;
 
 import com.google.common.base.Preconditions;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 
 /**
  * Default task manager.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
-public class DefaultTaskManager extends AbstractConfigHolder implements TaskManager {
+public class DefaultTaskManager implements TaskManager {
 
     private static final Log LOG = LogFactory.getLog(DefaultTaskManager.class);
 
     private final Injector injector;
-
     private DateTime startDateTime;
-
     private Status status;
 
     /**
      * Constructs a new instance using default configuration. See {@link JAlphaNodeConfig} for more details.
      */
     public DefaultTaskManager() {
-        this(null);
+        this(new JAlphaNodeType());
     }
 
     /**
      * Constructs a new instance with specified configuration.
-     * 
-     * @param config configuration to use. If null, a default instance is created
+     *
+     * @param  config  configuration to use. If null, a default instance is created
      */
     public DefaultTaskManager(final JAlphaNodeConfig config) {
-        this(config, null);
+        this(new InjectorModule(Preconditions.checkNotNull(config, "config")));
     }
 
     /**
-     * Constructs a new instance with specified configuration and guice injector.
-     * 
-     * @param config configuration to use. If null, a default instance is created. See {@link JAlphaNodeConfig} for
-     *            details of these defaults.
-     * @param injector guice injector
+     * Constructs a new instance with specified moudule injector.
+     *
+     * @param  module  injector module
      */
-    public DefaultTaskManager(final JAlphaNodeConfig config, final Injector injector) {
-        super(config == null ? new JAlphaNodeType() : config);
-        this.injector = (injector == null ? this.createDefaultInjector() : injector);
+    public DefaultTaskManager(final InjectorModule module) {
+        this.injector = Guice.createInjector(Stage.PRODUCTION, Preconditions.checkNotNull(module, "module"));
         this.status = Status.INSTANTIATED;
     }
 
@@ -88,11 +89,11 @@ public class DefaultTaskManager extends AbstractConfigHolder implements TaskMana
      */
     @Override
     public Period getRunningTime() {
-        if (this.status.isRunning()) {
-            return new PeriodImpl(this.startDateTime, new DateTime());
-        } else {
+        if (!this.status.isRunning()) {
             throw new IllegalStateException("JAlphaNode is not running");
         }
+
+        return new PeriodImpl(this.startDateTime, new DateTime());
     }
 
     /**
@@ -100,11 +101,11 @@ public class DefaultTaskManager extends AbstractConfigHolder implements TaskMana
      */
     @Override
     public Date getStartDate() {
-        if (this.status.isRunning()) {
-            return this.startDateTime.toDate();
-        } else {
+        if (!this.status.isRunning()) {
             throw new IllegalStateException("JAlphaNode is not running");
         }
+
+        return this.startDateTime.toDate();
     }
 
     /**
@@ -136,16 +137,15 @@ public class DefaultTaskManager extends AbstractConfigHolder implements TaskMana
      */
     @Override
     public void start() {
-        if (this.status.isStartAllowed()) {
-            DefaultTaskManager.LOG.info("Starting task manager...");
-            this.injector.getInstance(AbstractMembershipManager.class).connect();
-            this.startDateTime = new DateTime();
-            this.status = Status.RUNNING;
-            DefaultTaskManager.LOG.info("Task manager started!");
-        } else {
+        if (!this.status.isStartAllowed()) {
             throw new IllegalStateException("Start not allowed");
         }
 
+        DefaultTaskManager.LOG.info("Starting task manager...");
+        this.injector.getInstance(AbstractMembershipManager.class).connect();
+        this.startDateTime = new DateTime();
+        this.status = Status.RUNNING;
+        DefaultTaskManager.LOG.info("Task manager started!");
     }
 
     /**
@@ -153,16 +153,17 @@ public class DefaultTaskManager extends AbstractConfigHolder implements TaskMana
      */
     @Override
     public void shutdown() {
-        if (this.status.isShutdownAllowed()) {
-            DefaultTaskManager.LOG.info("Shutting down task manager...");
-            this.injector.getInstance(AbstractMembershipManager.class).shutdown();
-            this.injector.getInstance(TaskScheduler.class).shutdown();
-            this.injector.getInstance(ExecutorService.class).shutdown();
-            this.status = Status.TERMINATED;
-            DefaultTaskManager.LOG.info("Shutdown complete!");
-        } else {
+        if (!this.status.isShutdownAllowed()) {
             throw new IllegalStateException("Shutdown not allowed");
         }
+
+        DefaultTaskManager.LOG.info("Shutting down task manager...");
+        this.injector.getInstance(AbstractMembershipManager.class).shutdown();
+        this.injector.getInstance(TaskScheduler.class).shutdown();
+        this.injector.getInstance(ExecutorService.class).shutdown();
+        this.status = Status.TERMINATED;
+        DefaultTaskManager.LOG.info("Shutdown complete!");
+
     }
 
     /**
@@ -173,7 +174,26 @@ public class DefaultTaskManager extends AbstractConfigHolder implements TaskMana
         return this.status;
     }
 
-    private Injector createDefaultInjector() {
-        return Guice.createInjector(Stage.PRODUCTION, new BinderModule(this.getConfig()));
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JAlphaNodeConfig getConfig() {
+        return this.injector.getInstance(JAlphaNodeConfig.class);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("DefaultTaskManager [injector=");
+        builder.append(injector);
+        builder.append(", startDateTime=");
+        builder.append(startDateTime);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append("]");
+
+        return builder.toString();
+    }
+
 }

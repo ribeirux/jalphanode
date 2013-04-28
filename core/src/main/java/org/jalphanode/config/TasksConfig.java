@@ -24,16 +24,16 @@ import java.util.List;
 
 /**
  * Read only scheduled iterator configuration.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface TasksConfig {
 
     /**
      * Gets all configured tasks.
-     * 
-     * @return a {@link List} with all configured tasks
+     *
+     * @return  a {@link List} with all configured tasks
      */
     List<TaskConfig> getTask();
 }

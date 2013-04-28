@@ -18,9 +18,8 @@
  *
  * $Id$
  *******************************************************************************/
-package org.jalphanode.scheduler.iterator;
+package org.jalphanode.scheduler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
@@ -30,17 +29,16 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.jalphanode.scheduler.ScheduleIterator;
-import org.jalphanode.scheduler.SchedulerParseException;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 /**
  * Cron iterator. The pattern is a list of six single space-separated fields: representing second, minute, hour, day,
  * month, weekday. Month and weekday names can be given as the first three letters of the English names.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public class CronIterator implements ScheduleIterator {
 
@@ -68,9 +66,10 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Construct a new instance with specified pattern and default timezone.
-     * 
-     * @param expression a space-separated list of time fields
-     * @throws SchedulerParseException thrown if the pattern cannot be parse
+     *
+     * @param   expression  a space-separated list of time fields
+     *
+     * @throws  SchedulerParseException  thrown if the pattern cannot be parse
      */
     public CronIterator(final String expression) throws SchedulerParseException {
         this(expression, TimeZone.getDefault());
@@ -78,10 +77,11 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Construct a new instance with specified pattern and timeZone.
-     * 
-     * @param expression a space-separated list of time fields
-     * @param timeZone the TimeZone to use for generated trigger times
-     * @throws SchedulerParseException thrown if the pattern cannot be parse
+     *
+     * @param   expression  a space-separated list of time fields
+     * @param   timeZone    the TimeZone to use for generated trigger times
+     *
+     * @throws  SchedulerParseException  thrown if the pattern cannot be parse
      */
     public CronIterator(final String expression, final TimeZone timeZone) throws SchedulerParseException {
         this.expression = Preconditions.checkNotNull(expression, "expression");
@@ -91,8 +91,8 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Gets the expression property.
-     * 
-     * @return the expression property
+     *
+     * @return  the expression property
      */
     public String getExpression() {
         return this.expression;
@@ -100,8 +100,8 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Gets the timeZone property.
-     * 
-     * @return the timeZone property
+     *
+     * @return  the timeZone property
      */
     public TimeZone getTimeZone() {
         return this.timeZone;
@@ -110,30 +110,31 @@ public class CronIterator implements ScheduleIterator {
     /**
      * Get the next {@link Date} in the sequence matching the Cron pattern and after the value provided. The return
      * value will have a whole number of seconds, and will be after the input value.
-     * 
-     * @param date a seed value
-     * @return the next value matching the pattern
+     *
+     * @param   date  a seed value
+     *
+     * @return  the next value matching the pattern
      */
     @Override
     public Date next(final Date date) {
         /*
-        The plan:
-
-        1 Round up to the next whole second
-
-        2 If seconds match move on, otherwise find the next match:
-        2.1 If next match is in the next minute then roll forwards
-
-        3 If minute matches move on, otherwise find the next match
-        3.1 If next match is in the next hour then roll forwards
-        3.2 Reset the seconds and go to 2
-
-        4 If hour matches move on, otherwise find the next match
-        4.1 If next match is in the next day then roll forwards,
-        4.2 Reset the minutes and seconds and go to 2
-        
-        ...
-        */
+         * The plan:
+         *
+         * 1 Round up to the next whole second
+         *
+         * 2 If seconds match move on, otherwise find the next match:
+         * 2.1 If next match is in the next minute then roll forwards
+         *
+         * 3 If minute matches move on, otherwise find the next match
+         * 3.1 If next match is in the next hour then roll forwards
+         * 3.2 Reset the seconds and go to 2
+         *
+         * 4 If hour matches move on, otherwise find the next match
+         * 4.1 If next match is in the next day then roll forwards,
+         * 4.2 Reset the minutes and seconds and go to 2
+         *
+         * ...
+         */
 
         final Calendar calendar = new GregorianCalendar();
         calendar.setTimeZone(this.timeZone);
@@ -149,7 +150,7 @@ public class CronIterator implements ScheduleIterator {
     }
 
     private void doNext(final Calendar calendar, final int dot) {
-        final List<Integer> resets = new ArrayList<Integer>();
+        final List<Integer> resets = Lists.newLinkedList();
 
         final int second = calendar.get(Calendar.SECOND);
         final List<Integer> emptyList = Collections.emptyList();
@@ -191,8 +192,10 @@ public class CronIterator implements ScheduleIterator {
         final int updateMonth = this.findNext(this.months, month, calendar, Calendar.MONTH, Calendar.YEAR, resets);
         if (month != updateMonth) {
             if (calendar.get(Calendar.YEAR) - dot > 4) {
-                throw new IllegalStateException("Invalid cron expression led to runaway search for next trigger");
+                throw new IllegalArgumentException("Invalid cron expression " + expression
+                        + " led to runaway search for next trigger");
             }
+
             this.doNext(calendar, dot);
         }
 
@@ -205,6 +208,7 @@ public class CronIterator implements ScheduleIterator {
 
         int nextDay = dayOfMonth;
         int currentDayOfWeek = dayOfWeek;
+
         // the DAY_OF_WEEK values in java.util.Calendar start with 1 (Sunday),
         // but in the cron pattern, they start with 0, so we subtract 1 here
         while ((!daysOfMonth.get(dayOfMonth) || !daysOfWeek.get(currentDayOfWeek - 1))
@@ -215,8 +219,9 @@ public class CronIterator implements ScheduleIterator {
 
             this.reset(calendar, resets);
         }
+
         if (count >= CronIterator.MAX_DAYS) {
-            throw new IllegalStateException("Overflow in day for expression=" + this.expression);
+            throw new IllegalArgumentException("Overflow in day for expression=" + this.expression);
         }
 
         return nextDay;
@@ -224,29 +229,33 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Search the bits provided for the next set bit after the value provided, and reset the calendar.
-     * 
-     * @param bits a {@link BitSet} representing the allowed values of the field
-     * @param value the current value of the field
-     * @param calendar the calendar to increment as we move through the bits
-     * @param field the field to increment in the calendar (@see {@link Calendar} for the static constants defining
-     *            valid fields)
-     * @param lowerOrders the Calendar field ids that should be reset (i.e. the ones of lower significance than the
-     *            field of interest)
-     * @return the value of the calendar field that is next in the sequence
+     *
+     * @param   bits         a {@link BitSet} representing the allowed values of the field
+     * @param   value        the current value of the field
+     * @param   calendar     the calendar to increment as we move through the bits
+     * @param   field        the field to increment in the calendar (@see {@link Calendar} for the static constants
+     *                       defining valid fields)
+     * @param   lowerOrders  the Calendar field ids that should be reset (i.e. the ones of lower significance than the
+     *                       field of interest)
+     *
+     * @return  the value of the calendar field that is next in the sequence
      */
     private int findNext(final BitSet bits, final int value, final Calendar calendar, final int field,
             final int nextField, final List<Integer> lowerOrders) {
         int nextValue = bits.nextSetBit(value);
+
         // roll over if needed
         if (nextValue == -1) {
             calendar.add(nextField, 1);
             this.reset(calendar, Arrays.asList(field));
             nextValue = bits.nextSetBit(0);
         }
+
         if (nextValue != value) {
             calendar.set(field, nextValue);
             this.reset(calendar, lowerOrders);
         }
+
         return nextValue;
     }
 
@@ -266,8 +275,8 @@ public class CronIterator implements ScheduleIterator {
         final String[] fields = expression.split(" ");
 
         if (fields.length != 6) {
-            throw new SchedulerParseException(String.format(
-                    "Cron expression must consist of 6 fields (found %d in %s)", fields.length, expression));
+            throw new SchedulerParseException(String.format("Cron expression must consist of 6 fields (found %d in %s)",
+                    fields.length, expression));
         }
 
         this.setNumberHits(this.seconds, fields[0], 0, 60);
@@ -278,6 +287,7 @@ public class CronIterator implements ScheduleIterator {
         this.setDays(this.daysOfWeek, this.replaceOrdinals(fields[5], "SUN,MON,TUE,WED,THU,FRI,SAT"), 8);
 
         if (this.daysOfWeek.get(7)) {
+
             // Sunday can be represented as 0 or 7
             this.daysOfWeek.set(0);
             this.daysOfWeek.clear(7);
@@ -286,8 +296,8 @@ public class CronIterator implements ScheduleIterator {
 
     /**
      * Replace the values in the commaSeparatedList (case insensitive) with their index in the list.
-     * 
-     * @return a new string with the values from the list replaced
+     *
+     * @return  a new string with the values from the list replaced
      */
     private String replaceOrdinals(final String value, final String commaSeparatedList) {
         final String[] list = commaSeparatedList.toUpperCase().split(",");
@@ -301,8 +311,10 @@ public class CronIterator implements ScheduleIterator {
     }
 
     private void setDaysOfMonth(final BitSet bits, final String field) throws SchedulerParseException {
+
         // Days of month start with 1 (in Cron and Calendar) so add one
         this.setDays(bits, field, CronIterator.MAX_DAYS_MONTH + 1);
+
         // ... and remove it from the front
         bits.clear(0);
     }
@@ -312,6 +324,7 @@ public class CronIterator implements ScheduleIterator {
         if (currentField.contains("?")) {
             currentField = "*";
         }
+
         this.setNumberHits(bits, currentField, 0, max);
     }
 
@@ -319,8 +332,10 @@ public class CronIterator implements ScheduleIterator {
 
         final String currentValue = this.replaceOrdinals(value, "FOO,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC");
         final BitSet currentMonths = new BitSet(13);
+
         // Months start with 1 in Cron and 0 in Calendar, so push the values first into a longer bit set
         this.setNumberHits(currentMonths, currentValue, 1, CronIterator.NUMBER_MONTHS + 1);
+
         // ... and then rotate it to the front of the months
         for (int i = 1; i <= CronIterator.NUMBER_MONTHS; i++) {
             if (currentMonths.get(i)) {
@@ -330,11 +345,12 @@ public class CronIterator implements ScheduleIterator {
     }
 
     private void setNumberHits(final BitSet bits, final String value, final int min, final int max)
-            throws SchedulerParseException {
+        throws SchedulerParseException {
         final String[] fields = value.split(",");
 
         for (final String field : fields) {
             if (!field.contains("/")) {
+
                 // Not an incrementer so it must be a range (possibly empty)
                 final int[] range = this.getRange(field, min, max);
                 bits.set(range[0], range[1] + 1);
@@ -343,10 +359,12 @@ public class CronIterator implements ScheduleIterator {
                 if (split.length > 2) {
                     throw new SchedulerParseException("Incrementer has more than two fields: " + field);
                 }
+
                 final int[] range = this.getRange(split[0], min, max);
                 if (!split[0].contains("-")) {
                     range[1] = max - 1;
                 }
+
                 final int delta = Integer.valueOf(split[1]);
                 for (int i = range[0]; i <= range[1]; i += delta) {
                     bits.set(i);
@@ -371,12 +389,15 @@ public class CronIterator implements ScheduleIterator {
                 if (split.length > 2) {
                     throw new SchedulerParseException("Range has more than two fields: " + field);
                 }
+
                 result[0] = Integer.valueOf(split[0]);
                 result[1] = Integer.valueOf(split[1]);
             }
+
             if ((result[0] >= max) || (result[1] >= max)) {
                 throw new SchedulerParseException("Range exceeds maximum (" + max + "): " + field);
             }
+
             if ((result[0] < min) || (result[1] < min)) {
                 throw new SchedulerParseException("Range less than minimum (" + min + "): " + field);
             }

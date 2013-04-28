@@ -30,12 +30,12 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Encapsulates the configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "jalphanodeConfiguration", propOrder = { "tasks", "taskScheduler", "asyncExecutor", "membership" })
+@XmlType(name = "jalphanodeConfiguration", propOrder = {"tasks", "taskScheduler", "asyncExecutor", "membership"})
 @XmlRootElement(name = "jalphanode")
 public class JAlphaNodeType implements JAlphaNodeConfig {
 
@@ -47,7 +47,7 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
     /**
      * Supported file extensions.
      */
-    public static final String[] FILE_EXTENSIONS = { "xml" };
+    public static final String[] FILE_EXTENSIONS = {"xml"};
 
     @XmlElement
     private TasksType tasks;
@@ -73,8 +73,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Gets the tasks property.
-     * 
-     * @return the tasks property
+     *
+     * @return  the tasks property
      */
     @Override
     public TasksType getTasks() {
@@ -83,8 +83,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Sets the tasks property.
-     * 
-     * @param tasks the tasks to set
+     *
+     * @param  tasks  the tasks to set
      */
     public void setTasks(final TasksType tasks) {
         this.tasks = tasks;
@@ -92,8 +92,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Gets the taskScheduler property.
-     * 
-     * @return the taskScheduler property
+     *
+     * @return  the taskScheduler property
      */
     @Override
     public TaskSchedulerType getTaskScheduler() {
@@ -102,8 +102,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Sets the taskScheduler property.
-     * 
-     * @param taskScheduler the taskScheduler to set
+     *
+     * @param  taskScheduler  the taskScheduler to set
      */
     public void setTaskScheduler(final TaskSchedulerType taskScheduler) {
         this.taskScheduler = taskScheduler;
@@ -111,8 +111,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Gets the asyncExecutor property.
-     * 
-     * @return the asyncExecutor property
+     *
+     * @return  the asyncExecutor property
      */
     @Override
     public AsyncExecutorType getAsyncExecutor() {
@@ -121,8 +121,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Sets the asyncExecutor property.
-     * 
-     * @param asyncExecutor the asyncExecutor to set
+     *
+     * @param  asyncExecutor  the asyncExecutor to set
      */
     public void setAsyncExecutor(final AsyncExecutorType asyncExecutor) {
         this.asyncExecutor = asyncExecutor;
@@ -130,8 +130,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Gets the membership property.
-     * 
-     * @return the membership property
+     *
+     * @return  the membership property
      */
     @Override
     public MembershipType getMembership() {
@@ -140,8 +140,8 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
 
     /**
      * Sets the membership property.
-     * 
-     * @param membership the membership to set
+     *
+     * @param  membership  the membership to set
      */
     public void setMembership(final MembershipType membership) {
         this.membership = membership;

@@ -22,7 +22,9 @@ package org.jalphanode.notification;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import java.text.MessageFormat;
+
 import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
@@ -32,9 +34,9 @@ import com.google.common.base.Preconditions;
 
 /**
  * Invokes a listener method.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class ListenerInvocation {
 
@@ -46,10 +48,10 @@ public class ListenerInvocation {
 
     /**
      * Creates a new listener invocation.
-     * 
-     * @param target listener
-     * @param method method to run
-     * @param executor executor
+     *
+     * @param  target    listener
+     * @param  method    method to run
+     * @param  executor  executor
      */
     public ListenerInvocation(final Object target, final Method method, final ExecutorService executor) {
         this.target = Preconditions.checkNotNull(target, "target");
@@ -59,8 +61,8 @@ public class ListenerInvocation {
 
     /**
      * Gets the method property.
-     * 
-     * @return the method property
+     *
+     * @return  the method property
      */
     public Method getMethod() {
         return this.method;
@@ -68,8 +70,8 @@ public class ListenerInvocation {
 
     /**
      * Gets the target property.
-     * 
-     * @return the target property
+     *
+     * @return  the target property
      */
     public Object getTarget() {
         return this.target;
@@ -77,8 +79,8 @@ public class ListenerInvocation {
 
     /**
      * Invokes the listener method.
-     * 
-     * @param event event to pass to the method
+     *
+     * @param  event  event to pass to the method
      */
     public void invoke(final Object event) {
         Preconditions.checkNotNull(event, "event");

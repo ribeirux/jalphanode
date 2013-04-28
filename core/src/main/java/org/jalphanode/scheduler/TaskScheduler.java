@@ -25,19 +25,20 @@ import java.util.concurrent.ScheduledFuture;
 
 /**
  * Task scheduler.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface TaskScheduler {
 
     /**
      * Creates and executes periodic task.
-     * 
-     * @param command the task to execute
-     * @param scheduleIterator iterator which calcultes the next timeout
-     * @return a ScheduledFuture representing pending completion of the task, and whose <tt>get()</tt> method will throw
-     *         an exception upon cancellation
+     *
+     * @param   command           the task to execute
+     * @param   scheduleIterator  iterator which calcultes the next timeout
+     *
+     * @return  a ScheduledFuture representing pending completion of the task, and whose <tt>get()</tt> method will
+     *          throw an exception upon cancellation
      */
     ScheduledFuture<?> schedule(Runnable command, ScheduleIterator scheduleIterator);
 
@@ -51,12 +52,12 @@ public interface TaskScheduler {
      * Attempts to stop all actively executing tasks, halts the processing of waiting tasks, and returns a list of the
      * tasks that were awaiting execution. These tasks are drained (removed) from the task queue upon return from this
      * method.
-     * <p>
-     * There are no guarantees beyond best-effort attempts to stop processing actively executing tasks. This
+     *
+     * <p>There are no guarantees beyond best-effort attempts to stop processing actively executing tasks. This
      * implementation cancels tasks via {@link Thread#interrupt}, so any task that fails to respond to interrupts may
      * never terminate.
-     * 
-     * @return list of tasks that never commenced execution
+     *
+     * @return  list of tasks that never commenced execution
      */
     List<Runnable> shutdownNow();
 

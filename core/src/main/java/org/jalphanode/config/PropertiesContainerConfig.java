@@ -22,16 +22,16 @@ package org.jalphanode.config;
 
 /**
  * Generic configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface PropertiesContainerConfig {
 
     /**
      * Gets the properties of the component.
-     * 
-     * @return the properties of the component
+     *
+     * @return  the properties of the component
      */
     TypedPropertiesConfig getProperties();
 

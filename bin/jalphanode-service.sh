@@ -30,6 +30,8 @@ UI_JAR="jalphanode-ui.jar"
 
 LOG_DIR="$SCRIPT_FOLDER/../log"
 MAIN_CLASS="org.jalphanode.ui.JalphaNodeCli"
+
+# JGroups bind address -Djgroups.bind_addr=1.2.3.4.
 JVM_PARAMS="$JVM_PARAMS -Djava.net.preferIPv4Stack=true -Dlog4j.logDir=$LOG_DIR"
 
 JALPHANODE_CONF="$SCRIPT_FOLDER/../etc/jalphanode-config.xml"

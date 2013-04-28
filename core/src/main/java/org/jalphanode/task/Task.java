@@ -24,16 +24,16 @@ import org.jalphanode.config.TaskConfig;
 
 /**
  * Task interface. The task that needs high availability should implement this interface.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface Task {
 
     /**
      * Method executed on each timeout.
-     * 
-     * @param config the configuration
+     *
+     * @param  config  the configuration
      */
     void onTimeout(TaskConfig config);
 }

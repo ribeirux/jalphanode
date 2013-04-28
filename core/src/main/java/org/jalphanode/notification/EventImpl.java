@@ -26,36 +26,30 @@ import org.jalphanode.cluster.NodeAddress;
 
 /**
  * Event implementation.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class EventImpl implements ViewChangedEvent {
 
     private final String componentName;
-
     private final String clusterName;
-
     private final NodeAddress localAddress;
-
     private final NodeAddress masterAddress;
-
     private final List<NodeAddress> newMembers;
-
     private final List<NodeAddress> oldMembers;
-
     private final Boolean master;
 
     /**
      * Creates a new immutable event.
-     * 
-     * @param componentName the name of the node
-     * @param clusterName the name of the cluster
-     * @param localAddress local address
-     * @param masterAddress the address of the master node
-     * @param newMembers the current members of the group
-     * @param oldMembers the old members of the group
-     * @param master true if the local node is the master otherwise false
+     *
+     * @param  componentName  the name of the node
+     * @param  clusterName    the name of the cluster
+     * @param  localAddress   local address
+     * @param  masterAddress  the address of the master node
+     * @param  newMembers     the current members of the group
+     * @param  oldMembers     the old members of the group
+     * @param  master         true if the local node is the master otherwise false
      */
     public EventImpl(final String componentName, final String clusterName, final NodeAddress localAddress,
             final NodeAddress masterAddress, final List<NodeAddress> newMembers, final List<NodeAddress> oldMembers,
@@ -71,8 +65,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the componentName property.
-     * 
-     * @return the componentName property
+     *
+     * @return  the componentName property
      */
     @Override
     public String getComponentName() {
@@ -81,8 +75,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the clusterName property.
-     * 
-     * @return the clusterName property
+     *
+     * @return  the clusterName property
      */
     @Override
     public String getClusterName() {
@@ -91,8 +85,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the localAddress property.
-     * 
-     * @return the localAddress property
+     *
+     * @return  the localAddress property
      */
     @Override
     public NodeAddress getLocalAddress() {
@@ -101,8 +95,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the masterAddress property.
-     * 
-     * @return the masterAddress property
+     *
+     * @return  the masterAddress property
      */
     @Override
     public NodeAddress getMasterAddress() {
@@ -111,8 +105,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the newMembers property.
-     * 
-     * @return the newMembers property
+     *
+     * @return  the newMembers property
      */
     @Override
     public List<NodeAddress> getNewMembers() {
@@ -121,8 +115,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the oldMemebers property.
-     * 
-     * @return the oldMemebers property
+     *
+     * @return  the oldMemebers property
      */
     @Override
     public List<NodeAddress> getOldMembers() {
@@ -131,8 +125,8 @@ public class EventImpl implements ViewChangedEvent {
 
     /**
      * Gets the master property.
-     * 
-     * @return the master property
+     *
+     * @return  the master property
      */
     @Override
     public Boolean isMaster() {

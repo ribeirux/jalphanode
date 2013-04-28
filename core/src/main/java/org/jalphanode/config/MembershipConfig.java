@@ -22,23 +22,23 @@ package org.jalphanode.config;
 
 /**
  * Membership configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface MembershipConfig extends PropertiesContainerConfig {
 
     /**
      * Gets the node name.
-     * 
-     * @return the node name
+     *
+     * @return  the node name
      */
     String getNodeName();
 
     /**
      * Gets the cluster name.
-     * 
-     * @return cluster name
+     *
+     * @return  cluster name
      */
     String getClusterName();
 

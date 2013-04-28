@@ -27,9 +27,9 @@ import com.google.common.base.Preconditions;
 
 /**
  * Time period implementation.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class PeriodImpl extends BasePeriod implements Period {
 
@@ -37,9 +37,9 @@ public class PeriodImpl extends BasePeriod implements Period {
 
     /**
      * Creates a new instance.
-     * 
-     * @param start start instant
-     * @param end end instant
+     *
+     * @param  start  start instant
+     * @param  end    end instant
      */
     public PeriodImpl(final ReadableInstant start, final ReadableInstant end) {
         super(start, end, null);

@@ -23,15 +23,16 @@ package org.jalphanode.config;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.jalphanode.task.Task;
+
 import org.jalphanode.util.ConfigurationUtils;
 
 import com.google.common.base.Preconditions;
 
 /**
  * Converts a class name into a java Class.
- * 
- * @author ribeirux
- * @version $Revision: 118 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 118 $
  */
 public class TaskClassAdapter extends XmlAdapter<String, Task> {
 
@@ -43,6 +44,6 @@ public class TaskClassAdapter extends XmlAdapter<String, Task> {
     @Override
     public Task unmarshal(final String taskClass) throws Exception {
         return ConfigurationUtils.getClass(Preconditions.checkNotNull(taskClass, "taskClass"), Task.class)
-                .newInstance();
+                                 .newInstance();
     }
 }

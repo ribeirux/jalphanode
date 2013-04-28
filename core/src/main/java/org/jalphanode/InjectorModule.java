@@ -27,33 +27,38 @@ import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.SimpleMasterNodeElectionPolicy;
 import org.jalphanode.cluster.jgroups.ChannelProvider;
 import org.jalphanode.cluster.jgroups.JGroupsMembershipManager;
+
 import org.jalphanode.config.JAlphaNodeConfig;
+
 import org.jalphanode.notification.AsyncNotificationExecutorProvider;
 import org.jalphanode.notification.Notifier;
 import org.jalphanode.notification.NotifierImpl;
+
 import org.jalphanode.scheduler.RecurrentTaskScheduler;
 import org.jalphanode.scheduler.TaskScheduler;
+
 import org.jgroups.Channel;
 
 import com.google.common.base.Preconditions;
+
 import com.google.inject.AbstractModule;
 
 /**
  * Binds interfaces to the implementation.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
-public class BinderModule extends AbstractModule {
+public class InjectorModule extends AbstractModule {
 
     private final JAlphaNodeConfig config;
 
     /**
      * Creates a new binder instance.
-     * 
-     * @param config the configuration
+     *
+     * @param  config  the configuration
      */
-    public BinderModule(final JAlphaNodeConfig config) {
+    public InjectorModule(final JAlphaNodeConfig config) {
         this.config = Preconditions.checkNotNull(config, "config");
     }
 

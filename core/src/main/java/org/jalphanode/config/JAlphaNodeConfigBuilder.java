@@ -23,7 +23,9 @@ package org.jalphanode.config;
 import java.io.InputStream;
 
 import org.jalphanode.scheduler.ScheduleIterator;
+
 import org.jalphanode.task.Task;
+
 import org.jalphanode.util.ConfigurationUtils;
 
 import com.google.common.base.Preconditions;
@@ -31,9 +33,9 @@ import com.google.common.io.Closeables;
 
 /**
  * JAlphanode configuration builder.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public class JAlphaNodeConfigBuilder {
 
@@ -52,9 +54,10 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Adds a new task for execution.
-     * 
-     * @param task task to execute
-     * @return the task builder instance
+     *
+     * @param   task  task to execute
+     *
+     * @return  the task builder instance
      */
     public TaskBuilder addTask(final Task task) {
 
@@ -67,8 +70,8 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Gets the task scheduler builder.
-     * 
-     * @return the task scheduler builder instance
+     *
+     * @return  the task scheduler builder instance
      */
     public TaskSchedulerBuilder scheduler() {
         return new TaskSchedulerBuilder(this.config);
@@ -76,8 +79,8 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Gets the async executor builder.
-     * 
-     * @return the async executor builder instance
+     *
+     * @return  the async executor builder instance
      */
     public AsyncExecutorBuilder asyncExecutor() {
         return new AsyncExecutorBuilder(this.config);
@@ -85,8 +88,8 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Gets the membership builder.
-     * 
-     * @return the membership builder instance
+     *
+     * @return  the membership builder instance
      */
     public MembershipBuilder membership() {
         return new MembershipBuilder(this.config);
@@ -94,8 +97,8 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Builds the configuration.
-     * 
-     * @return the jalphanode configuration.
+     *
+     * @return  the jalphanode configuration.
      */
     public JAlphaNodeConfig build() {
         return this.config;
@@ -108,18 +111,21 @@ public class JAlphaNodeConfigBuilder {
     /**
      * Factory method to create an instance of jalphanode configuration. If users want to verify configuration file
      * correctness against schema then appropriate schema file name should be provided as well.
-     * <p/>
-     * Both configuration file and schema file are looked up in following order:
+     *
+     * <p/>Both configuration file and schema file are looked up in following order:
+     *
      * <p/>
      * <ol>
-     * <li>using current thread's context ClassLoader</li>
-     * <li>if fails, the system ClassLoader</li>
-     * <li>if fails, attempt is made to load it as a file from the disk</li>
+     *   <li>using current thread's context ClassLoader</li>
+     *   <li>if fails, the system ClassLoader</li>
+     *   <li>if fails, attempt is made to load it as a file from the disk</li>
      * </ol>
-     * 
-     * @param configStream input stream configuration
-     * @return jalphanode configuration
-     * @throws ConfigException if there are any issues creating jalphanode configuration
+     *
+     * @param   configStream  input stream configuration
+     *
+     * @return  jalphanode configuration
+     *
+     * @throws  ConfigException  if there are any issues creating jalphanode configuration
      */
     public static JAlphaNodeConfig buildFromStream(final InputStream configStream) throws ConfigException {
 
@@ -131,25 +137,28 @@ public class JAlphaNodeConfigBuilder {
             schemaIS = ConfigurationUtils.findInputStream(ResourceKeys.SCHEMA_LOCATION.getValue());
             return ConfigurationUtils.unmarshall(configStream, schemaIS, JAlphaNodeType.class);
         } finally {
-        	Closeables.closeQuietly(schemaIS);
+            Closeables.closeQuietly(schemaIS);
         }
     }
 
     /**
      * Factory method to create an instance of jalphanode configuration. If users want to verify configuration file
      * correctness against schema then appropriate schema file name should be provided as well.
-     * <p/>
-     * Both configuration file and schema file are looked up in following order:
+     *
+     * <p/>Both configuration file and schema file are looked up in following order:
+     *
      * <p/>
      * <ol>
-     * <li>using current thread's context ClassLoader</li>
-     * <li>if fails, the system ClassLoader</li>
-     * <li>if fails, attempt is made to load it as a file from the disk</li>
+     *   <li>using current thread's context ClassLoader</li>
+     *   <li>if fails, the system ClassLoader</li>
+     *   <li>if fails, attempt is made to load it as a file from the disk</li>
      * </ol>
-     * 
-     * @param configFileName configuration file name
-     * @return jalphanode configuration
-     * @throws ConfigException if there are any issues creating jalphanode configuration
+     *
+     * @param   configFileName  configuration file name
+     *
+     * @return  jalphanode configuration
+     *
+     * @throws  ConfigException  if there are any issues creating jalphanode configuration
      */
     public static JAlphaNodeConfig buildFromFile(final String configFileName) throws ConfigException {
 
@@ -164,16 +173,16 @@ public class JAlphaNodeConfigBuilder {
 
             return ConfigurationUtils.unmarshall(configIS, schemaIS, JAlphaNodeType.class);
         } finally {
-        	Closeables.closeQuietly(configIS);
-        	Closeables.closeQuietly(schemaIS);
+            Closeables.closeQuietly(configIS);
+            Closeables.closeQuietly(schemaIS);
         }
     }
 
     /**
      * Task builder.
-     * 
-     * @author ribeirux
-     * @version $Revision$
+     *
+     * @author   ribeirux
+     * @version  $Revision$
      */
     public static class TaskBuilder extends JAlphaNodeConfigBuilder {
 
@@ -186,9 +195,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The current task will have the specified name.
-         * 
-         * @param taskName task name
-         * @return the current task builder instance
+         *
+         * @param   taskName  task name
+         *
+         * @return  the current task builder instance
          */
         public TaskBuilder withName(final String taskName) {
             this.taskType.setTaskName(taskName);
@@ -197,9 +207,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The current task will have the specified scheduler.
-         * 
-         * @param scheduleIterator the scheduler iterator
-         * @return the current task builder instance
+         *
+         * @param   scheduleIterator  the scheduler iterator
+         *
+         * @return  the current task builder instance
          */
         public TaskBuilder withScheduler(final ScheduleIterator scheduleIterator) {
             this.taskType.setScheduleIterator(scheduleIterator);
@@ -208,10 +219,11 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The current task will have the specified property.
-         * 
-         * @param key property key
-         * @param value property value
-         * @return the current task builder instance
+         *
+         * @param   key    property key
+         * @param   value  property value
+         *
+         * @return  the current task builder instance
          */
         public TaskBuilder addProperty(final Object key, final Object value) {
             this.taskType.getProperties().put(key, value);
@@ -221,9 +233,9 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Task scheduler builder.
-     * 
-     * @author ribeirux
-     * @version $Revision$
+     *
+     * @author   ribeirux
+     * @version  $Revision$
      */
     public static class TaskSchedulerBuilder extends JAlphaNodeConfigBuilder {
 
@@ -233,9 +245,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The task scheduler will have the specified pool size.
-         * 
-         * @param size pool size
-         * @return the task scheduler builder instance
+         *
+         * @param   size  pool size
+         *
+         * @return  the task scheduler builder instance
          */
         public TaskSchedulerBuilder withCorePoolSize(final Integer size) {
             this.getConfig().getTaskScheduler().setCorePoolSize(size);
@@ -244,10 +257,11 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The task scheduler will have the specified property.
-         * 
-         * @param key property key
-         * @param value property value
-         * @return the task scheduler builder instance
+         *
+         * @param   key    property key
+         * @param   value  property value
+         *
+         * @return  the task scheduler builder instance
          */
         public TaskSchedulerBuilder addProperty(final Object key, final Object value) {
             this.getConfig().getTaskScheduler().getProperties().put(key, value);
@@ -257,9 +271,9 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Async executor builder.
-     * 
-     * @author ribeirux
-     * @version $Revision$
+     *
+     * @author   ribeirux
+     * @version  $Revision$
      */
     public static class AsyncExecutorBuilder extends JAlphaNodeConfigBuilder {
 
@@ -269,9 +283,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The async executor will have the specified pool size.
-         * 
-         * @param size pool size
-         * @return the async executor builder instance
+         *
+         * @param   size  pool size
+         *
+         * @return  the async executor builder instance
          */
         public AsyncExecutorBuilder withCorePoolSize(final Integer size) {
             this.getConfig().getAsyncExecutor().setCorePoolSize(size);
@@ -280,10 +295,11 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The async executor will have the specified property.
-         * 
-         * @param key property key
-         * @param value property value
-         * @return the async executor builder instance
+         *
+         * @param   key    property key
+         * @param   value  property value
+         *
+         * @return  the async executor builder instance
          */
         public AsyncExecutorBuilder addProperty(final Object key, final Object value) {
             this.getConfig().getAsyncExecutor().getProperties().put(key, value);
@@ -293,9 +309,9 @@ public class JAlphaNodeConfigBuilder {
 
     /**
      * Membership builder.
-     * 
-     * @author ribeirux
-     * @version $Revision$
+     *
+     * @author   ribeirux
+     * @version  $Revision$
      */
     public static class MembershipBuilder extends JAlphaNodeConfigBuilder {
 
@@ -305,9 +321,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The current node will have the specified name in the group.
-         * 
-         * @param nodeName node name
-         * @return the membership builder instance
+         *
+         * @param   nodeName  node name
+         *
+         * @return  the membership builder instance
          */
         public MembershipBuilder withNodeName(final String nodeName) {
             this.getConfig().getMembership().setNodeName(nodeName);
@@ -316,9 +333,10 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * This node will connect to the specified cluster name.
-         * 
-         * @param clusterName cluster name
-         * @return the membership builder instance
+         *
+         * @param   clusterName  cluster name
+         *
+         * @return  the membership builder instance
          */
         public MembershipBuilder withClusterName(final String clusterName) {
             this.getConfig().getMembership().setClusterName(clusterName);
@@ -327,10 +345,11 @@ public class JAlphaNodeConfigBuilder {
 
         /**
          * The group membership will have the specified property.
-         * 
-         * @param key property key
-         * @param value property value
-         * @return the group membership builder instance
+         *
+         * @param   key    property key
+         * @param   value  property value
+         *
+         * @return  the group membership builder instance
          */
         public MembershipBuilder addProperty(final Object key, final Object value) {
             this.getConfig().getMembership().getProperties().put(key, value);

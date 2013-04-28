@@ -26,9 +26,9 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * TypedPropertiesAdapter is JAXB XmlAdapter for TypedProperties.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class TypedPropertiesAdapter extends XmlAdapter<PropertiesType, TypedProperties> {
 

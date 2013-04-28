@@ -24,31 +24,32 @@ import java.util.Set;
 
 /**
  * Interface that denotes that the implementation can have listeners attached to it.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface Listenable {
 
     /**
      * Adds a listener to the component.
+     *
      * <p/>
-     * 
-     * @param listener must not be null.
+     *
+     * @param  listener  must not be null.
      */
     void addListener(Object listener);
 
     /**
      * Gets all registered listeners.
-     * 
-     * @return a set of all listeners registered on this component.
+     *
+     * @return  a set of all listeners registered on this component.
      */
     Set<Object> getListeners();
 
     /**
      * Removes a listener from the component.
-     * 
-     * @param listener listener to remove. Must not be null.
+     *
+     * @param  listener  listener to remove. Must not be null.
      */
     void removeListener(Object listener);
 }

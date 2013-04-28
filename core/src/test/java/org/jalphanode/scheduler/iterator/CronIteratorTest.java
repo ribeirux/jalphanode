@@ -22,14 +22,16 @@ package org.jalphanode.scheduler.iterator;
 
 import java.text.ParseException;
 
+import org.jalphanode.scheduler.CronIterator;
 import org.jalphanode.scheduler.SchedulerParseException;
+
 import org.testng.annotations.Test;
 
 /**
  * Cron iterator test.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public class CronIteratorTest {
 

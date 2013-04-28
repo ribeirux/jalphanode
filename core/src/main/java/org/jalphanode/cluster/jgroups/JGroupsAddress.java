@@ -21,13 +21,14 @@
 package org.jalphanode.cluster.jgroups;
 
 import org.jalphanode.cluster.NodeAddress;
+
 import org.jgroups.Address;
 
 /**
  * An encapsulation of a JGroups Address.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public class JGroupsAddress implements NodeAddress {
 
@@ -35,8 +36,8 @@ public class JGroupsAddress implements NodeAddress {
 
     /**
      * Creates a new instance off JGroups address.
-     * 
-     * @param address JGroups address
+     *
+     * @param  address  JGroups address
      */
     public JGroupsAddress(final Address address) {
         this.address = address;
@@ -44,8 +45,8 @@ public class JGroupsAddress implements NodeAddress {
 
     /**
      * Gets the address property.
-     * 
-     * @return the address property
+     *
+     * @return  the address property
      */
     public Address getAddress() {
         return this.address;
@@ -61,6 +62,7 @@ public class JGroupsAddress implements NodeAddress {
         if (this == obj) {
             return true;
         }
+
         if ((obj == null) || (this.getClass() != obj.getClass())) {
             return false;
         }

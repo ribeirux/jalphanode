@@ -26,9 +26,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * Properties container configuration.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 @XmlSeeAlso({ TaskType.class, TaskSchedulerType.class, AsyncExecutorType.class, MembershipType.class })
 public abstract class AbstractPropertiesContainer implements PropertiesContainerConfig {
@@ -46,8 +46,8 @@ public abstract class AbstractPropertiesContainer implements PropertiesContainer
 
     /**
      * Gets the properties property.
-     * 
-     * @return the properties property
+     *
+     * @return  the properties property
      */
     @Override
     public TypedProperties getProperties() {

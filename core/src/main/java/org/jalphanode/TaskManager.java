@@ -23,13 +23,14 @@ package org.jalphanode;
 import java.util.Date;
 
 import org.jalphanode.config.JAlphaNodeConfig;
+
 import org.jalphanode.notification.Listenable;
 
 /**
  * Executes a task.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface TaskManager extends Listenable {
 
@@ -45,29 +46,29 @@ public interface TaskManager extends Listenable {
 
     /**
      * Gets the period of running time.
-     * 
-     * @return the running time period
+     *
+     * @return  the running time period
      */
     Period getRunningTime();
 
     /**
      * Gets the start running date.
-     * 
-     * @return the start running date
+     *
+     * @return  the start running date
      */
     Date getStartDate();
 
     /**
      * Gets the status of the node.
-     * 
-     * @return the current status
+     *
+     * @return  the current status
      */
     Status getStatus();
 
     /**
      * Gets the current configuration.
-     * 
-     * @return the current configuration
+     *
+     * @return  the current configuration
      */
     JAlphaNodeConfig getConfig();
 

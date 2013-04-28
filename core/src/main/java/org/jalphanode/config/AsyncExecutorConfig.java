@@ -22,16 +22,16 @@ package org.jalphanode.config;
 
 /**
  * Async executor configuration.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface AsyncExecutorConfig extends PropertiesContainerConfig {
 
     /**
      * Gets the executor core pool size.
-     * 
-     * @return the core pool size
+     *
+     * @return  the core pool size
      */
     Integer getCorePoolSize();
 

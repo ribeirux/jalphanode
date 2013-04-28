@@ -22,9 +22,9 @@ package org.jalphanode;
 
 /**
  * Contains the different states of jalphanode.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public enum Status {
 
@@ -43,8 +43,8 @@ public enum Status {
 
     /**
      * Checks if task execution process is running.
-     * 
-     * @return true if the task execution process is reunning, otherwise false
+     *
+     * @return  true if the task execution process is reunning, otherwise false
      */
     public boolean isRunning() {
         return this.equals(RUNNING);
@@ -52,8 +52,8 @@ public enum Status {
 
     /**
      * Checks if task execution process was terminated.
-     * 
-     * @return true if the task execution process was terminated, otherwise false
+     *
+     * @return  true if the task execution process was terminated, otherwise false
      */
     public boolean isTerminated() {
         return this.equals(TERMINATED);
@@ -61,8 +61,8 @@ public enum Status {
 
     /**
      * Checks if the start is allowed.
-     * 
-     * @return true if the start is allowed, otherwise false
+     *
+     * @return  true if the start is allowed, otherwise false
      */
     public boolean isStartAllowed() {
         return this.equals(INSTANTIATED);
@@ -70,8 +70,8 @@ public enum Status {
 
     /**
      * Checks if stop is allowed.
-     * 
-     * @return true if the start is allowed, otherwise false
+     *
+     * @return  true if the start is allowed, otherwise false
      */
     public boolean isShutdownAllowed() {
         return (this.equals(RUNNING));

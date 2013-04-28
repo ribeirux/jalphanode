@@ -26,38 +26,38 @@ import org.jalphanode.cluster.NodeAddress;
 
 /**
  * Notifications for the task executor.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public interface Notifier extends Listenable {
 
     /**
      * Notifies all registered listeners of a viewChange event. Note that viewChange notifications are ALWAYS sent
      * immediately.
-     * 
-     * @param nodeName node name
-     * @param clusterName cluster name
-     * @param newMembers the new members of the view
-     * @param oldMembers the old members of the view
-     * @param myAddress node address
-     * @param masterAddress master address
-     * @param isMaster master status
+     *
+     * @param  nodeName       node name
+     * @param  clusterName    cluster name
+     * @param  newMembers     the new members of the view
+     * @param  oldMembers     the old members of the view
+     * @param  myAddress      node address
+     * @param  masterAddress  master address
+     * @param  isMaster       master status
      */
     void notifyViewChange(String nodeName, String clusterName, List<NodeAddress> newMembers,
             List<NodeAddress> oldMembers, NodeAddress myAddress, NodeAddress masterAddress, boolean isMaster);
 
     /**
      * Listener called before running the task.
-     * 
-     * @param taskName task name
+     *
+     * @param  taskName  task name
      */
     void beforeTask(String taskName);
 
     /**
      * Listener called after running the task.
-     * 
-     * @param taskName task name
+     *
+     * @param  taskName  task name
      */
     void afterTask(String taskName);
 

@@ -24,17 +24,18 @@ import java.util.Date;
 
 /**
  * Iterator which builds the next execution time.
- * 
- * @author ribeirux
- * @version $Revision$
+ *
+ * @author   ribeirux
+ * @version  $Revision$
  */
 public interface ScheduleIterator {
 
     /**
      * Builds the next execution time according the specified <code>date</code>.
-     * 
-     * @param date the date to begin the search for the next valid date
-     * @return the next execution date
+     *
+     * @param   date  the date to begin the search for the next valid date
+     *
+     * @return  the next execution date
      */
     Date next(Date date);
 }

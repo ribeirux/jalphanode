@@ -24,9 +24,9 @@ import org.jalphanode.util.ConfigurationUtils;
 
 /**
  * Contains all resource keys.
- * 
- * @author ribeirux
- * @version $Revision: 274 $
+ *
+ * @author   ribeirux
+ * @version  $Revision: 274 $
  */
 public enum ResourceKeys {
 
@@ -43,8 +43,8 @@ public enum ResourceKeys {
 
     /**
      * Gets the resource key.
-     * 
-     * @return the resource key
+     *
+     * @return  the resource key
      */
     public String getKey() {
         return this.key;
@@ -52,8 +52,8 @@ public enum ResourceKeys {
 
     /**
      * Gets the resource value.
-     * 
-     * @return the resource value
+     *
+     * @return  the resource value
      */
     public String getValue() {
         return ConfigurationUtils.getResourceProperty(this.key);
