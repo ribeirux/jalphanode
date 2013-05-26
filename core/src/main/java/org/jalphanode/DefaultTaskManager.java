@@ -55,8 +55,13 @@ public class DefaultTaskManager implements TaskManager {
     private static final Log LOG = LogFactory.getLog(DefaultTaskManager.class);
 
     private final Injector injector;
+
     private DateTime startDateTime;
     private Status status;
+
+    // services
+    private final AbstractMembershipManager membershipManager;
+    private final Notifier notifier;
 
     /**
      * Constructs a new instance using default configuration. See {@link JAlphaNodeConfig} for more details.
@@ -81,6 +86,8 @@ public class DefaultTaskManager implements TaskManager {
      */
     public DefaultTaskManager(final InjectorModule module) {
         this.injector = Guice.createInjector(Stage.PRODUCTION, Preconditions.checkNotNull(module, "module"));
+        this.membershipManager = this.injector.getInstance(AbstractMembershipManager.class);
+        this.notifier = this.injector.getInstance(Notifier.class);
         this.status = Status.INSTANTIATED;
     }
 
@@ -113,7 +120,7 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public void addListener(final Object listener) {
-        this.injector.getInstance(Notifier.class).addListener(Preconditions.checkNotNull(listener, "listener"));
+        this.notifier.addListener(Preconditions.checkNotNull(listener, "listener"));
     }
 
     /**
@@ -121,7 +128,7 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public Set<Object> getListeners() {
-        return this.injector.getInstance(Notifier.class).getListeners();
+        return this.notifier.getListeners();
     }
 
     /**
@@ -129,7 +136,7 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public void removeListener(final Object listener) {
-        this.injector.getInstance(Notifier.class).removeListener(Preconditions.checkNotNull(listener, "listener"));
+        this.notifier.removeListener(Preconditions.checkNotNull(listener, "listener"));
     }
 
     /**
@@ -142,7 +149,8 @@ public class DefaultTaskManager implements TaskManager {
         }
 
         DefaultTaskManager.LOG.info("Starting task manager...");
-        this.injector.getInstance(AbstractMembershipManager.class).connect();
+        this.membershipManager.connect();
+
         this.startDateTime = new DateTime();
         this.status = Status.RUNNING;
         DefaultTaskManager.LOG.info("Task manager started!");
@@ -158,7 +166,9 @@ public class DefaultTaskManager implements TaskManager {
         }
 
         DefaultTaskManager.LOG.info("Shutting down task manager...");
-        this.injector.getInstance(AbstractMembershipManager.class).shutdown();
+        membershipManager.shutdown();
+
+        // TODO shutdown thread pool
         this.injector.getInstance(TaskScheduler.class).shutdown();
         this.injector.getInstance(ExecutorService.class).shutdown();
         this.status = Status.TERMINATED;
@@ -182,6 +192,7 @@ public class DefaultTaskManager implements TaskManager {
         return this.injector.getInstance(JAlphaNodeConfig.class);
     }
 
+    // TODO generate toString
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
