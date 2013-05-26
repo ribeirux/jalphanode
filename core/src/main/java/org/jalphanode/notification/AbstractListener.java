@@ -155,11 +155,11 @@ public abstract class AbstractListener {
     protected boolean testListenerClassValidity(final Class<?> listenerClass) {
         final Listener listener = ReflectionUtil.getAnnotation(listenerClass, Listener.class);
         if (listener == null) {
-            throw new ListenerMethodException("Listener class should be annotated with listener annotation");
+            throw new MalformedListenerException("Listener class should be annotated with listener annotation");
         }
 
         if (!Modifier.isPublic(listenerClass.getModifiers())) {
-            throw new ListenerMethodException("Listener modifiers should be public!");
+            throw new MalformedListenerException("Listener modifiers should be public!");
         }
 
         return listener.sync();
@@ -175,15 +175,21 @@ public abstract class AbstractListener {
     protected void testListenerMethodValidity(final Method method, final Class<?> allowedParameter,
             final String annotationName) {
 
+        int mod = method.getModifiers();
+        if (!Modifier.isPublic(mod) || Modifier.isStatic(mod)) {
+            throw new MalformedListenerException(MessageFormat.format(
+                    "Methods annotated with {0} should be public and non static!", annotationName));
+        }
+
         if ((method.getParameterTypes().length != 1)
                 || !method.getParameterTypes()[0].isAssignableFrom(allowedParameter)) {
-            throw new ListenerMethodException(MessageFormat.format(
+            throw new MalformedListenerException(MessageFormat.format(
                     "Methods annotated with {0}  must accept exactly one parameter, of assignable from type {1}",
                     annotationName, allowedParameter.getName()));
         }
 
         if (!method.getReturnType().equals(void.class)) {
-            throw new ListenerMethodException(MessageFormat.format(
+            throw new MalformedListenerException(MessageFormat.format(
                     "Methods annotated with {0} should have a return type of void.", annotationName));
         }
     }
@@ -220,7 +226,7 @@ public abstract class AbstractListener {
         }
 
         if (!foundMethods) {
-            throw new ListenerMethodException(MessageFormat.format(
+            throw new MalformedListenerException(MessageFormat.format(
                     "Attempted to register listener of class {0} , but no valid public methods "
                         + "annotated with method-level event annotations found!", listener.getClass()));
         }

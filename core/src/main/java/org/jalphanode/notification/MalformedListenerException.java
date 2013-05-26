@@ -20,20 +20,22 @@
  *******************************************************************************/
 package org.jalphanode.notification;
 
+import org.jalphanode.JAlphaNodeRuntimeException;
+
 /**
- * Thrown if the listener method contains more then a single parameter.
+ * Thrown if the listener is defined incorrectly.
  *
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
-public class ListenerMethodException extends RuntimeException {
+public class MalformedListenerException extends JAlphaNodeRuntimeException {
 
     private static final long serialVersionUID = -7349283339726975180L;
 
     /**
      * Constructs a new exception with <code>null</code> as its detail message.
      */
-    public ListenerMethodException() {
+    public MalformedListenerException() {
         super();
     }
 
@@ -43,7 +45,7 @@ public class ListenerMethodException extends RuntimeException {
      * @param  message  the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
      *                  method.
      */
-    public ListenerMethodException(final String message) {
+    public MalformedListenerException(final String message) {
         super(message);
     }
 
@@ -54,7 +56,7 @@ public class ListenerMethodException extends RuntimeException {
      * @param  cause    the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>
      *                  null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public ListenerMethodException(final String message, final Throwable cause) {
+    public MalformedListenerException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -64,7 +66,7 @@ public class ListenerMethodException extends RuntimeException {
      * @param  cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
      *                value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public ListenerMethodException(final Throwable cause) {
+    public MalformedListenerException(final Throwable cause) {
         super(cause);
     }
 

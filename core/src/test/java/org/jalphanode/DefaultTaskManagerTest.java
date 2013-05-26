@@ -27,7 +27,7 @@ import org.jalphanode.annotation.ViewChanged;
 
 import org.jalphanode.config.ConfigException;
 
-import org.jalphanode.notification.ListenerMethodException;
+import org.jalphanode.notification.MalformedListenerException;
 import org.jalphanode.notification.ViewChangedEvent;
 
 import org.testng.Assert;
@@ -134,7 +134,7 @@ public class DefaultTaskManagerTest {
         taskManager.shutdown();
     }
 
-    @Test(expectedExceptions = {ListenerMethodException.class})
+    @Test(expectedExceptions = {MalformedListenerException.class})
     public void testListenerException() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();
@@ -149,7 +149,7 @@ public class DefaultTaskManagerTest {
         void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = {ListenerMethodException.class})
+    @Test(expectedExceptions = {MalformedListenerException.class})
     public void testListenerMethod() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();
@@ -164,7 +164,7 @@ public class DefaultTaskManagerTest {
         public void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = {ListenerMethodException.class})
+    @Test(expectedExceptions = {MalformedListenerException.class})
     public void testListenerPublicModifier() throws ConfigException {
 
         final TaskManager taskManager = new DefaultTaskManager();

@@ -20,7 +20,12 @@
  *******************************************************************************/
 package org.jalphanode;
 
+import java.lang.management.ManagementFactory;
+
 import java.util.concurrent.ExecutorService;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.jalphanode.cluster.AbstractMembershipManager;
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
@@ -29,6 +34,10 @@ import org.jalphanode.cluster.jgroups.ChannelProvider;
 import org.jalphanode.cluster.jgroups.JGroupsMembershipManager;
 
 import org.jalphanode.config.JAlphaNodeConfig;
+
+import org.jalphanode.jmx.ResourceDynamicMBean;
+import org.jalphanode.jmx.MBeanAnnotationScanner;
+import org.jalphanode.jmx.MBeanMetadata;
 
 import org.jalphanode.notification.AsyncNotificationExecutorProvider;
 import org.jalphanode.notification.Notifier;
@@ -42,6 +51,11 @@ import org.jgroups.Channel;
 import com.google.common.base.Preconditions;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 
 /**
  * Binds interfaces to the implementation.
@@ -52,6 +66,7 @@ import com.google.inject.AbstractModule;
 public class InjectorModule extends AbstractModule {
 
     private final JAlphaNodeConfig config;
+    private final MBeanServer mBeanServer;
 
     /**
      * Creates a new binder instance.
@@ -59,7 +74,25 @@ public class InjectorModule extends AbstractModule {
      * @param  config  the configuration
      */
     public InjectorModule(final JAlphaNodeConfig config) {
+        this(config, ManagementFactory.getPlatformMBeanServer());
+    }
+
+    /**
+     * Creates a new binder instance.
+     *
+     * @param  config  the configuration
+     */
+    public InjectorModule(final JAlphaNodeConfig config, final MBeanServer mBeanServer) {
         this.config = Preconditions.checkNotNull(config, "config");
+        this.mBeanServer = Preconditions.checkNotNull(mBeanServer, "mBeanServer");
+    }
+
+    public JAlphaNodeConfig getConfig() {
+        return config;
+    }
+
+    public MBeanServer getMBeanServer() {
+        return mBeanServer;
     }
 
     @Override
@@ -67,6 +100,9 @@ public class InjectorModule extends AbstractModule {
 
         // bind config
         this.bindConfig();
+
+        // bind MBean server
+        this.bindMBeanServer();
 
         // bind notifier
         this.bindNotifier();
@@ -86,10 +122,17 @@ public class InjectorModule extends AbstractModule {
         // Bind master node election policy
         this.bindMasterNodeElectionPolicy();
 
+        // Bind MBean annotation listener
+        this.bindMBeanListener();
+
     }
 
     protected void bindConfig() {
         this.bind(JAlphaNodeConfig.class).toInstance(this.config);
+    }
+
+    protected void bindMBeanServer() {
+        this.bind(MBeanServer.class).toInstance(this.mBeanServer);
     }
 
     protected void bindNotifier() {
@@ -116,4 +159,35 @@ public class InjectorModule extends AbstractModule {
         this.bind(MasterNodeElectionPolicy.class).to(SimpleMasterNodeElectionPolicy.class);
     }
 
+    protected void bindMBeanListener() {
+        final MBeanAnnotationScanner scanner = new MBeanAnnotationScanner();
+
+        this.bindListener(Matchers.any(), new TypeListener() {
+
+                @Override
+                public <I> void hear(final TypeLiteral<I> type, final TypeEncounter<I> encounter) {
+                    final MBeanMetadata metadata = scanner.scan(type.getRawType());
+
+                    if (metadata != null) {
+                        encounter.register(new InjectionListener<I>() {
+
+                                @Override
+                                public void afterInjection(final I injectee) {
+
+                                    try {
+
+                                        final ResourceDynamicMBean dynamicMBean =
+                                            new ResourceDynamicMBean(injectee, metadata);
+
+                                        mBeanServer.registerMBean(dynamicMBean,
+                                            new ObjectName(metadata.getObjectName()));
+                                    } catch (Exception e) {
+                                        encounter.addError(e);
+                                    }
+                                }
+                            });
+                    }
+                }
+            });
+    }
 }

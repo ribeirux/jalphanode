@@ -16,29 +16,40 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: ViewChanged.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: ListenerMethodException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.annotation;
+package org.jalphanode.jmx.annotation;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation should be used on methods that need to be notified when the topology changes (i.e., a member joins or
- * leaves the cluster).
- *
- * <p/>Methods annotated with this annotation should accept a single parameter, a
- * {@link org.jalphanode.notification.ViewChangedEvent} otherwise a
- * {@link org.jalphanode.notification.MalformedListenerException} will be thrown when registering your listener.
+ * Public classes annotated with this annotation will be exposed as MBeans. Take a look at
+ * {@link org.jalphanode.jmx.annotations.ManagedAttribute}, {@link org.jalphanode.jmx.annotations.ManagedOperation} and
+ * {@link org.jalphanode.jmx.annotations.ManagedParameter} for more details.
  *
  * @author   ribeirux
  * @version  $Revision: 274 $
- * @see      org.jalphanode.annotation.Listener
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ViewChanged {
-    // no fields
+@Target({ ElementType.TYPE })
+@Inherited
+public @interface MBean {
+
+    /**
+     * MBean object name. Refer to {@link javax.management.ObjectName} for more details.
+     *
+     * @return  the MBean object name
+     */
+    String objectName() default "";
+
+    /**
+     * Mbean description.
+     *
+     * @return  the MBean description
+     */
+    String description() default "";
 }

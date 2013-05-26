@@ -16,26 +16,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: ListenerInvocationException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: ListenerMethodException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.notification;
+package org.jalphanode.jmx;
 
 import org.jalphanode.JAlphaNodeRuntimeException;
 
 /**
- * Thrown if an error occurs while executing the listener method.
+ * Thrown if the MBean is defined incorrectly.
  *
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
-public class ListenerInvocationException extends JAlphaNodeRuntimeException {
+public class MalformedMBeanException extends JAlphaNodeRuntimeException {
 
     private static final long serialVersionUID = -7349283339726975180L;
 
     /**
      * Constructs a new exception with <code>null</code> as its detail message.
      */
-    public ListenerInvocationException() {
+    public MalformedMBeanException() {
         super();
     }
 
@@ -45,7 +45,7 @@ public class ListenerInvocationException extends JAlphaNodeRuntimeException {
      * @param  message  the detail message. The detail message is saved for later retrieval by the {@link #getMessage()}
      *                  method.
      */
-    public ListenerInvocationException(final String message) {
+    public MalformedMBeanException(final String message) {
         super(message);
     }
 
@@ -56,7 +56,7 @@ public class ListenerInvocationException extends JAlphaNodeRuntimeException {
      * @param  cause    the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>
      *                  null</tt> value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public ListenerInvocationException(final String message, final Throwable cause) {
+    public MalformedMBeanException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -66,7 +66,7 @@ public class ListenerInvocationException extends JAlphaNodeRuntimeException {
      * @param  cause  the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
      *                value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    public ListenerInvocationException(final Throwable cause) {
+    public MalformedMBeanException(final Throwable cause) {
         super(cause);
     }
 

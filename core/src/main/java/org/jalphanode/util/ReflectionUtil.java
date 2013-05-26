@@ -21,6 +21,11 @@
 package org.jalphanode.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.common.base.Preconditions;
 
@@ -35,6 +40,23 @@ public final class ReflectionUtil {
     private ReflectionUtil() { }
 
     /**
+     * Inspects the class passed in for the class level annotation specified. If the annotation is not available on the
+     * specified class, this method recursively inspects super classes and interfaces until it finds the required
+     * annotation.
+     *
+     * <p/>Returns false if the annotation cannot be found.
+     *
+     * @param   <T>         annotation type
+     * @param   clazz       class to inspect
+     * @param   annotation  annotation to search for. Must be a class-level annotation.
+     *
+     * @return  true if the annotation is present, otherwise false
+     */
+    public static <T extends Annotation> boolean isAnnotationPresent(final Class<?> clazz, final Class<T> annotation) {
+        return getAnnotation(clazz, annotation) != null;
+    }
+
+    /**
      * Inspects the class passed in for the class level annotation specified. If the annotation is not available, this
      * method recursively inspects super classes and interfaces until it finds the required annotation.
      *
@@ -47,35 +69,83 @@ public final class ReflectionUtil {
      * @return  the annotation instance, or null
      */
     public static <T extends Annotation> T getAnnotation(final Class<?> clazz, final Class<T> annotation) {
-        Class<?> tmpClazz = Preconditions.checkNotNull(clazz, "clazz");
+        Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
 
-        while (true) {
+        Class<?> tmpClazz = clazz;
+
+        T classAnnotation = null;
+
+        while (classAnnotation == null && tmpClazz != null && !tmpClazz.equals(Object.class)) {
 
             // first check class
-            T a = tmpClazz.getAnnotation(annotation);
-            if (a != null) {
-                return a;
-            }
+            classAnnotation = tmpClazz.getAnnotation(annotation);
 
-            // check interfaces
-            if (!tmpClazz.isInterface()) {
-                final Class<?>[] interfaces = tmpClazz.getInterfaces();
-                for (final Class<?> inter : interfaces) {
-                    a = ReflectionUtil.getAnnotation(inter, annotation);
-                    if (a != null) {
-                        return a;
+            if (classAnnotation == null) {
+
+                // check interfaces
+                if (!tmpClazz.isInterface()) {
+                    final Class<?>[] interfaces = tmpClazz.getInterfaces();
+                    for (int i = 0; i < interfaces.length && classAnnotation == null; i++) {
+                        classAnnotation = ReflectionUtil.getAnnotation(interfaces[i], annotation);
                     }
+                }
+
+                // If the annotation was not found, keep searching on super class
+                if (classAnnotation == null) {
+                    tmpClazz = tmpClazz.getSuperclass();
+                }
+            }
+        }
+
+        return classAnnotation;
+    }
+
+    public static <A extends Annotation> A getParameterAnnotation(final Method method, final int index,
+            final Class<A> annotationClass) {
+        Preconditions.checkNotNull(method, "method");
+        Preconditions.checkNotNull(annotationClass, "annotationClass");
+
+        Annotation[][] annotations = method.getParameterAnnotations();
+        Preconditions.checkPositionIndex(index, annotations.length, "index");
+
+        A annotation = null;
+
+        for (Annotation a : method.getParameterAnnotations()[index]) {
+            if (annotationClass.isInstance(a)) {
+                annotation = annotationClass.cast(a);
+                break;
+            }
+        }
+
+        return annotation;
+    }
+
+    public static List<Field> getAnnotatedAttributes(final Class<?> clazz,
+            final Class<? extends Annotation> annotation) {
+        Preconditions.checkNotNull(clazz, "clazz");
+        Preconditions.checkNotNull(annotation, "annotation");
+
+        List<Field> annotated = new LinkedList<Field>();
+
+        getAnnotatedAttributesRecursively(clazz, annotated, annotation);
+
+        return annotated;
+
+    }
+
+    private static void getAnnotatedAttributesRecursively(final Class<?> clazz, final List<Field> fields,
+            final Class<? extends Annotation> annotationType) {
+
+        if (clazz != null && !clazz.equals(Object.class)) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(annotationType)) {
+                    fields.add(field);
                 }
             }
 
-            // check super classes
-            final Class<?> superclass = tmpClazz.getSuperclass();
-            if (superclass == null) {
-                return null; // no where else to look
-            }
-
-            tmpClazz = superclass;
+            getAnnotatedAttributesRecursively(clazz.getSuperclass(), fields, annotationType);
         }
     }
+
 }

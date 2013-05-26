@@ -16,29 +16,42 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: ViewChanged.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: ListenerMethodException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.annotation;
+package org.jalphanode.jmx.mbean;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.jalphanode.jmx.annotation.MBean;
+import org.jalphanode.jmx.annotation.ManagedAttribute;
 
-/**
- * This annotation should be used on methods that need to be notified when the topology changes (i.e., a member joins or
- * leaves the cluster).
- *
- * <p/>Methods annotated with this annotation should accept a single parameter, a
- * {@link org.jalphanode.notification.ViewChangedEvent} otherwise a
- * {@link org.jalphanode.notification.MalformedListenerException} will be thrown when registering your listener.
- *
- * @author   ribeirux
- * @version  $Revision: 274 $
- * @see      org.jalphanode.annotation.Listener
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ViewChanged {
-    // no fields
+@MBean
+public class MBean5 {
+
+    private String field;
+
+    private int operationExecutionCount;
+
+    @ManagedAttribute(name = "fieldName", description = "fieldDescription")
+    public String getField() {
+        return field;
+    }
+
+    public void setField(final String field) {
+        this.field = field;
+    }
+
+    public int getOperationExecutionCount() {
+        return operationExecutionCount;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("AnnotatedMBean [field=");
+        builder.append(field);
+        builder.append(", operationExecutionCount=");
+        builder.append(operationExecutionCount);
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

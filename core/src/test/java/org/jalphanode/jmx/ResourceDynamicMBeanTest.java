@@ -16,29 +16,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: ViewChanged.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: ListenerMethodException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.annotation;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.jalphanode.jmx;
 
 /**
- * This annotation should be used on methods that need to be notified when the topology changes (i.e., a member joins or
- * leaves the cluster).
+ * {@link ResourceDynamicMBean} tests.
  *
- * <p/>Methods annotated with this annotation should accept a single parameter, a
- * {@link org.jalphanode.notification.ViewChangedEvent} otherwise a
- * {@link org.jalphanode.notification.MalformedListenerException} will be thrown when registering your listener.
- *
- * @author   ribeirux
- * @version  $Revision: 274 $
- * @see      org.jalphanode.annotation.Listener
+ * @author  pribeiro
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ViewChanged {
-    // no fields
-}
+public class ResourceDynamicMBeanTest { }

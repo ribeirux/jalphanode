@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * This annotation should be used on methods that need to be notified before the task run.
  *
  * <p/>Methods annotated with this annotation should accept a single parameter, a
- * {@link org.jalphanode.notification.Event} otherwise a {@link org.jalphanode.notification.ListenerMethodException}
+ * {@link org.jalphanode.notification.Event} otherwise a {@link org.jalphanode.notification.MalformedListenerException}
  * will be thrown when registering your listener.
  *
  * @author   ribeirux
