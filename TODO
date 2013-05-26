@@ -1,3 +1,21 @@
  - Add documentation (site and javadoc)
  - Add unit tests
  - Add class diagram
+ 
+ Publish statistics through JMX
+  - Thread pools
+  - Running tasks
+  - Mean time
+  - Master/Slaves
+  
+  - Default task manager should be thread safe. 
+        Move scheduler logic to this class. cache notifier and transfort as instance variables
+  - Create profile for distribution
+  - Update jgroups configurations
+  - Migrate all dates to jodatime
+  - Cleanup ReflectionUtils
+  - Analyze TODOs
+  - rename parameter to ManagedParameter
+  - MasterOnlySchedulerStrategy
+  - TaskScheduler should receive the TaskConfig.
+  - remove inheritance annotations.
