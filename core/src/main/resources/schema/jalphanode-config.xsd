@@ -1,80 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema xmlns="urn:jalphanode:config"
-	targetNamespace="urn:jalphanode:config" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" attributeFormDefault="unqualified" 
-	version="1.0">
+<xs:schema xmlns="urn:jalphanode:config" targetNamespace="urn:jalphanode:config"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    attributeFormDefault="unqualified" version="1.0">
 
-	<xs:element name="jalphanode" type="jalphanodeConfiguration" />
+    <xs:element name="jalphanode" type="jalphanodeConfiguration" />
 
-	<xs:complexType name="jalphanodeConfiguration">
-		<xs:sequence>
-			<xs:element name="tasks" type="tasksType" minOccurs="0" />
-			<xs:element name="taskScheduler" type="taskSchedulerType" minOccurs="0" />
-			<xs:element name="asyncExecutor" type="asyncExecutorType" minOccurs="0" />
-			<xs:element name="membership" type="membershipType" minOccurs="0" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="jalphanodeConfiguration">
+        <xs:sequence>
+            <xs:element name="tasks" type="tasksType" minOccurs="0" />
+            <xs:element name="taskScheduler" type="taskSchedulerType" minOccurs="0" />
+            <xs:element name="asyncExecutor" type="asyncExecutorType" minOccurs="0" />
+            <xs:element name="membership" type="membershipType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
 
-	<xs:complexType name="properties">
-		<xs:sequence>
-			<xs:element name="property" type="property" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="properties">
+        <xs:sequence>
+            <xs:element name="property" type="property" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
 
-	<xs:complexType name="property">
-		<xs:attribute name="name" use="required" type="xs:string" />
-		<xs:attribute name="value" use="required" type="xs:string" />
-	</xs:complexType>
+    <xs:complexType name="property">
+        <xs:attribute name="name" use="required" type="xs:string" />
+        <xs:attribute name="value" use="required" type="xs:string" />
+    </xs:complexType>
 
-	<xs:complexType name="tasksType">
-		<xs:sequence>
-			<xs:element name="task" type="taskType" maxOccurs="unbounded" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="tasksType">
+        <xs:sequence>
+            <xs:element name="task" type="taskType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
 
-	<xs:complexType name="taskType">
-		<xs:sequence>
-			<xs:element name="trigger" type="triggerType" />
-			<xs:element name="properties" type="properties" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="class" use="required" type="xs:string" />
-		<xs:attribute name="taskName" type="xs:string" />
-	</xs:complexType>
+    <xs:complexType name="taskType">
+        <xs:sequence>
+            <xs:element name="trigger" type="triggerType" />
+            <xs:element name="properties" type="properties" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="class" use="required" type="xs:string" />
+        <xs:attribute name="taskName" type="xs:string" />
+    </xs:complexType>
 
-	<xs:complexType name="triggerType">
-		<xs:sequence>
-			<xs:element name="expression" type="xs:string" />
-			<xs:element name="timezone" type="xs:string" minOccurs="0" />
-		</xs:sequence>
-	</xs:complexType>
+    <xs:complexType name="triggerType">
+        <xs:sequence>
+            <xs:element name="expression" type="xs:string" />
+            <xs:element name="timezone" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
 
-	<xs:complexType name="taskSchedulerType">
-		<xs:sequence>
-			<xs:element name="properties" type="properties" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="corePoolSize" type="oneOrMore" />
+    <xs:complexType name="taskSchedulerType">
+        <xs:sequence>
+            <xs:element name="properties" type="properties" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="corePoolSize" type="oneOrMore" />
+    </xs:complexType>
+
+    <xs:complexType name="asyncExecutorType">
+        <xs:sequence>
+            <xs:element name="properties" type="properties" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="corePoolSize" type="oneOrMore" />
         <xs:attribute name="maxPoolSize" type="oneOrMore" />
-	</xs:complexType>
+    </xs:complexType>
 
-	<xs:complexType name="asyncExecutorType">
-		<xs:sequence>
-			<xs:element name="properties" type="properties" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="corePoolSize" type="oneOrMore" />
-	</xs:complexType>
+    <xs:complexType name="membershipType">
+        <xs:sequence>
+            <xs:element name="properties" type="properties" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="nodeName" type="xs:string" />
+        <xs:attribute name="clusterName" type="xs:string" />
+    </xs:complexType>
 
-	<xs:complexType name="membershipType">
-		<xs:sequence>
-			<xs:element name="properties" type="properties" minOccurs="0" />
-		</xs:sequence>
-		<xs:attribute name="nodeName" type="xs:string" />
-		<xs:attribute name="clusterName" type="xs:string" />
-	</xs:complexType>
-
-	<xs:simpleType name="oneOrMore">
-		<xs:restriction base="xs:integer">
-			<xs:minInclusive value="1" />
-		</xs:restriction>
-	</xs:simpleType>
+    <xs:simpleType name="oneOrMore">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1" />
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>
