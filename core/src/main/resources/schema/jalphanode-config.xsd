@@ -53,6 +53,7 @@
 			<xs:element name="properties" type="properties" minOccurs="0" />
 		</xs:sequence>
 		<xs:attribute name="corePoolSize" type="oneOrMore" />
+        <xs:attribute name="maxPoolSize" type="oneOrMore" />
 	</xs:complexType>
 
 	<xs:complexType name="asyncExecutorType">

@@ -133,7 +133,7 @@ public class ConfigurationTest {
                 + "</task></tasks><taskScheduler corePoolSize=\"5\"><properties>"
                 + "<property name=\"threadNamePrefix\" value=\"task-pool\" />"
                 + "<property name=\"threadPriority\" value=\"5\" /></properties></taskScheduler>"
-                + "<asyncExecutor corePoolSize=\"5\">"
+                + "<asyncExecutor corePoolSize=\"5\" maxPoolSize=\"10\">"
                 + "<properties><property name=\"threadNamePrefix\" value=\"async-pool\" />"
                 + "<property name=\"threadPriority\" value=\"5\" />"
                 + "</properties></asyncExecutor><membership nodeName=\"nodeName\""

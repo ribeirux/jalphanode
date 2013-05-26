@@ -35,4 +35,11 @@ public interface AsyncExecutorConfig extends PropertiesContainerConfig {
      */
     Integer getCorePoolSize();
 
+    /**
+     * Gets the executor mac pool size.
+     *
+     * @return  the max pool size
+     */
+    Integer getMaxPoolSize();
+
 }

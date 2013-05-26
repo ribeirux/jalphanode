@@ -21,9 +21,12 @@
 package org.jalphanode.notification;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import org.jalphanode.config.AsyncExecutorConfig;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.TypedPropertiesConfig;
 
@@ -42,27 +45,16 @@ import com.google.inject.Provider;
  */
 public class AsyncNotificationExecutorProvider implements Provider<ExecutorService> {
 
+    private static final String KEEP_ALIVE_PROPERTY = "keepAlive";
+    private static final String DEFAULT_KEEP_ALIVE = "60000";
+
     private static final String THREAD_PRIORITY_PROPERTY = "threadPriority";
-
-    private static final String THREAD_PREFIX_PROPERTY = "threadPrefix";
-
-    private static final String DEFAULT_THREAD_PREFIX = "async-pool";
-
     private static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
 
+    private static final String THREAD_PREFIX_PROPERTY = "threadPrefix";
+    private static final String DEFAULT_THREAD_PREFIX = "async-pool";
+
     private final JAlphaNodeConfig config;
-
-    private ThreadFactory createThreadFactory(final JAlphaNodeConfig config) {
-        final TypedPropertiesConfig props = config.getAsyncExecutor().getProperties();
-
-        final String threadPrefix = props.getProperty(AsyncNotificationExecutorProvider.THREAD_PREFIX_PROPERTY,
-                AsyncNotificationExecutorProvider.DEFAULT_THREAD_PREFIX);
-
-        final int priority = props.getIntProperty(AsyncNotificationExecutorProvider.THREAD_PRIORITY_PROPERTY,
-                AsyncNotificationExecutorProvider.DEFAULT_THREAD_PRIORITY);
-
-        return DaemonThreadFactory.newInstance(threadPrefix, priority);
-    }
 
     /**
      * Creates a new asynchronous notification executor provider.
@@ -76,8 +68,29 @@ public class AsyncNotificationExecutorProvider implements Provider<ExecutorServi
 
     @Override
     public ExecutorService get() {
-        final Integer poolSize = this.config.getAsyncExecutor().getCorePoolSize();
 
-        return Executors.newScheduledThreadPool(poolSize, this.createThreadFactory(config));
+        // core pool size
+        // max pool size
+        // keep_alive_time millis
+        final AsyncExecutorConfig asyncConfig = this.config.getAsyncExecutor();
+        final Integer corePoolSize = asyncConfig.getCorePoolSize();
+        final Integer maxPoolSize = asyncConfig.getMaxPoolSize();
+
+        final TypedPropertiesConfig props = asyncConfig.getProperties();
+
+        final Integer keepAlive = Integer.valueOf(props.getProperty(
+                    AsyncNotificationExecutorProvider.KEEP_ALIVE_PROPERTY,
+                    AsyncNotificationExecutorProvider.DEFAULT_KEEP_ALIVE));
+
+        final String threadPrefix = props.getProperty(AsyncNotificationExecutorProvider.THREAD_PREFIX_PROPERTY,
+                AsyncNotificationExecutorProvider.DEFAULT_THREAD_PREFIX);
+
+        final int priority = props.getIntProperty(AsyncNotificationExecutorProvider.THREAD_PRIORITY_PROPERTY,
+                AsyncNotificationExecutorProvider.DEFAULT_THREAD_PRIORITY);
+
+        final ThreadFactory factory = DaemonThreadFactory.newInstance(threadPrefix, priority);
+
+        return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAlive, TimeUnit.MILLISECONDS,
+                new SynchronousQueue<Runnable>(), factory, new ThreadPoolExecutor.CallerRunsPolicy());
     }
 }

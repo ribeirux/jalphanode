@@ -36,7 +36,7 @@
 		</properties>
 	</taskScheduler>
 
-	<asyncExecutor corePoolSize="5">
+	<asyncExecutor corePoolSize="5" maxPoolSize="10">
 		<properties>
 			<property name="threadPrefix" value="async-pool" />
 			<property name="threadPriority" value="5" />

@@ -293,6 +293,11 @@ public class JAlphaNodeConfigBuilder {
             return this;
         }
 
+        public AsyncExecutorBuilder withMaxCorePoolSize(final Integer size) {
+            this.getConfig().getAsyncExecutor().setMaxPoolSize(size);
+            return this;
+        }
+
         /**
          * The async executor will have the specified property.
          *

@@ -40,8 +40,13 @@ public class AsyncExecutorType extends AbstractPropertiesContainer implements As
      */
     public static final int DEFAULT_CORE_POOL_SIZE = 10;
 
+    public static final int DEFAULT_MAX_POOL_SIZE = 20;
+
     @XmlAttribute
     private Integer corePoolSize;
+
+    @XmlAttribute
+    private Integer maxPoolSize;
 
     /**
      * Creates a new async executor with default configuration.
@@ -49,6 +54,7 @@ public class AsyncExecutorType extends AbstractPropertiesContainer implements As
     public AsyncExecutorType() {
         super();
         this.corePoolSize = AsyncExecutorType.DEFAULT_CORE_POOL_SIZE;
+        this.maxPoolSize = AsyncExecutorType.DEFAULT_MAX_POOL_SIZE;
     }
 
     /**
@@ -69,4 +75,23 @@ public class AsyncExecutorType extends AbstractPropertiesContainer implements As
     public void setCorePoolSize(final Integer corePoolSize) {
         this.corePoolSize = corePoolSize;
     }
+
+    /**
+     * Gets the maxPoolSize property.
+     *
+     * @return  the maxPoolSize property
+     */
+    public Integer getMaxPoolSize() {
+        return maxPoolSize;
+    }
+
+    /**
+     * Sets the maxPoolSize property.
+     *
+     * @param  maxPoolSize  the corePoolSize to set
+     */
+    public void setMaxPoolSize(final Integer maxPoolSize) {
+        this.maxPoolSize = maxPoolSize;
+    }
+
 }
