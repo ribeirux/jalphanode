@@ -9,7 +9,7 @@
         <xs:sequence>
             <xs:element name="tasks" type="tasksType" minOccurs="0" />
             <xs:element name="taskScheduler" type="taskSchedulerType" minOccurs="0" />
-            <xs:element name="asyncExecutor" type="asyncExecutorType" minOccurs="0" />
+            <xs:element name="asyncNotificationExecutor" type="asyncNotificationExecutorType" minOccurs="0" />
             <xs:element name="membership" type="membershipType" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
@@ -51,15 +51,14 @@
         <xs:sequence>
             <xs:element name="properties" type="properties" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="corePoolSize" type="oneOrMore" />
+        <xs:attribute name="poolSize" type="oneOrMore" />
     </xs:complexType>
 
-    <xs:complexType name="asyncExecutorType">
+    <xs:complexType name="asyncNotificationExecutorType">
         <xs:sequence>
             <xs:element name="properties" type="properties" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="corePoolSize" type="oneOrMore" />
-        <xs:attribute name="maxPoolSize" type="oneOrMore" />
+        <xs:attribute name="poolSize" type="oneOrMore" />
     </xs:complexType>
 
     <xs:complexType name="membershipType">
