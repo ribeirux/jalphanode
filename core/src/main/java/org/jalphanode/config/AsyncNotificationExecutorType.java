@@ -32,66 +32,43 @@ import javax.xml.bind.annotation.XmlType;
  * @version  $Revision$
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "asyncExecutorType")
-public class AsyncExecutorType extends AbstractPropertiesContainer implements AsyncExecutorConfig {
+@XmlType(name = "asyncNotificationExecutorType")
+public class AsyncNotificationExecutorType extends AbstractPropertiesContainer
+    implements AsyncNotificationExecutorConfig {
 
     /**
-     * Default core pool size.
+     * Default pool size.
      */
-    public static final int DEFAULT_CORE_POOL_SIZE = 10;
-
-    public static final int DEFAULT_MAX_POOL_SIZE = 20;
+    public static final int DEFAULT_POOL_SIZE = 10;
 
     @XmlAttribute
-    private Integer corePoolSize;
-
-    @XmlAttribute
-    private Integer maxPoolSize;
+    private Integer poolSize;
 
     /**
      * Creates a new async executor with default configuration.
      */
-    public AsyncExecutorType() {
+    public AsyncNotificationExecutorType() {
         super();
-        this.corePoolSize = AsyncExecutorType.DEFAULT_CORE_POOL_SIZE;
-        this.maxPoolSize = AsyncExecutorType.DEFAULT_MAX_POOL_SIZE;
+        this.poolSize = AsyncNotificationExecutorType.DEFAULT_POOL_SIZE;
     }
 
     /**
-     * Gets the corePoolSize property.
+     * Gets the poolSize property.
      *
-     * @return  the corePoolSize property
+     * @return  the poolSize property
      */
     @Override
-    public Integer getCorePoolSize() {
-        return this.corePoolSize;
+    public Integer getPoolSize() {
+        return this.poolSize;
     }
 
     /**
-     * Sets the corePoolSize property.
+     * Sets the poolSize property.
      *
-     * @param  corePoolSize  the corePoolSize to set
+     * @param  poolSize  the poolSize to set
      */
-    public void setCorePoolSize(final Integer corePoolSize) {
-        this.corePoolSize = corePoolSize;
-    }
-
-    /**
-     * Gets the maxPoolSize property.
-     *
-     * @return  the maxPoolSize property
-     */
-    public Integer getMaxPoolSize() {
-        return maxPoolSize;
-    }
-
-    /**
-     * Sets the maxPoolSize property.
-     *
-     * @param  maxPoolSize  the corePoolSize to set
-     */
-    public void setMaxPoolSize(final Integer maxPoolSize) {
-        this.maxPoolSize = maxPoolSize;
+    public void setPoolSize(final Integer poolSize) {
+        this.poolSize = poolSize;
     }
 
 }

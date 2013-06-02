@@ -16,19 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: TaskType.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: Listener.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.scheduler;
+package org.jalphanode.annotation;
 
-import org.jalphanode.annotation.Stop;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.jalphanode.config.TaskConfig;
+import com.google.inject.BindingAnnotation;
 
-public interface TaskScheduler {
-
-    void schedule(TaskConfig task);
-
-    @Stop(priority = 50)
-    void stop();
-
-}
+/**
+ * Asynchronous notification executor.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@BindingAnnotation
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+public @interface NotifierExecutor { }

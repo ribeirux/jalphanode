@@ -25,10 +25,7 @@ import java.lang.reflect.Method;
 
 import java.text.MessageFormat;
 
-import java.util.concurrent.ExecutorService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.concurrent.Executor;
 
 import com.google.common.base.Preconditions;
 
@@ -40,11 +37,9 @@ import com.google.common.base.Preconditions;
  */
 public class ListenerInvocation {
 
-    private static final Log LOG = LogFactory.getLog(ListenerInvocation.class);
-
     private final Object target;
     private final Method method;
-    private final ExecutorService executor;
+    private final Executor executor;
 
     /**
      * Creates a new listener invocation.
@@ -53,7 +48,7 @@ public class ListenerInvocation {
      * @param  method    method to run
      * @param  executor  executor
      */
-    public ListenerInvocation(final Object target, final Method method, final ExecutorService executor) {
+    public ListenerInvocation(final Object target, final Method method, final Executor executor) {
         this.target = Preconditions.checkNotNull(target, "target");
         this.method = Preconditions.checkNotNull(method, "method");
         this.executor = Preconditions.checkNotNull(executor, "executor");
@@ -84,14 +79,7 @@ public class ListenerInvocation {
      */
     public void invoke(final Object event) {
         Preconditions.checkNotNull(event, "event");
-
-        if (this.executor.isShutdown()) {
-            ListenerInvocation.LOG.error(MessageFormat.format(
-                    "Cannot execute method {0} on listener {1} because the executor was shutdown", this.method,
-                    this.target));
-        } else {
-            this.executor.execute(this.buildRunnable(event));
-        }
+        this.executor.execute(this.buildRunnable(event));
     }
 
     private Runnable buildRunnable(final Object event) {
@@ -103,15 +91,28 @@ public class ListenerInvocation {
                     ListenerInvocation.this.method.invoke(ListenerInvocation.this.target, event);
                 } catch (final InvocationTargetException e) {
                     throw new ListenerInvocationException(MessageFormat.format(
-                            "Caught exception invoking method {0} on listener instance {1}",
+                            "Caught exception invoking listener method {0} on instance {1}",
                             ListenerInvocation.this.method, ListenerInvocation.this.target), e.getTargetException());
                 } catch (final IllegalAccessException e) {
                     throw new ListenerInvocationException(MessageFormat.format(
-                            "Unable to invoke method {0} on Object instance {1}.", ListenerInvocation.this.method,
+                            "Unable to invoke listener method {0} on instance {1}.", ListenerInvocation.this.method,
                             ListenerInvocation.this.target), e);
                 }
             }
         };
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ListenerInvocation [target=");
+        builder.append(target);
+        builder.append(", method=");
+        builder.append(method);
+        builder.append(", executor=");
+        builder.append(executor);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

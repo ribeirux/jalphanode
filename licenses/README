@@ -37,11 +37,6 @@ version: 3.2.7.Final
 project: http://www.jgroups.org/
 license: LGPL
 
-name:    joda-time-2.1.jar
-version: 2.1
-project: http://joda-time.sourceforge.net/
-license: Apache License 2.0
-
 test
 
 name:    testng-6.8.jar

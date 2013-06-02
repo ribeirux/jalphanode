@@ -18,17 +18,35 @@
  *
  * $Id: TaskType.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.scheduler;
+package org.jalphanode.inject;
 
-import org.jalphanode.annotation.Stop;
+import java.lang.annotation.Annotation;
 
-import org.jalphanode.config.TaskConfig;
+import com.google.inject.Scope;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
+import com.google.inject.spi.BindingScopingVisitor;
 
-public interface TaskScheduler {
+public class IsSingletonBindingScopingVisitor implements BindingScopingVisitor<Boolean> {
 
-    void schedule(TaskConfig task);
+    @Override
+    public Boolean visitEagerSingleton() {
+        return Boolean.TRUE;
+    }
 
-    @Stop(priority = 50)
-    void stop();
+    @Override
+    public Boolean visitScope(final Scope scope) {
+        return scope == Scopes.SINGLETON;
+    }
+
+    @Override
+    public Boolean visitScopeAnnotation(final Class<? extends Annotation> scopeAnnotation) {
+        return scopeAnnotation == Singleton.class;
+    }
+
+    @Override
+    public Boolean visitNoScoping() {
+        return Boolean.FALSE;
+    }
 
 }

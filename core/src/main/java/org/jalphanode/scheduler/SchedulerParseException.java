@@ -22,6 +22,7 @@ package org.jalphanode.scheduler;
 
 import org.jalphanode.JAlphaNodeException;
 
+
 /**
  * Thrown if the cron expression is wrong.
  *

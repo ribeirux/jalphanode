@@ -33,16 +33,15 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.jalphanode.cluster.AbstractMembershipManager;
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.MembershipException;
+import org.jalphanode.cluster.MembershipManager;
 import org.jalphanode.cluster.NodeAddress;
 
 import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.config.MembershipConfig;
 
 import org.jalphanode.notification.Notifier;
-
-import org.jalphanode.scheduler.TaskScheduler;
 
 import org.jgroups.Address;
 import org.jgroups.Channel;
@@ -62,13 +61,17 @@ import com.google.inject.Inject;
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
-public class JGroupsMembershipManager extends AbstractMembershipManager implements Receiver {
+public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
     private static final Log LOG = LogFactory.getLog(JGroupsMembershipManager.class);
 
     private final CountDownLatch connectedLatch = new CountDownLatch(1);
 
+    private final JAlphaNodeConfig config;
     private final Channel channel;
+    private final MasterNodeElectionPolicy masterNodeElectionPolicy;
+    private final Notifier notifier;
+
     private volatile boolean master = false;
     private volatile NodeAddress address;
     private volatile NodeAddress masterAddress;
@@ -81,14 +84,23 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
      * @param  channel                   jgroups channel
      * @param  masterNodeElectionPolicy  master node election policy
      * @param  notifier                  notifier instance
-     * @param  taskScheduler             task executor
      */
     @Inject
     public JGroupsMembershipManager(final JAlphaNodeConfig config, final Channel channel,
-            final MasterNodeElectionPolicy masterNodeElectionPolicy, final Notifier notifier,
-            final TaskScheduler taskScheduler) {
-        super(config, masterNodeElectionPolicy, notifier, taskScheduler);
+            final MasterNodeElectionPolicy masterNodeElectionPolicy, final Notifier notifier) {
+        this.config = Preconditions.checkNotNull(config, "config");
+        this.notifier = Preconditions.checkNotNull(notifier, "notifier");
+        this.masterNodeElectionPolicy = Preconditions.checkNotNull(masterNodeElectionPolicy,
+                "masterNodeElectionPolicy");
         this.channel = Preconditions.checkNotNull(channel);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getClusterName() {
+        return this.config.getMembership().getClusterName();
     }
 
     /**
@@ -137,7 +149,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
 
         final int randomInRange = new Random().nextInt();
 
-        this.channel.setName(this.getConfig().getMembership().getNodeName() + "-" + randomInRange);
+        this.channel.setName(this.config.getMembership().getNodeName() + "-" + randomInRange);
         this.channel.setReceiver(this);
 
         try {
@@ -194,7 +206,7 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
             this.members = this.fromJGroupsAddressList(newMembers);
 
             // the list of members is immutable, thus, thread safe
-            this.masterAddress = this.getMasterNodeElectionPolicy().elect(this.members);
+            this.masterAddress = this.masterNodeElectionPolicy.elect(this.members);
 
             this.master = this.masterAddress.equals(this.address);
 
@@ -203,7 +215,10 @@ public class JGroupsMembershipManager extends AbstractMembershipManager implemen
                 this.connectedLatch.countDown();
             }
 
-            this.topologyChanged(this.members, oldMembers, this.getNodeAddress(), this.masterAddress, this.master);
+            // notify listeners
+            final MembershipConfig membershipConfs = this.config.getMembership();
+            this.notifier.notifyViewChange(membershipConfs.getNodeName(), membershipConfs.getClusterName(), members,
+                oldMembers, this.getNodeAddress(), masterAddress, this.master);
         }
     }
 

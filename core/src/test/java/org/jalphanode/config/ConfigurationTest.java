@@ -61,9 +61,9 @@ public class ConfigurationTest {
         Assert.assertNotNull(taskScheduler.getProperties());
 
         // Async Executor
-        final AsyncExecutorConfig asyncExecutor = config.getAsyncExecutor();
-        Assert.assertNotNull(asyncExecutor);
-        Assert.assertNotNull(asyncExecutor.getProperties());
+        final AsyncNotificationExecutorConfig asyncNotificationExecutor = config.getAsyncNotificationExecutor();
+        Assert.assertNotNull(asyncNotificationExecutor);
+        Assert.assertNotNull(asyncNotificationExecutor.getProperties());
 
         // Membership Manager
         final MembershipConfig membershipConf = config.getMembership();
@@ -99,16 +99,16 @@ public class ConfigurationTest {
         Assert.assertEquals(taskScheduler.getProperties().size(), 2);
         Assert.assertEquals(taskScheduler.getProperties().getProperty("threadNamePrefix"), "task-pool");
         Assert.assertEquals(taskScheduler.getProperties().getProperty("threadPriority"), "5");
-        Assert.assertEquals(taskScheduler.getCorePoolSize(), Integer.valueOf(5));
+        Assert.assertEquals(taskScheduler.getPoolSize(), Integer.valueOf(5));
 
         // Async Executor
-        final AsyncExecutorConfig asyncExecutor = config.getAsyncExecutor();
-        Assert.assertNotNull(asyncExecutor);
-        Assert.assertNotNull(asyncExecutor.getProperties());
-        Assert.assertEquals(asyncExecutor.getProperties().size(), 2);
-        Assert.assertEquals(asyncExecutor.getProperties().getProperty("threadNamePrefix"), "async-pool");
-        Assert.assertEquals(asyncExecutor.getProperties().getProperty("threadPriority"), "5");
-        Assert.assertEquals(asyncExecutor.getCorePoolSize(), Integer.valueOf(5));
+        final AsyncNotificationExecutorConfig asyncNotificationExecutor = config.getAsyncNotificationExecutor();
+        Assert.assertNotNull(asyncNotificationExecutor);
+        Assert.assertNotNull(asyncNotificationExecutor.getProperties());
+        Assert.assertEquals(asyncNotificationExecutor.getProperties().size(), 2);
+        Assert.assertEquals(asyncNotificationExecutor.getProperties().getProperty("threadNamePrefix"), "async-pool");
+        Assert.assertEquals(asyncNotificationExecutor.getProperties().getProperty("threadPriority"), "5");
+        Assert.assertEquals(asyncNotificationExecutor.getPoolSize(), Integer.valueOf(5));
 
         // Membership Manager
         final MembershipConfig membershipConf = config.getMembership();
@@ -130,13 +130,13 @@ public class ConfigurationTest {
                 + "taskName=\"TestName\"><trigger><expression>10 1 * * * ?</expression>"
                 + "<timezone>Europe/Lisbon</timezone></trigger><properties>"
                 + "<property name=\"name\" value=\"value\" /></properties>"
-                + "</task></tasks><taskScheduler corePoolSize=\"5\"><properties>"
+                + "</task></tasks><taskScheduler poolSize=\"5\"><properties>"
                 + "<property name=\"threadNamePrefix\" value=\"task-pool\" />"
                 + "<property name=\"threadPriority\" value=\"5\" /></properties></taskScheduler>"
-                + "<asyncExecutor corePoolSize=\"5\" maxPoolSize=\"10\">"
+                + "<asyncNotificationExecutor poolSize=\"5\" >"
                 + "<properties><property name=\"threadNamePrefix\" value=\"async-pool\" />"
                 + "<property name=\"threadPriority\" value=\"5\" />"
-                + "</properties></asyncExecutor><membership nodeName=\"nodeName\""
+                + "</properties></asyncNotificationExecutor><membership nodeName=\"nodeName\""
                 + " clusterName=\"clusterName\"><properties>"
                 + "<property name=\"configurationFile\" value=\"jgroups-udp.xml\" />"
                 + "</properties></membership></jalphanode>";
@@ -164,10 +164,10 @@ public class ConfigurationTest {
                                                                      .withScheduler(new CronIterator("10 1 * * * ?",
                                                                              TimeZone.getTimeZone("Europe/Lisbon")))
                                                                      .addProperty("name", "value").scheduler()
-                                                                     .withCorePoolSize(5)
+                                                                     .withPoolSize(5)
                                                                      .addProperty("threadNamePrefix", "task-pool")
-                                                                     .addProperty("threadPriority", "5").asyncExecutor()
-                                                                     .withCorePoolSize(5)
+                                                                     .addProperty("threadPriority", "5")
+                                                                     .asyncNotificationExecutor().withPoolSize(5)
                                                                      .addProperty("threadNamePrefix", "async-pool")
                                                                      .addProperty("threadPriority", "5").membership()
                                                                      .withNodeName("nodeName")

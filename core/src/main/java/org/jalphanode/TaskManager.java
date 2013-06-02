@@ -20,8 +20,6 @@
  *******************************************************************************/
 package org.jalphanode;
 
-import java.util.Date;
-
 import org.jalphanode.config.JAlphaNodeConfig;
 
 import org.jalphanode.notification.Listenable;
@@ -34,6 +32,12 @@ import org.jalphanode.notification.Listenable;
  */
 public interface TaskManager extends Listenable {
 
+    enum Status {
+        INSTANTIATED,
+        RUNNING,
+        STOPPED
+    }
+
     /**
      * Starts the task manager.
      */
@@ -45,31 +49,17 @@ public interface TaskManager extends Listenable {
     void shutdown();
 
     /**
-     * Gets the period of running time.
-     *
-     * @return  the running time period
-     */
-    Period getRunningTime();
-
-    /**
-     * Gets the start running date.
-     *
-     * @return  the start running date
-     */
-    Date getStartDate();
-
-    /**
-     * Gets the status of the node.
-     *
-     * @return  the current status
-     */
-    Status getStatus();
-
-    /**
      * Gets the current configuration.
      *
      * @return  the current configuration
      */
     JAlphaNodeConfig getConfig();
+
+    /**
+     * Gets the current state;
+     *
+     * @return  the current state
+     */
+    Status getStatus();
 
 }

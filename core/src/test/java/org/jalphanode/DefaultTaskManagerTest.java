@@ -20,7 +20,7 @@
  *******************************************************************************/
 package org.jalphanode;
 
-import java.util.Date;
+import org.jalphanode.TaskManager.Status;
 
 import org.jalphanode.annotation.Listener;
 import org.jalphanode.annotation.ViewChanged;
@@ -52,11 +52,6 @@ public class DefaultTaskManagerTest {
 
         taskManager.start();
 
-        final Period period = taskManager.getRunningTime();
-        Assert.assertNotNull(period, period.toString());
-
-        final Date startDate = taskManager.getStartDate();
-        Assert.assertNotNull(startDate, startDate.toString());
         Assert.assertEquals(taskManager.getStatus(), Status.RUNNING);
         Assert.assertEquals(taskManager.getListeners().size(), 0);
         Assert.assertNotNull(taskManager.getConfig());

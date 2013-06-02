@@ -16,19 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: TaskType.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: Listener.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.scheduler;
+package org.jalphanode.annotation;
 
-import org.jalphanode.annotation.Stop;
+import static java.lang.annotation.ElementType.METHOD;
 
-import org.jalphanode.config.TaskConfig;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface TaskScheduler {
+/**
+ * Method level annotation that indicates a (no param) method should be executed when jalphanode stops.
+ */
+@Target(METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Stop {
 
-    void schedule(TaskConfig task);
-
-    @Stop(priority = 50)
-    void stop();
-
+	 /**
+     * Optional parameter which defines the order in which this method will be called when JAlphanode stops.
+     * Default:100
+     *
+     * @return  execution priority
+     */
+    public abstract int priority() default 100;
 }

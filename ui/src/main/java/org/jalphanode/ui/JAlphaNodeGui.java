@@ -50,6 +50,8 @@ import org.apache.commons.logging.LogFactory;
 import org.jalphanode.DefaultTaskManager;
 import org.jalphanode.TaskManager;
 
+import org.jalphanode.TaskManager.Status;
+
 import org.jalphanode.annotation.Listener;
 import org.jalphanode.annotation.ViewChanged;
 
@@ -108,7 +110,7 @@ public class JAlphaNodeGui {
                 @Override
                 public void windowClosing(final WindowEvent event) {
                     if ((JAlphaNodeGui.this.taskManager != null)
-                            && JAlphaNodeGui.this.taskManager.getStatus().isShutdownAllowed()) {
+                            && JAlphaNodeGui.this.taskManager.getStatus() == Status.RUNNING) {
                         JAlphaNodeGui.this.taskManager.shutdown();
                     }
                 }

@@ -16,30 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id$
+ * $Id: Listener.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode.config;
+package org.jalphanode.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.google.inject.BindingAnnotation;
 
 /**
- * Async executor configuration.
- *
- * @author   ribeirux
- * @version  $Revision$
+ * Scheduler executor.
  */
-public interface AsyncExecutorConfig extends PropertiesContainerConfig {
-
-    /**
-     * Gets the executor core pool size.
-     *
-     * @return  the core pool size
-     */
-    Integer getCorePoolSize();
-
-    /**
-     * Gets the executor mac pool size.
-     *
-     * @return  the max pool size
-     */
-    Integer getMaxPoolSize();
-
-}
+@Retention(RetentionPolicy.RUNTIME)
+@BindingAnnotation
+@Target({ ElementType.FIELD, ElementType.PARAMETER })
+public @interface SchedulerExecutor { }

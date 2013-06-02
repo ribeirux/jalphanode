@@ -28,8 +28,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.jalphanode.scheduler.ScheduleIterator;
 
+import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.task.NoTask;
 import org.jalphanode.task.Task;
 

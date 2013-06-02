@@ -20,28 +20,40 @@
  *******************************************************************************/
 package org.jalphanode;
 
-import java.util.Date;
+import java.lang.reflect.Method;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.PriorityQueue;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.jalphanode.cluster.AbstractMembershipManager;
+import org.jalphanode.annotation.Start;
+import org.jalphanode.annotation.Stop;
 
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeType;
+import org.jalphanode.config.TaskConfig;
+
+import org.jalphanode.inject.InjectorModule;
+import org.jalphanode.inject.IsSingletonBindingScopingVisitor;
+import org.jalphanode.inject.LifecycleInvocation;
 
 import org.jalphanode.notification.Notifier;
 
 import org.jalphanode.scheduler.TaskScheduler;
 
-import org.joda.time.DateTime;
+import org.jalphanode.util.ReflectionUtil;
 
 import com.google.common.base.Preconditions;
 
+import com.google.inject.Binding;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Stage;
 
 /**
@@ -55,13 +67,7 @@ public class DefaultTaskManager implements TaskManager {
     private static final Log LOG = LogFactory.getLog(DefaultTaskManager.class);
 
     private final Injector injector;
-
-    private DateTime startDateTime;
-    private Status status;
-
-    // services
-    private final AbstractMembershipManager membershipManager;
-    private final Notifier notifier;
+    private volatile Status status;
 
     /**
      * Constructs a new instance using default configuration. See {@link JAlphaNodeConfig} for more details.
@@ -80,14 +86,12 @@ public class DefaultTaskManager implements TaskManager {
     }
 
     /**
-     * Constructs a new instance with specified moudule injector.
+     * Constructs a new instance with specified module injector.
      *
      * @param  module  injector module
      */
     public DefaultTaskManager(final InjectorModule module) {
         this.injector = Guice.createInjector(Stage.PRODUCTION, Preconditions.checkNotNull(module, "module"));
-        this.membershipManager = this.injector.getInstance(AbstractMembershipManager.class);
-        this.notifier = this.injector.getInstance(Notifier.class);
         this.status = Status.INSTANTIATED;
     }
 
@@ -95,40 +99,8 @@ public class DefaultTaskManager implements TaskManager {
      * {@inheritDoc}
      */
     @Override
-    public Period getRunningTime() {
-        if (!this.status.isRunning()) {
-            throw new IllegalStateException("JAlphaNode is not running");
-        }
-
-        return new PeriodImpl(this.startDateTime, new DateTime());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Date getStartDate() {
-        if (!this.status.isRunning()) {
-            throw new IllegalStateException("JAlphaNode is not running");
-        }
-
-        return this.startDateTime.toDate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void addListener(final Object listener) {
-        this.notifier.addListener(Preconditions.checkNotNull(listener, "listener"));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Set<Object> getListeners() {
-        return this.notifier.getListeners();
+        this.injector.getInstance(Notifier.class).addListener(Preconditions.checkNotNull(listener, "listener"));
     }
 
     /**
@@ -136,7 +108,15 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public void removeListener(final Object listener) {
-        this.notifier.removeListener(Preconditions.checkNotNull(listener, "listener"));
+        this.injector.getInstance(Notifier.class).removeListener(Preconditions.checkNotNull(listener, "listener"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<Object> getListeners() {
+        return this.injector.getInstance(Notifier.class).getListeners();
     }
 
     /**
@@ -144,15 +124,26 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public void start() {
-        if (!this.status.isStartAllowed()) {
-            throw new IllegalStateException("Start not allowed");
+        DefaultTaskManager.LOG.info("Starting task manager...");
+
+        synchronized (this) {
+            if (status != Status.INSTANTIATED) {
+                throw new IllegalStateException("Start not allowed");
+            }
+
+            // start all registered components
+            invoke(Status.RUNNING);
+
+            // schedule all tasks
+            JAlphaNodeConfig config = this.injector.getInstance(JAlphaNodeConfig.class);
+            TaskScheduler scheduler = this.injector.getInstance(TaskScheduler.class);
+            for (TaskConfig task : config.getTasks().getTask()) {
+                scheduler.schedule(task);
+            }
+
+            status = Status.RUNNING;
         }
 
-        DefaultTaskManager.LOG.info("Starting task manager...");
-        this.membershipManager.connect();
-
-        this.startDateTime = new DateTime();
-        this.status = Status.RUNNING;
         DefaultTaskManager.LOG.info("Task manager started!");
     }
 
@@ -161,27 +152,57 @@ public class DefaultTaskManager implements TaskManager {
      */
     @Override
     public void shutdown() {
-        if (!this.status.isShutdownAllowed()) {
-            throw new IllegalStateException("Shutdown not allowed");
+        DefaultTaskManager.LOG.info("Shutting down task manager...");
+
+        synchronized (this) {
+            if (status != Status.RUNNING) {
+                throw new IllegalStateException("Shutdown not allowed");
+            }
+
+            status = Status.STOPPED;
+
+            invoke(Status.STOPPED);
         }
 
-        DefaultTaskManager.LOG.info("Shutting down task manager...");
-        membershipManager.shutdown();
-
-        // TODO shutdown thread pool
-        this.injector.getInstance(TaskScheduler.class).shutdown();
-        this.injector.getInstance(ExecutorService.class).shutdown();
-        this.status = Status.TERMINATED;
         DefaultTaskManager.LOG.info("Shutdown complete!");
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Status getStatus() {
-        return this.status;
+    private void invoke(final Status status) {
+        Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
+        if (!bindings.isEmpty()) {
+            IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
+            PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size());
+
+            // collect all methods to start
+            for (Entry<Key<?>, Binding<?>> entry : bindings.entrySet()) {
+
+                // check if binding is singleton
+                if (entry.getValue().acceptScopingVisitor(isSingletonVisitor)) {
+                    Object instance = injector.getInstance(entry.getKey());
+                    if (status == Status.RUNNING) {
+                        List<Method> methods = ReflectionUtil.getAllMethods(instance.getClass(), Start.class);
+                        for (Method method : methods) {
+                            int priority = method.getAnnotation(Start.class).priority();
+                            toInvoke.add(new LifecycleInvocation(priority, instance, method));
+                        }
+                    } else if (status == Status.STOPPED) {
+                        List<Method> methods = ReflectionUtil.getAllMethods(instance.getClass(), Stop.class);
+                        for (Method method : methods) {
+                            int priority = method.getAnnotation(Stop.class).priority();
+                            toInvoke.add(new LifecycleInvocation(priority, instance, method));
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Status not supported: " + status);
+                    }
+                }
+            }
+
+            LifecycleInvocation invocation = toInvoke.poll();
+            while (invocation != null) {
+                invocation.invoke();
+                invocation = toInvoke.poll();
+            }
+        }
     }
 
     /**
@@ -192,19 +213,19 @@ public class DefaultTaskManager implements TaskManager {
         return this.injector.getInstance(JAlphaNodeConfig.class);
     }
 
-    // TODO generate toString
     @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("DefaultTaskManager [injector=");
-        builder.append(injector);
-        builder.append(", startDateTime=");
-        builder.append(startDateTime);
-        builder.append(", status=");
-        builder.append(status);
-        builder.append("]");
-
-        return builder.toString();
+    public Status getStatus() {
+        return status;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("DefaultTaskManager [injector=");
+        builder.append(injector);
+        builder.append(", state=");
+        builder.append(status);
+        builder.append("]");
+        return builder.toString();
+    }
 }

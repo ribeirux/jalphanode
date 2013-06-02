@@ -24,6 +24,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -119,6 +121,44 @@ public final class ReflectionUtil {
         }
 
         return annotation;
+    }
+
+    public static List<Method> getAllMethods(final Class<?> clazz, final Class<? extends Annotation> annotation) {
+        Preconditions.checkNotNull(clazz, "clazz");
+        Preconditions.checkNotNull(annotation, "annotation");
+
+        List<Method> annotated = new LinkedList<Method>();
+        getAllMethodsRecursively(clazz, annotated, annotation);
+
+        return annotated;
+    }
+
+    private static void getAllMethodsRecursively(final Class<?> clazz, final List<Method> annotated,
+            final Class<? extends Annotation> annotation) {
+
+        if (clazz != null && !clazz.equals(Object.class)) {
+            for (Method m : clazz.getDeclaredMethods()) {
+                if (m.isAnnotationPresent(annotation)) {
+
+                    // don't bother if this method has already been overridden by a subclass
+                    boolean exists = false;
+                    for (Iterator<Method> it = annotated.iterator(); it.hasNext() && !exists;) {
+                        Method found = it.next();
+                        exists = m.getName().equals(found.getName())
+                                && Arrays.equals(m.getParameterTypes(), found.getParameterAnnotations());
+                    }
+
+                    if (!exists) {
+                        annotated.add(m);
+                    }
+                }
+            }
+
+            getAllMethodsRecursively(clazz.getSuperclass(), annotated, annotation);
+            for (Class<?> ifc : clazz.getInterfaces()) {
+                getAllMethodsRecursively(ifc, annotated, annotation);
+            }
+        }
     }
 
     public static List<Field> getAnnotatedAttributes(final Class<?> clazz,

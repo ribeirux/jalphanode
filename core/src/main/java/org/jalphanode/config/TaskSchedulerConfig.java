@@ -29,10 +29,10 @@ package org.jalphanode.config;
 public interface TaskSchedulerConfig extends PropertiesContainerConfig {
 
     /**
-     * Gets the executor core pool size.
+     * Gets the executor pool size.
      *
-     * @return  the core pool size
+     * @return  the pool size
      */
-    Integer getCorePoolSize();
+    Integer getPoolSize();
 
 }

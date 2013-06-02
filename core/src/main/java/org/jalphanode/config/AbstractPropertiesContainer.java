@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
-@XmlSeeAlso({ TaskType.class, TaskSchedulerType.class, AsyncExecutorType.class, MembershipType.class })
+@XmlSeeAlso({ TaskType.class, TaskSchedulerType.class, AsyncNotificationExecutorType.class, MembershipType.class })
 public abstract class AbstractPropertiesContainer implements PropertiesContainerConfig {
 
     @XmlElement

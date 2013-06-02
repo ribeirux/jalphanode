@@ -16,43 +16,67 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: JAlphaNodeConfig.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id$
  *******************************************************************************/
-package org.jalphanode.config;
+package org.jalphanode.cluster;
+
+import java.util.List;
+
+import org.jalphanode.annotation.Start;
+import org.jalphanode.annotation.Stop;
 
 /**
- * Configuration root.
+ * Membership manager.
  *
  * @author   ribeirux
- * @version  $Revision: 274 $
+ * @version  $Revision$
  */
-public interface JAlphaNodeConfig {
+public interface MembershipManager {
 
     /**
-     * Gets tasks configuration.
+     * Gets the cluster name.
      *
-     * @return  tasks configuration
+     * @return  the name of the cluster. Null if running in local mode.
      */
-    TasksConfig getTasks();
+    String getClusterName();
 
     /**
-     * Gets task scheduler configuration.
+     * Gets the node address.
      *
-     * @return  task scheduler configuration
+     * @return  then node address
      */
-    TaskSchedulerConfig getTaskScheduler();
+    NodeAddress getNodeAddress();
 
     /**
-     * Gets async executor configuration.
+     * Gets the master node address.
      *
-     * @return  async executor configuration
+     * @return  the master node address
      */
-    AsyncNotificationExecutorConfig getAsyncNotificationExecutor();
+    NodeAddress getMasterNodeAddress();
 
     /**
-     * Gets membership configuration.
+     * Checks if this node is a master node.
      *
-     * @return  membership configuration
+     * @return  true if the node is a master node, otherwise false
      */
-    MembershipConfig getMembership();
+    boolean isMasterNode();
+
+    /**
+     * Gets the members of the cluster.
+     *
+     * @return  the members of the cluster
+     */
+    List<NodeAddress> getMembers();
+
+    /**
+     * Connects to a group. The client is now able to receive views.
+     */
+    @Start
+    void connect();
+
+    /**
+     * Shutdown the membership manager.
+     */
+    @Stop(priority = 150)
+    void shutdown();
 }

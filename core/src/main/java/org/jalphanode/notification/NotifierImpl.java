@@ -24,10 +24,11 @@ import java.lang.annotation.Annotation;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 import org.jalphanode.annotation.AfterTask;
 import org.jalphanode.annotation.BeforeTask;
+import org.jalphanode.annotation.NotifierExecutor;
 import org.jalphanode.annotation.ViewChanged;
 
 import org.jalphanode.cluster.NodeAddress;
@@ -66,7 +67,7 @@ public class NotifierImpl extends AbstractListener implements Notifier {
      * @param  asyncExecutor  asynchronous executor
      */
     @Inject
-    public NotifierImpl(final ExecutorService asyncExecutor) {
+    public NotifierImpl(@NotifierExecutor final Executor asyncExecutor) {
         super(asyncExecutor);
     }
 

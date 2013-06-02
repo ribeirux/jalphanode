@@ -36,37 +36,37 @@ import javax.xml.bind.annotation.XmlType;
 public class TaskSchedulerType extends AbstractPropertiesContainer implements TaskSchedulerConfig {
 
     /**
-     * Default core pool size.
+     * Default pool size.
      */
-    public static final int DEFAULT_CORE_POOL_SIZE = 10;
+    public static final int DEFAULT_POOL_SIZE = 10;
 
     @XmlAttribute
-    private Integer corePoolSize;
+    private Integer poolSize;
 
     /**
      * Creates a new async executor with default configuration.
      */
     public TaskSchedulerType() {
         super();
-        this.corePoolSize = TaskSchedulerType.DEFAULT_CORE_POOL_SIZE;
+        this.poolSize = TaskSchedulerType.DEFAULT_POOL_SIZE;
     }
 
     /**
-     * Gets the corePoolSize property.
+     * Gets the poolSize property.
      *
-     * @return  the corePoolSize property
+     * @return  the poolSize property
      */
     @Override
-    public Integer getCorePoolSize() {
-        return this.corePoolSize;
+    public Integer getPoolSize() {
+        return this.poolSize;
     }
 
     /**
-     * Sets the corePoolSize property.
+     * Sets the poolSize property.
      *
-     * @param  corePoolSize  the corePoolSize to set
+     * @param  poolSize  the poolSize to set
      */
-    public void setCorePoolSize(final Integer corePoolSize) {
-        this.corePoolSize = corePoolSize;
+    public void setPoolSize(final Integer poolSize) {
+        this.poolSize = poolSize;
     }
 }

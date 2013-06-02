@@ -18,33 +18,38 @@
  *
  * $Id: BinderModule.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode;
+package org.jalphanode.inject;
 
 import java.lang.management.ManagementFactory;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jalphanode.cluster.AbstractMembershipManager;
+import org.jalphanode.annotation.NotifierExecutor;
+import org.jalphanode.annotation.SchedulerExecutor;
+
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
+import org.jalphanode.cluster.MembershipManager;
 import org.jalphanode.cluster.SimpleMasterNodeElectionPolicy;
 import org.jalphanode.cluster.jgroups.ChannelProvider;
 import org.jalphanode.cluster.jgroups.JGroupsMembershipManager;
 
 import org.jalphanode.config.JAlphaNodeConfig;
 
-import org.jalphanode.jmx.ResourceDynamicMBean;
+import org.jalphanode.executors.LazyInitializingNotifierExecutor;
+import org.jalphanode.executors.LazyInitializingSchedulerExecutor;
+
 import org.jalphanode.jmx.MBeanAnnotationScanner;
 import org.jalphanode.jmx.MBeanMetadata;
+import org.jalphanode.jmx.ResourceDynamicMBean;
 
-import org.jalphanode.notification.AsyncNotificationExecutorProvider;
 import org.jalphanode.notification.Notifier;
 import org.jalphanode.notification.NotifierImpl;
 
-import org.jalphanode.scheduler.RecurrentTaskScheduler;
 import org.jalphanode.scheduler.TaskScheduler;
+import org.jalphanode.scheduler.TaskSchedulerImpl;
 
 import org.jgroups.Channel;
 
@@ -107,11 +112,14 @@ public class InjectorModule extends AbstractModule {
         // bind notifier
         this.bindNotifier();
 
-        // bind task scheduler
+        // Bind async executor
+        this.bindAsyncNotifierExecutor();
+
+        // task scheduler
         this.bindTaskScheduler();
 
-        // Bind async executor
-        this.bindAsyncExecutor();
+        // Bind scheduler executor
+        this.bindSchedulerExecutor();
 
         // Bind membership manager
         this.bindMembershipManager();
@@ -124,6 +132,8 @@ public class InjectorModule extends AbstractModule {
 
         // Bind MBean annotation listener
         this.bindMBeanListener();
+
+        this.bindLifecycleManager();
 
     }
 
@@ -139,16 +149,22 @@ public class InjectorModule extends AbstractModule {
         this.bind(Notifier.class).to(NotifierImpl.class).asEagerSingleton();
     }
 
-    protected void bindTaskScheduler() {
-        this.bind(TaskScheduler.class).to(RecurrentTaskScheduler.class).asEagerSingleton();
+    protected void bindAsyncNotifierExecutor() {
+        this.bind(Executor.class).annotatedWith(NotifierExecutor.class).to(LazyInitializingNotifierExecutor.class)
+            .asEagerSingleton();
     }
 
-    protected void bindAsyncExecutor() {
-        this.bind(ExecutorService.class).toProvider(AsyncNotificationExecutorProvider.class).asEagerSingleton();
+    protected void bindTaskScheduler() {
+        this.bind(TaskScheduler.class).to(TaskSchedulerImpl.class).asEagerSingleton();
+    }
+
+    protected void bindSchedulerExecutor() {
+        this.bind(Executor.class).annotatedWith(SchedulerExecutor.class).to(LazyInitializingSchedulerExecutor.class)
+            .asEagerSingleton();
     }
 
     protected void bindMembershipManager() {
-        this.bind(AbstractMembershipManager.class).to(JGroupsMembershipManager.class).asEagerSingleton();
+        this.bind(MembershipManager.class).to(JGroupsMembershipManager.class).asEagerSingleton();
     }
 
     protected void bindMembershipChannel() {
@@ -161,7 +177,6 @@ public class InjectorModule extends AbstractModule {
 
     protected void bindMBeanListener() {
         final MBeanAnnotationScanner scanner = new MBeanAnnotationScanner();
-
         this.bindListener(Matchers.any(), new TypeListener() {
 
                 @Override
@@ -173,11 +188,9 @@ public class InjectorModule extends AbstractModule {
 
                                 @Override
                                 public void afterInjection(final I injectee) {
-
                                     try {
-
-                                        final ResourceDynamicMBean dynamicMBean =
-                                            new ResourceDynamicMBean(injectee, metadata);
+                                        final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
+                                                metadata);
 
                                         mBeanServer.registerMBean(dynamicMBean,
                                             new ObjectName(metadata.getObjectName()));
@@ -190,4 +203,6 @@ public class InjectorModule extends AbstractModule {
                 }
             });
     }
+
+    protected void bindLifecycleManager() { }
 }

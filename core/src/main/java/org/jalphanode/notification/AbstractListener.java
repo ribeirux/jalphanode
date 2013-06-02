@@ -29,7 +29,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 import org.jalphanode.annotation.Listener;
 
@@ -48,15 +48,15 @@ import com.google.common.util.concurrent.MoreExecutors;
  */
 public abstract class AbstractListener {
 
-    private final ExecutorService asyncExecutor;
-    private final ExecutorService syncExecutor;
+    private final Executor asyncExecutor;
+    private final Executor syncExecutor;
 
     /**
      * Initializes internal fields.
      *
      * @param  asyncExecutor  asynchronous executor
      */
-    public AbstractListener(final ExecutorService asyncExecutor) {
+    public AbstractListener(final Executor asyncExecutor) {
         this.asyncExecutor = Preconditions.checkNotNull(asyncExecutor, "asyncExecutor");
         this.syncExecutor = MoreExecutors.sameThreadExecutor();
     }
@@ -206,7 +206,7 @@ public abstract class AbstractListener {
 
         final boolean sync = this.testListenerClassValidity(listener.getClass());
         boolean foundMethods = false;
-        ExecutorService listenerExecutor;
+        Executor listenerExecutor;
         final Map<Class<? extends Annotation>, Class<?>> allowedListeners = this.getAllowedMethodAnnotations();
 
         // now try all methods on the listener for anything that we like. Note that only PUBLIC methods are scanned.

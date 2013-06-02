@@ -22,8 +22,8 @@ package org.jalphanode.config;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.jalphanode.scheduler.ScheduleIterator;
 
+import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.task.Task;
 
 /**

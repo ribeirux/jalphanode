@@ -16,19 +16,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: TaskType.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id$
  *******************************************************************************/
-package org.jalphanode.scheduler;
+package org.jalphanode.config;
 
-import org.jalphanode.annotation.Stop;
+/**
+ * Async executor configuration.
+ *
+ * @author   ribeirux
+ * @version  $Revision$
+ */
+public interface AsyncNotificationExecutorConfig extends PropertiesContainerConfig {
 
-import org.jalphanode.config.TaskConfig;
-
-public interface TaskScheduler {
-
-    void schedule(TaskConfig task);
-
-    @Stop(priority = 50)
-    void stop();
+    /**
+     * Gets the executor core pool size.
+     *
+     * @return  the core pool size
+     */
+    Integer getPoolSize();
 
 }

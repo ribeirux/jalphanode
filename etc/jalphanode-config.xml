@@ -29,19 +29,19 @@
 		</task>
 	</tasks>
 
-	<taskScheduler corePoolSize="5">
+	<taskScheduler poolSize="5">
 		<properties>
 			<property name="threadPrefix" value="task-pool" />
 			<property name="threadPriority" value="5" />
 		</properties>
 	</taskScheduler>
 
-	<asyncExecutor corePoolSize="5" maxPoolSize="10">
+	<asyncNotificationExecutor poolSize="5">
 		<properties>
 			<property name="threadPrefix" value="async-pool" />
 			<property name="threadPriority" value="5" />
 		</properties>
-	</asyncExecutor>
+	</asyncNotificationExecutor>
 
 	<membership nodeName="nodeName" clusterName="clusterName">
 		<properties>

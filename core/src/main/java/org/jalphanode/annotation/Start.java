@@ -16,38 +16,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * $Id: PeriodImpl.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
+ * $Id: Listener.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
  *******************************************************************************/
-package org.jalphanode;
+package org.jalphanode.annotation;
 
-import org.joda.time.ReadableInstant;
-import org.joda.time.base.BasePeriod;
+import static java.lang.annotation.ElementType.METHOD;
 
-import com.google.common.base.Preconditions;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Time period implementation.
- *
- * @author   ribeirux
- * @version  $Revision: 274 $
+ * Method level annotation that indicates a (no param) method should be executed when jalphanode starts.
  */
-public class PeriodImpl extends BasePeriod implements Period {
-
-    private static final long serialVersionUID = -3136128959120851735L;
+@Target(METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Start {
 
     /**
-     * Creates a new instance.
+     * Optional parameter which defines the order in which this method will be called when JAlphanode starts.
+     * Default:100
      *
-     * @param  start  start instant
-     * @param  end    end instant
+     * @return  execution priority
      */
-    public PeriodImpl(final ReadableInstant start, final ReadableInstant end) {
-        super(start, end, null);
-    }
-
-    @Override
-    public int getPeriodField(final PeriodField field) {
-        return this.getValue(Preconditions.checkNotNull(field, "field").getIndex());
-    }
-
+    public abstract int priority() default 100;
 }

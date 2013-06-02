@@ -35,7 +35,9 @@ import javax.xml.bind.annotation.XmlType;
  * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "jalphanodeConfiguration", propOrder = {"tasks", "taskScheduler", "asyncExecutor", "membership"})
+@XmlType(
+    name = "jalphanodeConfiguration", propOrder = {"tasks", "taskScheduler", "asyncNotificationExecutor", "membership"}
+)
 @XmlRootElement(name = "jalphanode")
 public class JAlphaNodeType implements JAlphaNodeConfig {
 
@@ -56,7 +58,7 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
     private TaskSchedulerType taskScheduler;
 
     @XmlElement
-    private AsyncExecutorType asyncExecutor;
+    private AsyncNotificationExecutorType asyncNotificationExecutor;
 
     @XmlElement
     private MembershipType membership;
@@ -67,7 +69,7 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
     public JAlphaNodeType() {
         this.tasks = new TasksType();
         this.taskScheduler = new TaskSchedulerType();
-        this.asyncExecutor = new AsyncExecutorType();
+        this.asyncNotificationExecutor = new AsyncNotificationExecutorType();
         this.membership = new MembershipType();
     }
 
@@ -110,22 +112,22 @@ public class JAlphaNodeType implements JAlphaNodeConfig {
     }
 
     /**
-     * Gets the asyncExecutor property.
+     * Gets the asyncNotificationExecutor property.
      *
-     * @return  the asyncExecutor property
+     * @return  the asyncNotificationExecutor property
      */
     @Override
-    public AsyncExecutorType getAsyncExecutor() {
-        return this.asyncExecutor;
+    public AsyncNotificationExecutorType getAsyncNotificationExecutor() {
+        return this.asyncNotificationExecutor;
     }
 
     /**
-     * Sets the asyncExecutor property.
+     * Sets the asyncNotificationExecutor property.
      *
-     * @param  asyncExecutor  the asyncExecutor to set
+     * @param  asyncNotificationExecutor  the asyncNotificationExecutor to set
      */
-    public void setAsyncExecutor(final AsyncExecutorType asyncExecutor) {
-        this.asyncExecutor = asyncExecutor;
+    public void setAsyncNotificationExecutor(final AsyncNotificationExecutorType asyncNotificationExecutor) {
+        this.asyncNotificationExecutor = asyncNotificationExecutor;
     }
 
     /**

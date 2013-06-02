@@ -22,8 +22,8 @@ package org.jalphanode.config;
 
 import java.io.InputStream;
 
-import org.jalphanode.scheduler.ScheduleIterator;
 
+import org.jalphanode.scheduler.ScheduleIterator;
 import org.jalphanode.task.Task;
 
 import org.jalphanode.util.ConfigurationUtils;
@@ -82,8 +82,8 @@ public class JAlphaNodeConfigBuilder {
      *
      * @return  the async executor builder instance
      */
-    public AsyncExecutorBuilder asyncExecutor() {
-        return new AsyncExecutorBuilder(this.config);
+    public AsyncNotificationExecutorBuilder asyncNotificationExecutor() {
+        return new AsyncNotificationExecutorBuilder(this.config);
     }
 
     /**
@@ -250,8 +250,8 @@ public class JAlphaNodeConfigBuilder {
          *
          * @return  the task scheduler builder instance
          */
-        public TaskSchedulerBuilder withCorePoolSize(final Integer size) {
-            this.getConfig().getTaskScheduler().setCorePoolSize(size);
+        public TaskSchedulerBuilder withPoolSize(final Integer size) {
+            this.getConfig().getTaskScheduler().setPoolSize(size);
             return this;
         }
 
@@ -275,9 +275,9 @@ public class JAlphaNodeConfigBuilder {
      * @author   ribeirux
      * @version  $Revision$
      */
-    public static class AsyncExecutorBuilder extends JAlphaNodeConfigBuilder {
+    public static class AsyncNotificationExecutorBuilder extends JAlphaNodeConfigBuilder {
 
-        protected AsyncExecutorBuilder(final JAlphaNodeType config) {
+        protected AsyncNotificationExecutorBuilder(final JAlphaNodeType config) {
             super(config);
         }
 
@@ -288,13 +288,8 @@ public class JAlphaNodeConfigBuilder {
          *
          * @return  the async executor builder instance
          */
-        public AsyncExecutorBuilder withCorePoolSize(final Integer size) {
-            this.getConfig().getAsyncExecutor().setCorePoolSize(size);
-            return this;
-        }
-
-        public AsyncExecutorBuilder withMaxCorePoolSize(final Integer size) {
-            this.getConfig().getAsyncExecutor().setMaxPoolSize(size);
+        public AsyncNotificationExecutorBuilder withPoolSize(final Integer size) {
+            this.getConfig().getAsyncNotificationExecutor().setPoolSize(size);
             return this;
         }
 
@@ -306,8 +301,8 @@ public class JAlphaNodeConfigBuilder {
          *
          * @return  the async executor builder instance
          */
-        public AsyncExecutorBuilder addProperty(final Object key, final Object value) {
-            this.getConfig().getAsyncExecutor().getProperties().put(key, value);
+        public AsyncNotificationExecutorBuilder addProperty(final Object key, final Object value) {
+            this.getConfig().getAsyncNotificationExecutor().getProperties().put(key, value);
             return this;
         }
     }
