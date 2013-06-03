@@ -44,7 +44,7 @@ import com.google.common.base.Preconditions;
 
 import com.google.inject.Inject;
 
-public class TaskSchedulerImpl implements TaskScheduler {
+public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
     private static final Log LOG = LogFactory.getLog(TaskSchedulerImpl.class);
 
@@ -64,7 +64,7 @@ public class TaskSchedulerImpl implements TaskScheduler {
         this.membershipManager = Preconditions.checkNotNull(membershipManager, "membershipManager");
         this.notifier = Preconditions.checkNotNull(notifier, "notifier");
         this.queue = new DelayQueue<RecurrentTask>();
-        this.runner = new Thread(getRunner(), "Runner thread");
+        this.runner = new Thread(this, "Runner thread");
         runner.start();
     }
 
@@ -72,18 +72,8 @@ public class TaskSchedulerImpl implements TaskScheduler {
     public void schedule(final TaskConfig task) {
         Preconditions.checkNotNull(task, "task");
 
-        Date nextTimeout = task.getScheduleIterator().next(new Date());
-        if (nextTimeout != null) {
-            addTask(new RecurrentTask(task, nextTimeout));
-        }
-    }
-
-    protected void addTask(final RecurrentTask task) {
-        if (running) {
-            queue.add(task);
-        } else {
-            LOG.error("Failed adding task to queue.Timer is not running; task: " + task);
-        }
+        // TODO return future
+        new RecurrentTask(task).schedule();
     }
 
     @Override
@@ -92,28 +82,25 @@ public class TaskSchedulerImpl implements TaskScheduler {
         runner.interrupt();
     }
 
-    private Runnable getRunner() {
-        return new Runnable() {
+    public void run() {
+        while (running) {
+            try {
+                RecurrentTask task = queue.take();
+                try {
+                    if (membershipManager.isMasterNode()) {
+                        executor.execute(task);
+                    } else {
 
-            @Override
-            public void run() {
-
-                while (running) {
-                    try {
-                        RecurrentTask task = queue.take();
-                        try {
-                            if (membershipManager.isMasterNode()) {
-                                executor.execute(task);
-                            }
-                        } catch (Throwable t) {
-                            LOG.error("failed submitting task to thread pool", t);
-                        }
-                    } catch (InterruptedException interrupted) {
-                        /* Allow thread to exit */
+                        // if it'not the master, just schedule the task
+                        task.schedule();
                     }
+                } catch (Throwable t) {
+                    LOG.error("failed submitting task to thread pool", t);
                 }
+            } catch (InterruptedException interrupted) {
+                /* Allow thread to exit */
             }
-        };
+        }
     }
 
     private class RecurrentTask implements Runnable, Delayed {
@@ -121,9 +108,9 @@ public class TaskSchedulerImpl implements TaskScheduler {
         private final TaskConfig taskConfig;
         private volatile Date executionTime;
 
-        public RecurrentTask(final TaskConfig taskConfig, final Date executionTime) {
+        public RecurrentTask(final TaskConfig taskConfig) {
             this.taskConfig = Preconditions.checkNotNull(taskConfig, "taskConfig");
-            this.executionTime = Preconditions.checkNotNull(executionTime, "executionTime");
+            this.executionTime = new Date();
         }
 
         /**
@@ -152,10 +139,19 @@ public class TaskSchedulerImpl implements TaskScheduler {
 
             notifier.afterTask(taskConfig.getTaskName());
 
+            schedule();
+        }
+
+        public void schedule() {
             Date nextTimeout = this.taskConfig.getScheduleIterator().next(executionTime);
+
             if (nextTimeout != null) {
                 executionTime = nextTimeout;
-                addTask(this);
+                if (running) {
+                    queue.add(this);
+                } else {
+                    LOG.error("Failed adding task to queue.Timer is not running; task: " + taskConfig.getTaskName());
+                }
             }
         }
     }
