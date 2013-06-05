@@ -27,8 +27,8 @@ import com.google.common.base.Preconditions;
 
 /**
  * MBean attribute metadata.
- * 
- * @author   ribeirux
+ *
+ * @author  ribeirux
  */
 public class ManagedAttributeMetadata {
 
@@ -134,7 +134,7 @@ public class ManagedAttributeMetadata {
         builder2.append(readMethod);
         builder2.append(", writeMethod=");
         builder2.append(writeMethod);
-        builder2.append("]");
+        builder2.append(']');
         return builder2.toString();
     }
 

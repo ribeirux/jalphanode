@@ -22,6 +22,7 @@ package org.jalphanode;
 
 import java.lang.reflect.Method;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,7 +49,9 @@ import org.jalphanode.scheduler.TaskScheduler;
 
 import org.jalphanode.util.ReflectionUtil;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Ordering;
 
 import com.google.inject.Binding;
 import com.google.inject.Guice;
@@ -65,6 +68,15 @@ import com.google.inject.Stage;
 public class DefaultTaskManager implements TaskManager {
 
     private static final Log LOG = LogFactory.getLog(DefaultTaskManager.class);
+
+    private static final Comparator<LifecycleInvocation> PRIORITY_COMPARATOR = Ordering.natural().onResultOf(
+            new Function<LifecycleInvocation, Integer>() {
+
+                @Override
+                public Integer apply(final LifecycleInvocation obj) {
+                    return obj.getPriority();
+                }
+            });
 
     private final Injector injector;
     private volatile Status status;
@@ -171,7 +183,8 @@ public class DefaultTaskManager implements TaskManager {
         Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
         if (!bindings.isEmpty()) {
             IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
-            PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size());
+            PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size(),
+                    PRIORITY_COMPARATOR);
 
             // collect all methods to start
             for (Entry<Key<?>, Binding<?>> entry : bindings.entrySet()) {
@@ -225,7 +238,7 @@ public class DefaultTaskManager implements TaskManager {
         builder.append(injector);
         builder.append(", state=");
         builder.append(status);
-        builder.append("]");
+        builder.append(']');
         return builder.toString();
     }
 }

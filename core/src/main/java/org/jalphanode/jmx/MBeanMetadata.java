@@ -29,8 +29,8 @@ import com.google.common.collect.ImmutableSortedMap;
 
 /**
  * MBean metadata.
- * 
- * @author   ribeirux
+ *
+ * @author  ribeirux
  */
 public class MBeanMetadata {
 
@@ -166,7 +166,7 @@ public class MBeanMetadata {
         builder2.append(attributes);
         builder2.append(", operations=");
         builder2.append(operations);
-        builder2.append("]");
+        builder2.append(']');
         return builder2.toString();
     }
 

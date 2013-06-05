@@ -25,8 +25,8 @@ import com.google.common.base.Preconditions;
 
 /**
  * MBean parameter metadata.
- * 
- * @author   ribeirux
+ *
+ * @author  ribeirux
  */
 public class ManagedParameterMetadata {
 
@@ -116,7 +116,7 @@ public class ManagedParameterMetadata {
         builder2.append(name);
         builder2.append(", description=");
         builder2.append(description);
-        builder2.append("]");
+        builder2.append(']');
         return builder2.toString();
     }
 

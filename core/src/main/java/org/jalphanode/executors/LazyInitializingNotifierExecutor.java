@@ -108,6 +108,7 @@ public class LazyInitializingNotifierExecutor extends LazyInitializingThreadPool
                 }
             }
         } catch (InterruptedException ie) {
+            LOG.warn("Shutdown interrupted", ie);
 
             // (Re-)Cancel if current thread also interrupted
             pool.shutdownNow();

@@ -33,8 +33,8 @@ import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * MBean operation metadata.
- * 
- * @author   ribeirux
+ *
+ * @author  ribeirux
  */
 public class ManagedOperationMetadata {
 
@@ -160,7 +160,7 @@ public class ManagedOperationMetadata {
         builder2.append(description);
         builder2.append(", parameters=");
         builder2.append(parameters);
-        builder2.append("]");
+        builder2.append(']');
         return builder2.toString();
     }
 

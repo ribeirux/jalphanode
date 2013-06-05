@@ -50,7 +50,7 @@ public class MBean5 {
         builder.append(field);
         builder.append(", operationExecutionCount=");
         builder.append(operationExecutionCount);
-        builder.append("]");
+        builder.append(']');
         return builder.toString();
     }
 

@@ -111,7 +111,7 @@ public class ListenerInvocation {
         builder.append(method);
         builder.append(", executor=");
         builder.append(executor);
-        builder.append("]");
+        builder.append(']');
         return builder.toString();
     }
 

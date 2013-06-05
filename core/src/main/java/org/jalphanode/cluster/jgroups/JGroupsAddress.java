@@ -24,6 +24,8 @@ import org.jalphanode.cluster.NodeAddress;
 
 import org.jgroups.Address;
 
+import com.google.common.base.Objects;
+
 /**
  * An encapsulation of a JGroups Address.
  *
@@ -54,26 +56,23 @@ public class JGroupsAddress implements NodeAddress {
 
     @Override
     public int hashCode() {
-        return this.address == null ? 0 : this.address.hashCode();
+        return Objects.hashCode(address);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
+
+        if (obj == this) {
             return true;
         }
 
-        if ((obj == null) || (this.getClass() != obj.getClass())) {
-            return false;
+        if (obj instanceof JGroupsAddress) {
+            final JGroupsAddress other = (JGroupsAddress) obj;
+
+            return Objects.equal(getAddress(), other.getAddress());
         }
 
-        final JGroupsAddress that = (JGroupsAddress) obj;
-
-        if (this.address != null ? !this.address.equals(that.address) : that.address != null) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.text.MessageFormat;
 
 import com.google.common.base.Preconditions;
 
-public class LifecycleInvocation implements Comparable<LifecycleInvocation> {
+public class LifecycleInvocation {
 
     private final Object[] NO_ARGS = {};
 
@@ -67,11 +67,6 @@ public class LifecycleInvocation implements Comparable<LifecycleInvocation> {
     }
 
     @Override
-    public int compareTo(final LifecycleInvocation o) {
-        return Integer.compare(this.priority, o.getPriority());
-    }
-
-    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("LifecycleInvocation [priority=");
@@ -80,7 +75,7 @@ public class LifecycleInvocation implements Comparable<LifecycleInvocation> {
         builder.append(target);
         builder.append(", method=");
         builder.append(method);
-        builder.append("]");
+        builder.append(']');
         return builder.toString();
     }
 

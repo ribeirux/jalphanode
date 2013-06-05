@@ -174,7 +174,7 @@ public class ResourceDynamicMBean implements DynamicMBean {
                 attributeList.add(new Attribute(attributeName, getAttribute(attributeName)));
             } catch (Exception e) {
                 LOG.error(MessageFormat.format("Could not get attribute {0} on MBean {1}", attributeName,
-                        metadata.getInstanceClass().getName()));
+                        metadata.getInstanceClass().getName()), e);
             }
         }
 
@@ -194,7 +194,7 @@ public class ResourceDynamicMBean implements DynamicMBean {
                 attributeList.add(attribute);
             } catch (Exception e) {
                 LOG.error(MessageFormat.format("Could not set attribute {0} to {1} on MBean {2}", attribute.getName(),
-                        attribute.getValue(), metadata.getInstanceClass().getName()));
+                        attribute.getValue(), metadata.getInstanceClass().getName()), e);
             }
         }
 
@@ -238,7 +238,7 @@ public class ResourceDynamicMBean implements DynamicMBean {
         builder.append(metadata);
         builder.append(", mbeanInfo=");
         builder.append(mbeanInfo);
-        builder.append("]");
+        builder.append(']');
         return builder.toString();
     }
 }
