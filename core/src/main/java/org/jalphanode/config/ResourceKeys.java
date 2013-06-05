@@ -35,7 +35,7 @@ public enum ResourceKeys {
      */
     SCHEMA_LOCATION("configuration.schema.location");
 
-    private String key;
+    private final String key;
 
     private ResourceKeys(final String key) {
         this.key = key;

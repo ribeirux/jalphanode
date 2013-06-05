@@ -125,17 +125,17 @@ public class ManagedAttributeMetadata {
 
     @Override
     public String toString() {
-        StringBuilder builder2 = new StringBuilder();
-        builder2.append("ManagedAttributeMetadata [name=");
-        builder2.append(name);
-        builder2.append(", description=");
-        builder2.append(description);
-        builder2.append(", readMethod=");
-        builder2.append(readMethod);
-        builder2.append(", writeMethod=");
-        builder2.append(writeMethod);
-        builder2.append(']');
-        return builder2.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ManagedAttributeMetadata [name=");
+        builder.append(name);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", readMethod=");
+        builder.append(readMethod);
+        builder.append(", writeMethod=");
+        builder.append(writeMethod);
+        builder.append(']');
+        return builder.toString();
     }
 
 }

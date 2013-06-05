@@ -72,7 +72,7 @@ public class ManagedOperationMetadata {
         }
 
         public Builder withName(final String name) {
-            this.description = Preconditions.checkNotNull(name, "name");
+            this.name = Preconditions.checkNotNull(name, "name");
 
             return this;
 
@@ -136,7 +136,7 @@ public class ManagedOperationMetadata {
         }
 
         if (obj instanceof ManagedOperationMetadata) {
-            ManagedOperationMetadata other = (ManagedOperationMetadata) obj;
+            final ManagedOperationMetadata other = (ManagedOperationMetadata) obj;
 
             return Objects.equal(getMethod(), other.getMethod()) && Objects.equal(getName(), other.getName())
                     && Objects.equal(getDescription(), other.getDescription())
@@ -149,19 +149,19 @@ public class ManagedOperationMetadata {
 
     @Override
     public String toString() {
-        StringBuilder builder2 = new StringBuilder();
-        builder2.append("ManagedOperationMetadata [method=");
-        builder2.append(method);
-        builder2.append(", name=");
-        builder2.append(name);
-        builder2.append(", impact=");
-        builder2.append(impact);
-        builder2.append(", description=");
-        builder2.append(description);
-        builder2.append(", parameters=");
-        builder2.append(parameters);
-        builder2.append(']');
-        return builder2.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ManagedOperationMetadata [method=");
+        builder.append(method);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", impact=");
+        builder.append(impact);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", parameters=");
+        builder.append(parameters);
+        builder.append(']');
+        return builder.toString();
     }
 
 }

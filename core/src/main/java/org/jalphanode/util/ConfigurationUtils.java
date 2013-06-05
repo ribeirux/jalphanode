@@ -67,7 +67,7 @@ public final class ConfigurationUtils {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(ConfigurationUtils.BUNDLE_NAME);
 
     private ConfigurationUtils() {
-        // utility class
+        // utilities class
     }
 
     /**

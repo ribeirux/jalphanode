@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 
 import org.jalphanode.annotation.Listener;
 
-import org.jalphanode.util.ReflectionUtil;
+import org.jalphanode.util.ReflectionUtils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
@@ -153,7 +153,7 @@ public abstract class AbstractListener {
      *          asyncProcessor.
      */
     protected boolean testListenerClassValidity(final Class<?> listenerClass) {
-        final Listener listener = ReflectionUtil.getAnnotation(listenerClass, Listener.class);
+        final Listener listener = ReflectionUtils.getAnnotation(listenerClass, Listener.class);
         if (listener == null) {
             throw new MalformedListenerException("Listener class should be annotated with listener annotation");
         }
@@ -175,7 +175,7 @@ public abstract class AbstractListener {
     protected void testListenerMethodValidity(final Method method, final Class<?> allowedParameter,
             final String annotationName) {
 
-        int mod = method.getModifiers();
+        final int mod = method.getModifiers();
         if (!Modifier.isPublic(mod) || Modifier.isStatic(mod)) {
             throw new MalformedListenerException(MessageFormat.format(
                     "Methods annotated with {0} should be public and non static!", annotationName));
@@ -206,7 +206,6 @@ public abstract class AbstractListener {
 
         final boolean sync = this.testListenerClassValidity(listener.getClass());
         boolean foundMethods = false;
-        Executor listenerExecutor;
         final Map<Class<? extends Annotation>, Class<?>> allowedListeners = this.getAllowedMethodAnnotations();
 
         // now try all methods on the listener for anything that we like. Note that only PUBLIC methods are scanned.
@@ -218,8 +217,8 @@ public abstract class AbstractListener {
                 final Class<?> value = annotationEntry.getValue();
                 if (m.isAnnotationPresent(key)) {
                     this.testListenerMethodValidity(m, value, key.getName());
-                    listenerExecutor = (sync ? this.syncExecutor : this.asyncExecutor);
-                    this.addListenerInvocation(key, new ListenerInvocation(listener, m, listenerExecutor));
+                    this.addListenerInvocation(key,
+                        new ListenerInvocation(listener, m, (sync ? this.syncExecutor : this.asyncExecutor)));
                     foundMethods = true;
                 }
             }

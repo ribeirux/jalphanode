@@ -98,7 +98,7 @@ public class ManagedParameterMetadata {
         }
 
         if (obj instanceof ManagedParameterMetadata) {
-            ManagedParameterMetadata other = (ManagedParameterMetadata) obj;
+            final ManagedParameterMetadata other = (ManagedParameterMetadata) obj;
 
             return Objects.equal(getType(), other.getType()) && Objects.equal(getName(), other.getName())
                     && Objects.equal(getDescription(), other.getDescription());
@@ -109,15 +109,15 @@ public class ManagedParameterMetadata {
 
     @Override
     public String toString() {
-        StringBuilder builder2 = new StringBuilder();
-        builder2.append("ManagedParameterMetadata [type=");
-        builder2.append(type);
-        builder2.append(", name=");
-        builder2.append(name);
-        builder2.append(", description=");
-        builder2.append(description);
-        builder2.append(']');
-        return builder2.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("ManagedParameterMetadata [type=");
+        builder.append(type);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(']');
+        return builder.toString();
     }
 
 }

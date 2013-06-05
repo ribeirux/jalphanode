@@ -59,11 +59,9 @@ public class XMLEventHandler implements ValidationEventHandler {
         final String details = MessageFormat.format("Line: [{0}:{1}] Message: {2}", eventLocation.getLineNumber(),
                 eventLocation.getColumnNumber(), event.getMessage());
 
-        boolean result;
-
+        boolean result = true;
         if (event.getSeverity() == ValidationEvent.WARNING) {
             XMLEventHandler.LOG.warn(details);
-            result = true;
         } else {
             XMLEventHandler.LOG.error(details);
             result = false;

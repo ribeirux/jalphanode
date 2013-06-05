@@ -83,8 +83,8 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
     }
 
     public void run() {
-        while (running) {
-            try {
+        try {
+            while (running) {
                 RecurrentTask task = queue.take();
                 try {
                     if (membershipManager.isMasterNode()) {
@@ -97,9 +97,12 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
                 } catch (Throwable t) {
                     LOG.error("failed submitting task to thread pool", t);
                 }
-            } catch (InterruptedException interrupted) {
-                /* Allow thread to exit */
             }
+        } catch (InterruptedException interrupted) {
+            LOG.info("Task scheduler interrupted");
+
+            // Restore the interrupted status
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -118,7 +121,7 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
          */
         @Override
         public int compareTo(final Delayed o) {
-            RecurrentTask other = (RecurrentTask) o;
+            final RecurrentTask other = (RecurrentTask) o;
             return executionTime.compareTo(other.executionTime);
         }
 
@@ -143,7 +146,7 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
         }
 
         public void schedule() {
-            Date nextTimeout = this.taskConfig.getScheduleIterator().next(executionTime);
+            final Date nextTimeout = this.taskConfig.getScheduleIterator().next(executionTime);
 
             if (nextTimeout != null) {
                 executionTime = nextTimeout;

@@ -231,7 +231,7 @@ public class ResourceDynamicMBean implements DynamicMBean {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("AnnotationDrivenDynamicMBean [instance=");
         builder.append(instance);
         builder.append(", metadata=");

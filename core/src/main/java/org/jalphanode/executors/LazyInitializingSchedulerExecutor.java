@@ -59,7 +59,7 @@ public class LazyInitializingSchedulerExecutor extends LazyInitializingThreadPoo
 
     protected static final long RUNNING_TASKS_TIMEOUT = 60000;
 
-    private JAlphaNodeConfig config;
+    private final JAlphaNodeConfig config;
 
     @Inject
     public LazyInitializingSchedulerExecutor(final JAlphaNodeConfig config) {
@@ -88,6 +88,8 @@ public class LazyInitializingSchedulerExecutor extends LazyInitializingThreadPoo
 
     @Override
     protected void cleanup(final ThreadPoolExecutor pool) {
+        LOG.info("Shutting down scheduler executor");
+
         pool.shutdown(); // Disable new tasks from being submitted
         try {
             final TypedPropertiesConfig props = this.config.getTaskScheduler().getProperties();

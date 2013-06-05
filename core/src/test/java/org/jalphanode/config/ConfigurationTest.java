@@ -180,6 +180,6 @@ public class ConfigurationTest {
 
     @Test(expectedExceptions = {ConfigException.class})
     public void testBadFileConfig() throws ConfigException {
-        final JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromFile("bad-jalphanode-config.xml");
+        JAlphaNodeConfigBuilder.buildFromFile("bad-jalphanode-config.xml");
     }
 }

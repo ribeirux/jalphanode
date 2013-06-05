@@ -37,9 +37,11 @@ import com.google.common.base.Preconditions;
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
-public final class ReflectionUtil {
+public final class ReflectionUtils {
 
-    private ReflectionUtil() { }
+    private ReflectionUtils() {
+        // utilities class
+    }
 
     /**
      * Inspects the class passed in for the class level annotation specified. If the annotation is not available on the
@@ -89,7 +91,7 @@ public final class ReflectionUtil {
                 if (!tmpClazz.isInterface()) {
                     final Class<?>[] interfaces = tmpClazz.getInterfaces();
                     for (int i = 0; i < interfaces.length && classAnnotation == null; i++) {
-                        classAnnotation = ReflectionUtil.getAnnotation(interfaces[i], annotation);
+                        classAnnotation = ReflectionUtils.getAnnotation(interfaces[i], annotation);
                     }
                 }
 

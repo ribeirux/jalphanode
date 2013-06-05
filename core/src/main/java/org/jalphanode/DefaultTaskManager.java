@@ -47,7 +47,7 @@ import org.jalphanode.notification.Notifier;
 
 import org.jalphanode.scheduler.TaskScheduler;
 
-import org.jalphanode.util.ReflectionUtil;
+import org.jalphanode.util.ReflectionUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -147,8 +147,8 @@ public class DefaultTaskManager implements TaskManager {
             invoke(Status.RUNNING);
 
             // schedule all tasks
-            JAlphaNodeConfig config = this.injector.getInstance(JAlphaNodeConfig.class);
-            TaskScheduler scheduler = this.injector.getInstance(TaskScheduler.class);
+            final JAlphaNodeConfig config = this.injector.getInstance(JAlphaNodeConfig.class);
+            final TaskScheduler scheduler = this.injector.getInstance(TaskScheduler.class);
             for (TaskConfig task : config.getTasks().getTask()) {
                 scheduler.schedule(task);
             }
@@ -180,10 +180,10 @@ public class DefaultTaskManager implements TaskManager {
     }
 
     private void invoke(final Status status) {
-        Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
+        final Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
         if (!bindings.isEmpty()) {
-            IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
-            PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size(),
+            final IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
+            final PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size(),
                     PRIORITY_COMPARATOR);
 
             // collect all methods to start
@@ -193,13 +193,13 @@ public class DefaultTaskManager implements TaskManager {
                 if (entry.getValue().acceptScopingVisitor(isSingletonVisitor)) {
                     Object instance = injector.getInstance(entry.getKey());
                     if (status == Status.RUNNING) {
-                        List<Method> methods = ReflectionUtil.getAllMethods(instance.getClass(), Start.class);
+                        List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), Start.class);
                         for (Method method : methods) {
                             int priority = method.getAnnotation(Start.class).priority();
                             toInvoke.add(new LifecycleInvocation(priority, instance, method));
                         }
                     } else if (status == Status.STOPPED) {
-                        List<Method> methods = ReflectionUtil.getAllMethods(instance.getClass(), Stop.class);
+                        List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), Stop.class);
                         for (Method method : methods) {
                             int priority = method.getAnnotation(Stop.class).priority();
                             toInvoke.add(new LifecycleInvocation(priority, instance, method));
@@ -233,7 +233,7 @@ public class DefaultTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("DefaultTaskManager [injector=");
         builder.append(injector);
         builder.append(", state=");

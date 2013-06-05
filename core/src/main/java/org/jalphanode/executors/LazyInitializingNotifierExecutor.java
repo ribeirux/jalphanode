@@ -62,7 +62,7 @@ public class LazyInitializingNotifierExecutor extends LazyInitializingThreadPool
 
     protected static final long RUNNING_TASKS_TIMEOUT = 60000;
 
-    private JAlphaNodeConfig config;
+    private final JAlphaNodeConfig config;
 
     @Inject
     public LazyInitializingNotifierExecutor(final JAlphaNodeConfig config) {
@@ -92,6 +92,7 @@ public class LazyInitializingNotifierExecutor extends LazyInitializingThreadPool
 
     @Override
     protected void cleanup(final ThreadPoolExecutor pool) {
+        LOG.info("Shutting down notifier executor");
 
         pool.shutdown(); // Disable new tasks from being submitted
         try {

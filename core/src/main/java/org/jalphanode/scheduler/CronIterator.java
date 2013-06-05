@@ -29,8 +29,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
@@ -212,8 +210,8 @@ public class CronIterator implements ScheduleIterator {
 
         // the DAY_OF_WEEK values in java.util.Calendar start with 1 (Sunday),
         // but in the cron pattern, they start with 0, so we subtract 1 here
-        while ((!daysOfMonth.get(dayOfMonth) || !daysOfWeek.get(currentDayOfWeek - 1))
-                && (count++ < CronIterator.MAX_DAYS)) {
+        boolean bit = daysOfMonth.get(dayOfMonth);
+        while ((!bit || !daysOfWeek.get(currentDayOfWeek - 1)) && (count++ < CronIterator.MAX_DAYS)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
             nextDay = calendar.get(Calendar.DAY_OF_MONTH);
             currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -265,7 +263,7 @@ public class CronIterator implements ScheduleIterator {
      */
     private void reset(final Calendar calendar, final List<Integer> fields) {
         for (final int field : fields) {
-            calendar.set(field, field == Calendar.DAY_OF_MONTH ? 1 : 0);
+            calendar.set(field, (field == Calendar.DAY_OF_MONTH) ? 1 : 0);
         }
     }
 

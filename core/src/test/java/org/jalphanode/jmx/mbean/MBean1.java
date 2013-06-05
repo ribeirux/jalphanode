@@ -52,7 +52,7 @@ public class MBean1 {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("AnnotatedMBean [field=");
         builder.append(field);
         builder.append(", operationExecutionCount=");

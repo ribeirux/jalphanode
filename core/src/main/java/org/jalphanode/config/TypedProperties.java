@@ -93,16 +93,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         final String property = this.getProperty(key, resolveSysProp);
 
-        boolean result;
-
+        boolean result = defaultValue;
         if (property == null) {
-            result = defaultValue;
             TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
         } else {
             try {
                 result = Boolean.parseBoolean(property);
             } catch (final Exception e) {
-                result = defaultValue;
                 TypedProperties.LOG.warn(MessageFormat.format(
                         "Unable to convert string property [{0}] to a boolean! Using default value [{1}]", property,
                         defaultValue), e);
@@ -139,16 +136,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         final String property = this.getProperty(key, resolveSysProp);
 
-        int result;
-
+        int result = defaultValue;
         if (property == null) {
-            result = defaultValue;
             TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
         } else {
             try {
                 result = Integer.parseInt(property);
             } catch (final NumberFormatException e) {
-                result = defaultValue;
                 TypedProperties.LOG.warn(MessageFormat.format(
                         "Unable to convert string property [{0}] to an int! Using default value [{1}]", property,
                         defaultValue), e);
@@ -185,16 +179,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         final String property = this.getProperty(key, resolveSysProp);
 
-        long result;
-
+        long result = defaultValue;
         if (property == null) {
-            result = defaultValue;
             TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
         } else {
             try {
                 result = Long.parseLong(property);
             } catch (final NumberFormatException e) {
-                result = defaultValue;
                 TypedProperties.LOG.warn(MessageFormat.format(
                         "Unable to convert string property [{0}] to a long! Using default value [{1}]", property,
                         defaultValue), e);
@@ -218,9 +209,8 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         final String property = this.getProperty(key, resolveSysProp);
 
-        String result;
+        String result = defaultValue;
         if (property == null) {
-            result = defaultValue;
             TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
         } else {
             result = property;
@@ -252,7 +242,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
                 property = System.getProperty(value);
             }
 
-            result = (property == null ? value : property);
+            result = ((property == null) ? value : property);
         }
 
         return result;

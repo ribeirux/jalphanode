@@ -38,9 +38,8 @@ public class TypedPropertiesAdapter extends XmlAdapter<PropertiesType, TypedProp
         final PropertiesType pxml = new PropertiesType();
 
         if (tProps != null) {
-            PropertyType newProp;
             for (final Entry<Object, Object> entry : tProps.entrySet()) {
-                newProp = new PropertyType();
+                PropertyType newProp = new PropertyType();
                 newProp.setName((String) entry.getKey());
                 newProp.setValue((String) entry.getValue());
                 pxml.getProperty().add(newProp);

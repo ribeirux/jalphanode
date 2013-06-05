@@ -141,7 +141,7 @@ public class MBeanMetadata {
         }
 
         if (obj instanceof MBeanMetadata) {
-            MBeanMetadata other = (MBeanMetadata) obj;
+            final MBeanMetadata other = (MBeanMetadata) obj;
 
             return Objects.equal(getInstanceClass(), other.getInstanceClass())
                     && Objects.equal(getObjectName(), other.getObjectName())
@@ -155,19 +155,19 @@ public class MBeanMetadata {
 
     @Override
     public String toString() {
-        StringBuilder builder2 = new StringBuilder();
-        builder2.append("MBeanMetadata [instanceClass=");
-        builder2.append(instanceClass);
-        builder2.append(", objectName=");
-        builder2.append(objectName);
-        builder2.append(", description=");
-        builder2.append(description);
-        builder2.append(", attributes=");
-        builder2.append(attributes);
-        builder2.append(", operations=");
-        builder2.append(operations);
-        builder2.append(']');
-        return builder2.toString();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("MBeanMetadata [instanceClass=");
+        builder.append(instanceClass);
+        builder.append(", objectName=");
+        builder.append(objectName);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", attributes=");
+        builder.append(attributes);
+        builder.append(", operations=");
+        builder.append(operations);
+        builder.append(']');
+        return builder.toString();
     }
 
 }

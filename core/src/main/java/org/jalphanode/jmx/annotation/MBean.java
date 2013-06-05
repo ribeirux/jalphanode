@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
 
 /**
  * Public classes annotated with this annotation will be exposed as MBeans. Take a look at
- * {@link org.jalphanode.jmx.annotations.ManagedAttribute}, {@link org.jalphanode.jmx.annotations.ManagedOperation} and
- * {@link org.jalphanode.jmx.annotations.ManagedParameter} for more details.
+ * {@link org.jalphanode.jmx.annotation.ManagedAttribute}, {@link org.jalphanode.jmx.annotation.ManagedOperation} and
+ * {@link org.jalphanode.jmx.annotation.ManagedParameter} for more details.
  *
  * @author   ribeirux
  * @version  $Revision: 274 $

@@ -60,7 +60,7 @@ public class DefaultTaskManagerTest {
     }
 
     @Listener
-    public class ListenerTest {
+    public static class ListenerTest {
 
         private boolean assertError = false;
         private boolean executed = false;
@@ -94,7 +94,7 @@ public class DefaultTaskManagerTest {
 
     }
 
-    public class ListenerTestChild extends ListenerTest { }
+    public static class ListenerTestChild extends ListenerTest { }
 
     @Test
     public void testListener() throws ConfigException {
@@ -138,7 +138,7 @@ public class DefaultTaskManagerTest {
     }
 
     @Listener
-    public class MethodTest {
+    public static class MethodTest {
 
         @ViewChanged
         void viewChanged(final ViewChangedEvent event) { }
@@ -153,7 +153,7 @@ public class DefaultTaskManagerTest {
     }
 
     @Listener
-    class ClassTest {
+    static class ClassTest {
 
         @ViewChanged
         public void viewChanged(final ViewChangedEvent event) { }

@@ -132,9 +132,6 @@ public class InjectorModule extends AbstractModule {
 
         // Bind MBean annotation listener
         this.bindMBeanListener();
-
-        this.bindLifecycleManager();
-
     }
 
     protected void bindConfig() {
@@ -203,6 +200,4 @@ public class InjectorModule extends AbstractModule {
                 }
             });
     }
-
-    protected void bindLifecycleManager() { }
 }

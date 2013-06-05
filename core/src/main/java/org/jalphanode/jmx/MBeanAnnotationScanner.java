@@ -31,7 +31,6 @@ import java.lang.reflect.Modifier;
 
 import java.text.MessageFormat;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +40,7 @@ import org.jalphanode.jmx.annotation.ManagedAttribute;
 import org.jalphanode.jmx.annotation.ManagedOperation;
 import org.jalphanode.jmx.annotation.ManagedParameter;
 
-import org.jalphanode.util.ReflectionUtil;
+import org.jalphanode.util.ReflectionUtils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -58,7 +57,7 @@ public class MBeanAnnotationScanner {
         Preconditions.checkNotNull(klass, "klass");
 
         MBeanMetadata metadata = null;
-        final MBean mBean = ReflectionUtil.getAnnotation(klass, MBean.class);
+        final MBean mBean = ReflectionUtils.getAnnotation(klass, MBean.class);
 
         if (mBean != null) {
 
@@ -66,7 +65,7 @@ public class MBeanAnnotationScanner {
                 throw new MalformedMBeanException("MBean modifiers should be public!");
             }
 
-            MBeanMetadata.Builder builder = new MBeanMetadata.Builder(klass);
+            final MBeanMetadata.Builder builder = new MBeanMetadata.Builder(klass);
             if (!mBean.objectName().isEmpty()) {
                 builder.withObjectName(mBean.objectName());
             }
@@ -76,7 +75,7 @@ public class MBeanAnnotationScanner {
             }
 
             try {
-                BeanInfo beanInfo = Introspector.getBeanInfo(klass, Object.class);
+                final BeanInfo beanInfo = Introspector.getBeanInfo(klass, Object.class);
 
                 buildAttributeMetadata(klass, beanInfo, builder);
                 buildOperationMetadata(beanInfo, builder);
@@ -93,14 +92,15 @@ public class MBeanAnnotationScanner {
     protected void buildAttributeMetadata(final Class<?> klass, final BeanInfo beanInfo,
             final MBeanMetadata.Builder builder) {
 
-        List<Field> fields = ReflectionUtil.getAnnotatedAttributes(klass, ManagedAttribute.class);
-        Map<String, Field> indexFields = Maps.newHashMapWithExpectedSize(fields.size());
+        final List<Field> fields = ReflectionUtils.getAnnotatedAttributes(klass, ManagedAttribute.class);
+        final Map<String, Field> indexFields = Maps.newHashMapWithExpectedSize(fields.size());
         for (Field field : fields) {
             indexFields.put(field.getName(), field);
         }
 
-        Set<String> attributes = Sets.newHashSet();
-        for (PropertyDescriptor property : beanInfo.getPropertyDescriptors()) {
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        final Set<String> attributes = Sets.newHashSetWithExpectedSize(propertyDescriptors.length);
+        for (PropertyDescriptor property : propertyDescriptors) {
 
             final Field annotatedField = indexFields.remove(property.getName());
             final Method readMethod = property.getReadMethod();
@@ -161,7 +161,7 @@ public class MBeanAnnotationScanner {
         }
 
         if (writeMethod != null) {
-            ManagedAttribute setterAttribute = writeMethod.getAnnotation(ManagedAttribute.class);
+            final ManagedAttribute setterAttribute = writeMethod.getAnnotation(ManagedAttribute.class);
             if (setterAttribute != null) {
                 annotation = setterAttribute;
                 annotationCounter++;
@@ -177,10 +177,12 @@ public class MBeanAnnotationScanner {
     }
 
     protected void buildOperationMetadata(final BeanInfo beanInfo, final MBeanMetadata.Builder builder) {
-        Set<Method> allAccessors = allAccessors(beanInfo);
 
-        Set<String> operationMethods = new HashSet<String>();
-        for (MethodDescriptor descriptor : beanInfo.getMethodDescriptors()) {
+        final Set<Method> allAccessors = allAccessors(beanInfo);
+        final MethodDescriptor[] methodDescriptors = beanInfo.getMethodDescriptors();
+        final Set<String> operationMethods = Sets.newHashSetWithExpectedSize(methodDescriptors.length);
+
+        for (MethodDescriptor descriptor : methodDescriptors) {
             Method method = descriptor.getMethod();
             ManagedOperation operationAnnotation = method.getAnnotation(ManagedOperation.class);
 
@@ -222,8 +224,10 @@ public class MBeanAnnotationScanner {
     }
 
     private Set<Method> allAccessors(final BeanInfo beanInfo) {
-        Set<Method> allAccessors = new HashSet<Method>();
-        for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
+        final PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        final Set<Method> allAccessors = Sets.newHashSetWithExpectedSize(propertyDescriptors.length);
+
+        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             Method getter = propertyDescriptor.getReadMethod();
             if (getter != null) {
                 allAccessors.add(getter);
@@ -239,12 +243,12 @@ public class MBeanAnnotationScanner {
     }
 
     protected void buildParameterMetadata(final Method method, final ManagedOperationMetadata.Builder builder) {
-        Class<?>[] parameters = method.getParameterTypes();
+        final Class<?>[] parameters = method.getParameterTypes();
         for (int parameterIndex = 0; parameterIndex < parameters.length; parameterIndex++) {
             final String pType = method.getParameterTypes()[parameterIndex].getName();
 
             // locate parameter annotation
-            ManagedParameter parameter = ReflectionUtil.getParameterAnnotation(method, parameterIndex,
+            ManagedParameter parameter = ReflectionUtils.getParameterAnnotation(method, parameterIndex,
                     ManagedParameter.class);
 
             if (parameter != null) {

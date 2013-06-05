@@ -50,7 +50,9 @@ public final class FileUtils {
 
     private static final Log LOG = LogFactory.getLog(FileUtils.class);
 
-    private FileUtils() { }
+    private FileUtils() {
+        // utilities class
+    }
 
     /**
      * Looks up the file, see : {@link FileUtils}.

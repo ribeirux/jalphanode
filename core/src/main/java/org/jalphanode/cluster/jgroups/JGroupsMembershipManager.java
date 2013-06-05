@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -66,6 +67,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
     private static final Log LOG = LogFactory.getLog(JGroupsMembershipManager.class);
 
     private final CountDownLatch connectedLatch = new CountDownLatch(1);
+    private final ReentrantLock lock = new ReentrantLock();
 
     private final JAlphaNodeConfig config;
     private final Channel channel;
@@ -139,26 +141,31 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    public synchronized void connect() {
-
-        if (this.channel.isConnected()) {
-            throw new IllegalStateException("Channel is already connected.");
-        }
-
-        JGroupsMembershipManager.LOG.info("Starting JGroups Channel...");
-
-        final int randomInRange = new Random().nextInt();
-
-        this.channel.setName(this.config.getMembership().getNodeName() + "-" + randomInRange);
-        this.channel.setReceiver(this);
-
+    public void connect() {
+        lock.lock();
         try {
-            this.channel.connect(this.getClusterName());
-            this.connectedLatch.await();
-        } catch (final InterruptedException e) {
-            JGroupsMembershipManager.LOG.error("Connection thread interrupted while waiting for members to be set", e);
-        } catch (final Exception e) {
-            throw new MembershipException("Unable to start JGroups Channel", e);
+            if (this.channel.isConnected()) {
+                throw new IllegalStateException("Channel is already connected.");
+            }
+
+            JGroupsMembershipManager.LOG.info("Starting JGroups Channel...");
+
+            final int randomInRange = new Random().nextInt();
+
+            this.channel.setName(this.config.getMembership().getNodeName() + "-" + randomInRange);
+            this.channel.setReceiver(this);
+
+            try {
+                this.channel.connect(this.getClusterName());
+                this.connectedLatch.await();
+            } catch (final InterruptedException e) {
+                JGroupsMembershipManager.LOG.error("Connection thread interrupted while waiting for members to be set",
+                    e);
+            } catch (final Exception e) {
+                throw new MembershipException("Unable to start JGroups Channel", e);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -166,11 +173,16 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    public synchronized void shutdown() {
-        if (this.channel.isOpen()) {
-            JGroupsMembershipManager.LOG.info("Disconnecting and closing JGroups Channel");
-            this.channel.disconnect();
-            this.channel.close();
+    public void shutdown() {
+        lock.lock();
+        try {
+            if (this.channel.isOpen()) {
+                JGroupsMembershipManager.LOG.info("Disconnecting and closing JGroups Channel");
+                this.channel.disconnect();
+                this.channel.close();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 

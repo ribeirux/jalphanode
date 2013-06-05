@@ -104,7 +104,7 @@ public class ListenerInvocation {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("ListenerInvocation [target=");
         builder.append(target);
         builder.append(", method=");

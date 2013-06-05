@@ -36,12 +36,12 @@ public class IsSingletonBindingScopingVisitor implements BindingScopingVisitor<B
 
     @Override
     public Boolean visitScope(final Scope scope) {
-        return scope == Scopes.SINGLETON;
+        return Scopes.SINGLETON.equals(scope);
     }
 
     @Override
     public Boolean visitScopeAnnotation(final Class<? extends Annotation> scopeAnnotation) {
-        return scopeAnnotation == Singleton.class;
+        return Singleton.class.equals(scopeAnnotation);
     }
 
     @Override

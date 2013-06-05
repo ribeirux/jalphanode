@@ -29,7 +29,7 @@ import com.google.common.base.Preconditions;
 
 public class LifecycleInvocation {
 
-    private final Object[] NO_ARGS = {};
+    private static final Object[] NO_ARGS = {};
 
     private final int priority;
     private final Object target;
@@ -68,7 +68,7 @@ public class LifecycleInvocation {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("LifecycleInvocation [priority=");
         builder.append(priority);
         builder.append(", target=");
