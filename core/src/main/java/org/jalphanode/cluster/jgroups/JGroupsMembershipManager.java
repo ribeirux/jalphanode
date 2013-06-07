@@ -42,6 +42,9 @@ import org.jalphanode.cluster.NodeAddress;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.MembershipConfig;
 
+import org.jalphanode.jmx.annotation.MBean;
+import org.jalphanode.jmx.annotation.ManagedOperation;
+
 import org.jalphanode.notification.Notifier;
 
 import org.jgroups.Address;
@@ -91,16 +94,17 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
     public JGroupsMembershipManager(final JAlphaNodeConfig config, final Channel channel,
             final MasterNodeElectionPolicy masterNodeElectionPolicy, final Notifier notifier) {
         this.config = Preconditions.checkNotNull(config, "config");
-        this.notifier = Preconditions.checkNotNull(notifier, "notifier");
+        this.channel = Preconditions.checkNotNull(channel);
         this.masterNodeElectionPolicy = Preconditions.checkNotNull(masterNodeElectionPolicy,
                 "masterNodeElectionPolicy");
-        this.channel = Preconditions.checkNotNull(channel);
+        this.notifier = Preconditions.checkNotNull(notifier, "notifier");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @ManagedOperation
     public String getClusterName() {
         return this.config.getMembership().getClusterName();
     }

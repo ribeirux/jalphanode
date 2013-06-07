@@ -189,6 +189,8 @@ public class InjectorModule extends AbstractModule {
                                         final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
                                                 metadata);
 
+                                        // TODO cleanup mBeanServer
+                                        // create interface JMX registration
                                         mBeanServer.registerMBean(dynamicMBean,
                                             new ObjectName(metadata.getObjectName()));
                                     } catch (Exception e) {

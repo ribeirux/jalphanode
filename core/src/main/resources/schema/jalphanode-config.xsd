@@ -7,7 +7,12 @@
 
     <xs:complexType name="jalphanodeConfiguration">
         <xs:sequence>
-            <xs:element name="tasks" type="tasksType" minOccurs="0" />
+            <xs:element name="tasks" type="tasksType" minOccurs="0" >
+                <xs:unique name="uniqueTaskName">
+                <xs:selector xpath="task" /> 
+                <xs:field xpath="@taskName" /> 
+            </xs:unique>
+            </xs:element>
             <xs:element name="taskScheduler" type="taskSchedulerType" minOccurs="0" />
             <xs:element name="asyncNotificationExecutor" type="asyncNotificationExecutorType" minOccurs="0" />
             <xs:element name="membership" type="membershipType" minOccurs="0" />
@@ -37,7 +42,7 @@
             <xs:element name="properties" type="properties" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="class" use="required" type="xs:string" />
-        <xs:attribute name="taskName" type="xs:string" />
+        <xs:attribute name="taskName" use="required" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="triggerType">
