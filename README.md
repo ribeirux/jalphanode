@@ -77,4 +77,4 @@ You can select an optional configuration file before starting jalpahnode. To use
 
 The GUI provides an efficient way to check the current members of the group.
 
-![](http://piwik-ribeirux.rhcloud.com/piwik.php?idsite=1&rec=1)
+[![](http://piwik-ribeirux.rhcloud.com/piwik.php?idsite=1&rec=1)]
