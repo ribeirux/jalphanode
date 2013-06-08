@@ -7,7 +7,7 @@
 
     <xs:complexType name="jalphanodeConfiguration">
         <xs:sequence>
-            <xs:element name="tasks" type="tasksType" minOccurs="0" >
+            <xs:element name="tasks" type="tasksType" >
                 <xs:unique name="uniqueTaskName">
                     <xs:selector xpath="tns:task" /> 
                     <xs:field xpath="@taskName" /> 

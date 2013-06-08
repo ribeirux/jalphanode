@@ -28,8 +28,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 import org.jalphanode.scheduler.ScheduleIterator;
+
 import org.jalphanode.task.NoTask;
 import org.jalphanode.task.Task;
 
@@ -50,7 +50,7 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
      */
     public static final Task DEFAULT_TASK = new NoTask();
 
-    @XmlAttribute
+    @XmlAttribute(required = true)
     private String taskName;
 
     @XmlAttribute(name = "class", required = true)
