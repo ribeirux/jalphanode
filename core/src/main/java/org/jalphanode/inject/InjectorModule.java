@@ -20,12 +20,7 @@
  *******************************************************************************/
 package org.jalphanode.inject;
 
-import java.lang.management.ManagementFactory;
-
 import java.util.concurrent.Executor;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 
 import org.jalphanode.annotation.NotifierExecutor;
 import org.jalphanode.annotation.SchedulerExecutor;
@@ -71,7 +66,6 @@ import com.google.inject.spi.TypeListener;
 public class InjectorModule extends AbstractModule {
 
     private final JAlphaNodeConfig config;
-    private final MBeanServer mBeanServer;
 
     /**
      * Creates a new binder instance.
@@ -79,25 +73,11 @@ public class InjectorModule extends AbstractModule {
      * @param  config  the configuration
      */
     public InjectorModule(final JAlphaNodeConfig config) {
-        this(config, ManagementFactory.getPlatformMBeanServer());
-    }
-
-    /**
-     * Creates a new binder instance.
-     *
-     * @param  config  the configuration
-     */
-    public InjectorModule(final JAlphaNodeConfig config, final MBeanServer mBeanServer) {
         this.config = Preconditions.checkNotNull(config, "config");
-        this.mBeanServer = Preconditions.checkNotNull(mBeanServer, "mBeanServer");
     }
 
     public JAlphaNodeConfig getConfig() {
         return config;
-    }
-
-    public MBeanServer getMBeanServer() {
-        return mBeanServer;
     }
 
     @Override
@@ -105,9 +85,6 @@ public class InjectorModule extends AbstractModule {
 
         // bind config
         this.bindConfig();
-
-        // bind MBean server
-        this.bindMBeanServer();
 
         // bind notifier
         this.bindNotifier();
@@ -136,10 +113,6 @@ public class InjectorModule extends AbstractModule {
 
     protected void bindConfig() {
         this.bind(JAlphaNodeConfig.class).toInstance(this.config);
-    }
-
-    protected void bindMBeanServer() {
-        this.bind(MBeanServer.class).toInstance(this.mBeanServer);
     }
 
     protected void bindNotifier() {
@@ -191,8 +164,8 @@ public class InjectorModule extends AbstractModule {
 
                                         // TODO cleanup mBeanServer
                                         // create interface JMX registration
-                                        mBeanServer.registerMBean(dynamicMBean,
-                                            new ObjectName(metadata.getObjectName()));
+                                        // jmx.registerMBean(dynamicMBean,
+                                        // new ObjectName(metadata.getObjectName()));
                                     } catch (Exception e) {
                                         encounter.addError(e);
                                     }

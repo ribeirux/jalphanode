@@ -23,7 +23,9 @@ package org.jalphanode.scheduler;
 import java.text.MessageFormat;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.Executor;
@@ -41,6 +43,8 @@ import org.jalphanode.config.TaskConfig;
 import org.jalphanode.notification.Notifier;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 import com.google.inject.Inject;
 
@@ -48,13 +52,15 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
     private static final Log LOG = LogFactory.getLog(TaskSchedulerImpl.class);
 
+    private final BlockingQueue<RecurrentTask> queue = new DelayQueue<RecurrentTask>();
+    private final Set<String> inProgress = Sets.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+
     private volatile boolean running = true;
 
     private final Executor executor;
     private final MembershipManager membershipManager;
     private final Notifier notifier;
 
-    private final BlockingQueue<RecurrentTask> queue;
     private final Thread runner;
 
     @Inject
@@ -63,7 +69,6 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
         this.executor = Preconditions.checkNotNull(executor, "executor");
         this.membershipManager = Preconditions.checkNotNull(membershipManager, "membershipManager");
         this.notifier = Preconditions.checkNotNull(notifier, "notifier");
-        this.queue = new DelayQueue<RecurrentTask>();
         this.runner = new Thread(this, "Runner thread");
         runner.start();
     }
@@ -74,6 +79,10 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
         // TODO return future
         new RecurrentTask(task).schedule();
+    }
+
+    public Set<String> getInProgressTasks() {
+        return ImmutableSet.copyOf(inProgress);
     }
 
     @Override
@@ -132,7 +141,10 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
         @Override
         public void run() {
-            notifier.beforeTask(taskConfig.getTaskName());
+            String taskName = taskConfig.getTaskName();
+
+            notifier.beforeTask(taskName);
+            inProgress.add(taskName);
 
             try {
                 taskConfig.getTask().onTimeout(taskConfig);
@@ -140,6 +152,7 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
                 LOG.error(MessageFormat.format("Task execution failed: {0}", t.getMessage()), t);
             }
 
+            inProgress.remove(taskName);
             notifier.afterTask(taskConfig.getTaskName());
 
             schedule();

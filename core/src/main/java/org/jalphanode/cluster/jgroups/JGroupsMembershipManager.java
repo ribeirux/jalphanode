@@ -42,9 +42,6 @@ import org.jalphanode.cluster.NodeAddress;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.MembershipConfig;
 
-import org.jalphanode.jmx.annotation.MBean;
-import org.jalphanode.jmx.annotation.ManagedOperation;
-
 import org.jalphanode.notification.Notifier;
 
 import org.jgroups.Address;
@@ -55,7 +52,6 @@ import org.jgroups.View;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 import com.google.inject.Inject;
 
@@ -104,7 +100,6 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    @ManagedOperation
     public String getClusterName() {
         return this.config.getMembership().getClusterName();
     }
@@ -152,7 +147,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
                 throw new IllegalStateException("Channel is already connected.");
             }
 
-            JGroupsMembershipManager.LOG.info("Starting JGroups Channel...");
+            LOG.info("Starting JGroups Channel...");
 
             final int randomInRange = new Random().nextInt();
 
@@ -163,8 +158,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
                 this.channel.connect(this.getClusterName());
                 this.connectedLatch.await();
             } catch (final InterruptedException e) {
-                JGroupsMembershipManager.LOG.error("Connection thread interrupted while waiting for members to be set",
-                    e);
+                LOG.error("Connection thread interrupted while waiting for members to be set", e);
             } catch (final Exception e) {
                 throw new MembershipException("Unable to start JGroups Channel", e);
             }
@@ -181,7 +175,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
         lock.lock();
         try {
             if (this.channel.isOpen()) {
-                JGroupsMembershipManager.LOG.info("Disconnecting and closing JGroups Channel");
+                LOG.info("Disconnecting and closing JGroups Channel");
                 this.channel.disconnect();
                 this.channel.close();
             }
@@ -195,7 +189,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      */
     @Override
     public void viewAccepted(final View newView) {
-        JGroupsMembershipManager.LOG.info(MessageFormat.format("Received new cluster view: {0}", newView));
+        LOG.info(MessageFormat.format("Received new cluster view: {0}", newView));
 
         final List<Address> newMembers = newView.getMembers();
 
@@ -216,7 +210,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
             if (oldMembers.isEmpty()) {
                 this.address = new JGroupsAddress(this.channel.getAddress());
-                JGroupsMembershipManager.LOG.info(MessageFormat.format("Local address is {0}.", this.address));
+                LOG.info(MessageFormat.format("Local address is {0}.", this.address));
             }
 
             this.members = this.fromJGroupsAddressList(newMembers);
@@ -243,7 +237,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      */
     @Override
     public void suspect(final Address addr) {
-        JGroupsMembershipManager.LOG.warn(MessageFormat.format("Member {0} is suspected of having crashed.", addr));
+        LOG.warn(MessageFormat.format("Member {0} is suspected of having crashed.", addr));
     }
 
     /**
@@ -287,7 +281,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
     }
 
     private List<NodeAddress> fromJGroupsAddressList(final List<Address> list) {
-        final Builder<NodeAddress> builder = ImmutableList.builder();
+        final ImmutableList.Builder<NodeAddress> builder = ImmutableList.builder();
         for (final Address addr : list) {
             builder.add(new JGroupsAddress(addr));
         }
