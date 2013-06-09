@@ -21,10 +21,10 @@
 package org.jalphanode.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -33,7 +33,9 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,7 +44,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.logging.Log;
@@ -53,6 +54,8 @@ import org.jalphanode.TaskManager;
 
 import org.jalphanode.TaskManager.Status;
 
+import org.jalphanode.annotation.AfterTask;
+import org.jalphanode.annotation.BeforeTask;
 import org.jalphanode.annotation.Listener;
 import org.jalphanode.annotation.ViewChanged;
 
@@ -62,10 +65,12 @@ import org.jalphanode.config.ConfigException;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeConfigBuilder;
 import org.jalphanode.config.JAlphaNodeType;
+import org.jalphanode.config.TaskConfig;
 
+import org.jalphanode.notification.Event;
 import org.jalphanode.notification.ViewChangedEvent;
 
-import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * JAlphaNode GUI.
@@ -80,8 +85,6 @@ public class JAlphaNodeGui {
 
     private JFrame frmTaskManager;
 
-    private JTextField configFile;
-
     private JPanel imageContainer;
 
     private JPanel taskContainer;
@@ -92,17 +95,12 @@ public class JAlphaNodeGui {
 
     private JButton btnStop;
 
+    private ImmutableMap<String, JComponent> tasks;
+
     /**
      * Create the application.
      */
     public JAlphaNodeGui() {
-        this.initializeGui();
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initializeGui() {
 
         this.frmTaskManager = new JFrame();
         this.frmTaskManager.setTitle(Messages.getString("gui.frmTaskManager.title")); // $NON-NLS-1$
@@ -112,78 +110,8 @@ public class JAlphaNodeGui {
 
                 @Override
                 public void windowClosing(final WindowEvent event) {
-                    if ((JAlphaNodeGui.this.taskManager != null)
-                            && JAlphaNodeGui.this.taskManager.getStatus() == Status.RUNNING) {
-                        JAlphaNodeGui.this.taskManager.shutdown();
-                    }
-                }
-            });
-
-        final JPanel interactiveContainer = new JPanel();
-        this.frmTaskManager.getContentPane().add(interactiveContainer, BorderLayout.SOUTH);
-
-        final JPanel filePanel = new JPanel();
-        filePanel.setLayout(new GridLayout(0, 3));
-
-        final JLabel configLabel = new JLabel(Messages.getString("gui.label.text"));
-        configLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        filePanel.add(configLabel);
-
-        this.configFile = new JTextField();
-        this.configFile.setHorizontalAlignment(SwingConstants.LEFT);
-        filePanel.add(this.configFile);
-        this.configFile.addKeyListener(new KeyAdapter() {
-
-                @Override
-                public void keyPressed(final KeyEvent e) {
-                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                        JAlphaNodeGui.this.startTaskManager();
-                    }
-                }
-            });
-
-        final JButton btnBrowse = new JButton(Messages.getString("gui.btnOpenFile.text"));
-        filePanel.add(btnBrowse);
-
-        final JPanel commandPannel = new JPanel();
-        commandPannel.setLayout(new GridLayout(0, 2));
-
-        this.btnStart = new JButton(Messages.getString("gui.button.text")); // $NON-NLS-1$
-        commandPannel.add(this.btnStart);
-        this.btnStart.addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseClicked(final MouseEvent event) {
-                    JAlphaNodeGui.this.startTaskManager();
-                }
-            });
-
-        this.btnStop = new JButton(Messages.getString("gui.btnStop.text")); // $NON-NLS-1$
-        this.btnStop.setEnabled(false);
-        this.btnStop.addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    JAlphaNodeGui.this.stopTaskManager();
-                }
-            });
-        commandPannel.add(this.btnStop);
-        interactiveContainer.setLayout(new GridLayout(0, 1));
-        interactiveContainer.add(filePanel);
-        interactiveContainer.add(commandPannel);
-        btnBrowse.addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    final JFileChooser chooser = new JFileChooser();
-                    final FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            Messages.getString("gui.fileChooserExtensionDescription.text"),
-                            JAlphaNodeType.FILE_EXTENSIONS);
-                    chooser.setFileFilter(filter);
-
-                    final int returnVal = chooser.showOpenDialog(JAlphaNodeGui.this.frmTaskManager);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        JAlphaNodeGui.this.configFile.setText(chooser.getSelectedFile().getAbsolutePath());
+                    if ((taskManager != null) && taskManager.getStatus() == Status.RUNNING) {
+                        taskManager.shutdown();
                     }
                 }
             });
@@ -198,39 +126,90 @@ public class JAlphaNodeGui {
         this.frmTaskManager.getContentPane().add(splitPane, BorderLayout.CENTER);
 
         this.taskContainer = new JPanel();
-        this.taskContainer.setLayout(new GridLayout(0, 1));
         taskScrollPane.setViewportView(this.taskContainer);
+        taskContainer.setLayout(new BoxLayout(taskContainer, BoxLayout.Y_AXIS));
 
         this.imageContainer = new JPanel();
         this.imageContainer.setLayout(new GridLayout(0, 4));
         imageScrollPane.setViewportView(this.imageContainer);
-    }
 
-    private void startTaskManager() {
-        if (this.btnStart.isEnabled()) {
-            final String fileLocation = this.configFile.getText();
-            try {
-                JAlphaNodeConfig config = null;
+        final JPanel commandPannel = new JPanel();
+        frmTaskManager.getContentPane().add(commandPannel, BorderLayout.SOUTH);
+        commandPannel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-                if (!Strings.isNullOrEmpty(fileLocation)) {
-                    config = JAlphaNodeConfigBuilder.buildFromFile(fileLocation);
+        this.btnStart = new JButton(Messages.getString("gui.button.text")); // $NON-NLS-1$
+        commandPannel.add(this.btnStart);
+        this.btnStart.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseClicked(final MouseEvent event) {
+                    btnStart.setEnabled(false);
+
+                    boolean started = false;
+                    final JFileChooser chooser = new JFileChooser();
+                    final FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                            Messages.getString("gui.fileChooserExtensionDescription.text"),
+                            JAlphaNodeType.FILE_EXTENSIONS);
+                    chooser.setFileFilter(filter);
+
+                    final int returnVal = chooser.showOpenDialog(frmTaskManager);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            startTaskManager(chooser.getSelectedFile().getAbsolutePath());
+                            btnStop.setEnabled(true);
+                            started = true;
+                        } catch (final ConfigException e) {
+                            dispatchException(e, "error.invalidConfig");
+                        } catch (final Throwable e) {
+                            dispatchException(e, "error.unexpected");
+                        }
+                    }
+
+                    if (!started) {
+                        btnStart.setEnabled(true);
+                    }
                 }
+            });
 
-                this.taskManager = new DefaultTaskManager(config);
-                this.taskManager.addListener(this);
+        this.btnStop = new JButton(Messages.getString("gui.btnStop.text"));
+        this.btnStop.setEnabled(false);
+        this.btnStop.addMouseListener(new MouseAdapter() {
 
-                this.taskManager.start();
-                this.btnStart.setEnabled(false);
-                this.btnStop.setEnabled(true);
-            } catch (final ConfigException e) {
-                this.dispatchException(e, "error.invalidConfig");
-            } catch (final Exception e) {
-                this.dispatchException(e, "error.unexpected");
-            }
-        }
+                @Override
+                public void mouseClicked(final MouseEvent e) {
+                    stopTaskManager();
+                }
+            });
+        commandPannel.add(this.btnStop);
     }
 
-    private void dispatchException(final Exception exception, final String messageKey) {
+    private void startTaskManager(final String path) throws ConfigException {
+        JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromFile(path);
+        taskManager = new DefaultTaskManager(config);
+        taskManager.addListener(this);
+        taskManager.start();
+
+        // add tasks
+        ImmutableMap.Builder<String, JComponent> builder = new ImmutableMap.Builder<String, JComponent>();
+        for (TaskConfig task : config.getTasks().getTask()) {
+            String taskName = task.getTaskName();
+            JTextField label = new JTextField(taskName);
+            label.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+            label.setAlignmentY(JTextField.CENTER_ALIGNMENT);
+            label.setHorizontalAlignment(JTextField.CENTER);
+            label.setEditable(false);
+            label.setOpaque(true);
+            label.setBackground(Color.LIGHT_GRAY);
+            builder.put(taskName, label);
+            this.taskContainer.add(label);
+        }
+
+        this.tasks = builder.build();
+        this.taskContainer.repaint();
+        this.taskContainer.revalidate();
+    }
+
+    private void dispatchException(final Throwable exception, final String messageKey) {
         JAlphaNodeGui.LOG.error(exception.getMessage(), exception);
 
         JOptionPane.showMessageDialog(this.frmTaskManager, Messages.getString(messageKey),
@@ -239,8 +218,9 @@ public class JAlphaNodeGui {
 
     private void stopTaskManager() {
         if (this.btnStop.isEnabled()) {
-            this.taskManager.shutdown();
+            this.clearTaskContainer();
             this.clearImageContainer();
+            this.taskManager.shutdown();
             this.btnStop.setEnabled(false);
             this.btnStart.setEnabled(true);
         }
@@ -270,6 +250,22 @@ public class JAlphaNodeGui {
         this.updateImageContainer(picLabels);
     }
 
+    @BeforeTask
+    public void setTaskRunning(final Event event) {
+        JComponent label = tasks.get(event.getComponentName());
+        label.setBackground(Color.GREEN);
+        label.repaint();
+        label.revalidate();
+    }
+
+    @AfterTask
+    public void setTaskStopped(final Event event) {
+        JComponent label = tasks.get(event.getComponentName());
+        label.setBackground(Color.LIGHT_GRAY);
+        label.repaint();
+        label.revalidate();
+    }
+
     private synchronized void updateImageContainer(final List<JLabel> picLabels) {
         this.imageContainer.removeAll();
 
@@ -285,6 +281,13 @@ public class JAlphaNodeGui {
         this.imageContainer.removeAll();
         this.imageContainer.repaint();
         this.imageContainer.revalidate();
+    }
+
+    // TODO check concurrency
+    private void clearTaskContainer() {
+        this.taskContainer.removeAll();
+        this.taskContainer.repaint();
+        this.taskContainer.revalidate();
     }
 
     private JLabel buildImage(final NodeTypeImage nodeTypeImage, final NodeAddress nodeAddress) {
