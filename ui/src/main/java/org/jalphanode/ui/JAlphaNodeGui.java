@@ -40,6 +40,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -82,6 +83,8 @@ public class JAlphaNodeGui {
     private JTextField configFile;
 
     private JPanel imageContainer;
+
+    private JPanel taskContainer;
 
     private JButton btnStart;
 
@@ -185,12 +188,22 @@ public class JAlphaNodeGui {
                 }
             });
 
-        final JScrollPane scrollPane = new JScrollPane();
-        this.frmTaskManager.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        final JScrollPane taskScrollPane = new JScrollPane();
+        final JScrollPane imageScrollPane = new JScrollPane();
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, taskScrollPane, imageScrollPane);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setDividerLocation(150);
+
+        this.frmTaskManager.getContentPane().add(splitPane, BorderLayout.CENTER);
+
+        this.taskContainer = new JPanel();
+        this.taskContainer.setLayout(new GridLayout(0, 1));
+        taskScrollPane.setViewportView(this.taskContainer);
 
         this.imageContainer = new JPanel();
         this.imageContainer.setLayout(new GridLayout(0, 4));
-        scrollPane.setViewportView(this.imageContainer);
+        imageScrollPane.setViewportView(this.imageContainer);
     }
 
     private void startTaskManager() {
