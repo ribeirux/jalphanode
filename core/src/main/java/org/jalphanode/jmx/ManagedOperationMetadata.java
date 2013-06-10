@@ -29,7 +29,6 @@ import javax.management.MBeanOperationInfo;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * MBean operation metadata.

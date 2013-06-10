@@ -160,14 +160,9 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
         public void schedule() {
             final Date nextTimeout = this.taskConfig.getScheduleIterator().next(executionTime);
-
-            if (nextTimeout != null) {
+            if (nextTimeout != null && running) {
                 executionTime = nextTimeout;
-                if (running) {
-                    queue.add(this);
-                } else {
-                    LOG.error("Failed adding task to queue.Timer is not running; task: " + taskConfig.getTaskName());
-                }
+                queue.add(this);
             }
         }
     }

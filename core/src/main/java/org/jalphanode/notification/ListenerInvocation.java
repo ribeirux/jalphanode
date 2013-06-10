@@ -27,6 +27,9 @@ import java.text.MessageFormat;
 
 import java.util.concurrent.Executor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.google.common.base.Preconditions;
 
 /**
@@ -36,6 +39,8 @@ import com.google.common.base.Preconditions;
  * @version  $Revision: 274 $
  */
 public class ListenerInvocation {
+
+    private static final Log LOG = LogFactory.getLog(ListenerInvocation.class);
 
     private final Object target;
     private final Method method;
@@ -88,15 +93,13 @@ public class ListenerInvocation {
             @Override
             public void run() {
                 try {
-                    ListenerInvocation.this.method.invoke(ListenerInvocation.this.target, event);
+                    method.invoke(target, event);
                 } catch (final InvocationTargetException e) {
-                    throw new ListenerInvocationException(MessageFormat.format(
-                            "Caught exception invoking listener method {0} on instance {1}",
-                            ListenerInvocation.this.method, ListenerInvocation.this.target), e.getTargetException());
+                    LOG.error(MessageFormat.format("Caught exception invoking listener method {0} on instance {1}",
+                            method, target), e.getTargetException());
                 } catch (final IllegalAccessException e) {
-                    throw new ListenerInvocationException(MessageFormat.format(
-                            "Unable to invoke listener method {0} on instance {1}.", ListenerInvocation.this.method,
-                            ListenerInvocation.this.target), e);
+                    LOG.error(MessageFormat.format("Unable to invoke listener method {0} on instance {1}.", method,
+                            target), e);
                 }
             }
         };

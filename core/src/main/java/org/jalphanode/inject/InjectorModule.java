@@ -38,7 +38,6 @@ import org.jalphanode.executors.LazyInitializingSchedulerExecutor;
 
 import org.jalphanode.jmx.MBeanAnnotationScanner;
 import org.jalphanode.jmx.MBeanMetadata;
-import org.jalphanode.jmx.ResourceDynamicMBean;
 
 import org.jalphanode.notification.Notifier;
 import org.jalphanode.notification.NotifierImpl;
@@ -159,8 +158,8 @@ public class InjectorModule extends AbstractModule {
                                 @Override
                                 public void afterInjection(final I injectee) {
                                     try {
-                                        final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
-                                                metadata);
+                                        // final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
+                                        // metadata);
 
                                         // TODO cleanup mBeanServer
                                         // create interface JMX registration

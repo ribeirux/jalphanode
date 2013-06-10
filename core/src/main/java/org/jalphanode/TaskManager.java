@@ -34,8 +34,11 @@ public interface TaskManager extends Listenable {
 
     enum Status {
         INSTANTIATED,
+        STARTING,
         RUNNING,
-        STOPPED
+        STOPPING,
+        STOPPED,
+        FAILED;
     }
 
     /**

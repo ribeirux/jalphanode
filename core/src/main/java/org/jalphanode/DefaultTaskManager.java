@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -78,8 +79,9 @@ public class DefaultTaskManager implements TaskManager {
                 }
             });
 
+    private final AtomicReference<Status> status = new AtomicReference<Status>(Status.INSTANTIATED);
+
     private final Injector injector;
-    private volatile Status status;
 
     /**
      * Constructs a new instance using default configuration. See {@link JAlphaNodeConfig} for more details.
@@ -104,7 +106,6 @@ public class DefaultTaskManager implements TaskManager {
      */
     public DefaultTaskManager(final InjectorModule module) {
         this.injector = Guice.createInjector(Stage.PRODUCTION, Preconditions.checkNotNull(module, "module"));
-        this.status = Status.INSTANTIATED;
     }
 
     /**
@@ -138,10 +139,11 @@ public class DefaultTaskManager implements TaskManager {
     public void start() {
         DefaultTaskManager.LOG.info("Starting task manager...");
 
-        synchronized (this) {
-            if (status != Status.INSTANTIATED) {
-                throw new IllegalStateException("Start not allowed");
-            }
+        if (!status.compareAndSet(Status.INSTANTIATED, Status.STARTING)) {
+            throw new IllegalStateException("Start not allowed");
+        }
+
+        try {
 
             // start all registered components
             invoke(Status.RUNNING);
@@ -153,10 +155,13 @@ public class DefaultTaskManager implements TaskManager {
                 scheduler.schedule(task);
             }
 
-            status = Status.RUNNING;
-        }
+            status.set(Status.RUNNING);
 
-        DefaultTaskManager.LOG.info("Task manager started!");
+            DefaultTaskManager.LOG.info("Task manager started!");
+        } catch (RuntimeException r) {
+            status.set(Status.FAILED);
+            throw r;
+        }
     }
 
     /**
@@ -166,17 +171,25 @@ public class DefaultTaskManager implements TaskManager {
     public void shutdown() {
         DefaultTaskManager.LOG.info("Shutting down task manager...");
 
-        synchronized (this) {
-            if (status != Status.RUNNING) {
+        if (!status.compareAndSet(Status.RUNNING, Status.STOPPING)) {
+
+            // Trying to stop() from FAILED is valid, but may not work
+            if (!status.compareAndSet(Status.FAILED, Status.STOPPING)) {
                 throw new IllegalStateException("Shutdown not allowed");
             }
-
-            status = Status.STOPPED;
-
-            invoke(Status.STOPPED);
         }
 
-        DefaultTaskManager.LOG.info("Shutdown complete!");
+        try {
+            invoke(Status.STOPPED);
+
+            status.set(Status.STOPPED);
+
+            DefaultTaskManager.LOG.info("Shutdown complete!");
+        } catch (RuntimeException r) {
+            status.set(Status.FAILED);
+            throw r;
+        }
+
     }
 
     private void invoke(final Status status) {
@@ -228,7 +241,7 @@ public class DefaultTaskManager implements TaskManager {
 
     @Override
     public Status getStatus() {
-        return status;
+        return status.get();
     }
 
     @Override

@@ -24,25 +24,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -58,8 +54,6 @@ import org.jalphanode.annotation.AfterTask;
 import org.jalphanode.annotation.BeforeTask;
 import org.jalphanode.annotation.Listener;
 import org.jalphanode.annotation.ViewChanged;
-
-import org.jalphanode.cluster.NodeAddress;
 
 import org.jalphanode.config.ConfigException;
 import org.jalphanode.config.JAlphaNodeConfig;
@@ -84,17 +78,11 @@ public class JAlphaNodeGui {
     private static final Log LOG = LogFactory.getLog(JAlphaNodeGui.class);
 
     private JFrame frmTaskManager;
-
-    private JPanel imageContainer;
-
     private JPanel taskContainer;
-
+    private GroupMembersTableModel groupMembersModel;
     private JButton btnStart;
-
-    private TaskManager taskManager;
-
     private JButton btnStop;
-
+    private TaskManager taskManager;
     private ImmutableMap<String, JComponent> tasks;
 
     /**
@@ -104,7 +92,7 @@ public class JAlphaNodeGui {
 
         this.frmTaskManager = new JFrame();
         this.frmTaskManager.setTitle(Messages.getString("gui.frmTaskManager.title")); // $NON-NLS-1$
-        this.frmTaskManager.setBounds(100, 100, 450, 300);
+        this.frmTaskManager.setBounds(100, 100, 600, 300);
         this.frmTaskManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frmTaskManager.addWindowListener(new WindowAdapter() {
 
@@ -116,22 +104,22 @@ public class JAlphaNodeGui {
                 }
             });
 
-        final JScrollPane taskScrollPane = new JScrollPane();
-        final JScrollPane imageScrollPane = new JScrollPane();
+        this.taskContainer = new JPanel();
+        taskContainer.setLayout(new BoxLayout(taskContainer, BoxLayout.Y_AXIS));
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, taskScrollPane, imageScrollPane);
+        final JScrollPane taskScrollPane = new JScrollPane(taskContainer);
+
+        groupMembersModel = new GroupMembersTableModel();
+
+        JTable table = new JTable(groupMembersModel);
+
+        final JScrollPane groupMembersScrollPane = new JScrollPane(table);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, taskScrollPane, groupMembersScrollPane);
         splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(150);
 
         this.frmTaskManager.getContentPane().add(splitPane, BorderLayout.CENTER);
-
-        this.taskContainer = new JPanel();
-        taskScrollPane.setViewportView(this.taskContainer);
-        taskContainer.setLayout(new BoxLayout(taskContainer, BoxLayout.Y_AXIS));
-
-        this.imageContainer = new JPanel();
-        this.imageContainer.setLayout(new GridLayout(0, 4));
-        imageScrollPane.setViewportView(this.imageContainer);
 
         final JPanel commandPannel = new JPanel();
         frmTaskManager.getContentPane().add(commandPannel, BorderLayout.SOUTH);
@@ -143,30 +131,28 @@ public class JAlphaNodeGui {
 
                 @Override
                 public void mouseClicked(final MouseEvent event) {
-                    btnStart.setEnabled(false);
+                    if (btnStart.isEnabled()) {
+                        btnStart.setEnabled(false);
 
-                    boolean started = false;
-                    final JFileChooser chooser = new JFileChooser();
-                    final FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                            Messages.getString("gui.fileChooserExtensionDescription.text"),
-                            JAlphaNodeType.FILE_EXTENSIONS);
-                    chooser.setFileFilter(filter);
+                        boolean started = false;
 
-                    final int returnVal = chooser.showOpenDialog(frmTaskManager);
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            startTaskManager(chooser.getSelectedFile().getAbsolutePath());
-                            btnStop.setEnabled(true);
-                            started = true;
-                        } catch (final ConfigException e) {
-                            dispatchException(e, "error.invalidConfig");
-                        } catch (final Throwable e) {
-                            dispatchException(e, "error.unexpected");
+                        JFileChooser chooser = createFileChooser();
+                        final int returnVal = chooser.showOpenDialog(frmTaskManager);
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            try {
+                                startTaskManager(chooser.getSelectedFile().getAbsolutePath());
+                                btnStop.setEnabled(true);
+                                started = true;
+                            } catch (final ConfigException e) {
+                                dispatchException(e, "error.invalidConfig");
+                            } catch (final Throwable e) {
+                                dispatchException(e, "error.unexpected");
+                            }
                         }
-                    }
 
-                    if (!started) {
-                        btnStart.setEnabled(true);
+                        if (!started) {
+                            btnStart.setEnabled(true);
+                        }
                     }
                 }
             });
@@ -181,6 +167,22 @@ public class JAlphaNodeGui {
                 }
             });
         commandPannel.add(this.btnStop);
+    }
+
+    private JFileChooser createFileChooser() {
+        final JFileChooser chooser = new JFileChooser();
+        final FileNameExtensionFilter filter = new FileNameExtensionFilter(Messages.getString(
+                    "gui.fileChooserExtensionDescription.text"), JAlphaNodeType.FILE_EXTENSIONS);
+        chooser.setFileFilter(filter);
+
+        return chooser;
+    }
+
+    private void dispatchException(final Throwable exception, final String messageKey) {
+        JAlphaNodeGui.LOG.error(exception.getMessage(), exception);
+
+        JOptionPane.showMessageDialog(this.frmTaskManager, Messages.getString(messageKey),
+            Messages.getString("gui.frmTaskManager.title"), JOptionPane.ERROR_MESSAGE);
     }
 
     private void startTaskManager(final String path) throws ConfigException {
@@ -209,47 +211,6 @@ public class JAlphaNodeGui {
         this.taskContainer.revalidate();
     }
 
-    private void dispatchException(final Throwable exception, final String messageKey) {
-        JAlphaNodeGui.LOG.error(exception.getMessage(), exception);
-
-        JOptionPane.showMessageDialog(this.frmTaskManager, Messages.getString(messageKey),
-            Messages.getString("gui.frmTaskManager.title"), JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void stopTaskManager() {
-        if (this.btnStop.isEnabled()) {
-            this.clearTaskContainer();
-            this.clearImageContainer();
-            this.taskManager.shutdown();
-            this.btnStop.setEnabled(false);
-            this.btnStart.setEnabled(true);
-        }
-    }
-
-    @ViewChanged
-    public void viewChanged(final ViewChangedEvent event) {
-
-        final List<JLabel> picLabels = new ArrayList<JLabel>();
-        for (final NodeAddress newMember : event.getNewMembers()) {
-            JLabel picLabel;
-            if (newMember.equals(event.getLocalAddress())) {
-                if (newMember.equals(event.getMasterAddress())) {
-                    picLabel = this.buildImage(NodeTypeImage.LOCAL_MASTER, newMember);
-                } else {
-                    picLabel = this.buildImage(NodeTypeImage.LOCAL_SLAVE, newMember);
-                }
-            } else if (newMember.equals(event.getMasterAddress())) {
-                picLabel = this.buildImage(NodeTypeImage.REMOTE_MASTER, newMember);
-            } else {
-                picLabel = this.buildImage(NodeTypeImage.REMOTE_SLAVE, newMember);
-            }
-
-            picLabels.add(picLabel);
-        }
-
-        this.updateImageContainer(picLabels);
-    }
-
     @BeforeTask
     public void setTaskRunning(final Event event) {
         JComponent label = tasks.get(event.getComponentName());
@@ -266,35 +227,35 @@ public class JAlphaNodeGui {
         label.revalidate();
     }
 
-    private synchronized void updateImageContainer(final List<JLabel> picLabels) {
-        this.imageContainer.removeAll();
+    private void stopTaskManager() {
+        if (this.btnStop.isEnabled()) {
 
-        for (final JLabel picLabel : picLabels) {
-            this.imageContainer.add(picLabel);
+            this.btnStop.setEnabled(false);
+
+            // shutdown
+            try {
+                this.taskManager.shutdown();
+                this.btnStart.setEnabled(true);
+            } catch (RuntimeException r) {
+                this.btnStop.setEnabled(true);
+
+                throw r;
+            } finally {
+
+                // clear task container
+                this.taskContainer.removeAll();
+                this.taskContainer.repaint();
+                this.taskContainer.revalidate();
+
+                // clear table
+                groupMembersModel.removeAllRows();
+            }
         }
-
-        this.imageContainer.repaint();
-        this.imageContainer.revalidate();
     }
 
-    private synchronized void clearImageContainer() {
-        this.imageContainer.removeAll();
-        this.imageContainer.repaint();
-        this.imageContainer.revalidate();
-    }
-
-    // TODO check concurrency
-    private void clearTaskContainer() {
-        this.taskContainer.removeAll();
-        this.taskContainer.repaint();
-        this.taskContainer.revalidate();
-    }
-
-    private JLabel buildImage(final NodeTypeImage nodeTypeImage, final NodeAddress nodeAddress) {
-        final JLabel picLabel = new JLabel(nodeTypeImage.getImage());
-        picLabel.setToolTipText(nodeAddress.toString());
-
-        return picLabel;
+    @ViewChanged
+    public void viewChanged(final ViewChangedEvent event) {
+        groupMembersModel.update(event);
     }
 
     /**
