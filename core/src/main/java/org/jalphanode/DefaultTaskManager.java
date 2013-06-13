@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.jalphanode;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import java.util.Comparator;
@@ -146,7 +147,11 @@ public class DefaultTaskManager implements TaskManager {
         try {
 
             // start all registered components
-            invoke(Status.RUNNING);
+            invoke(new Function<Method, Integer>() {
+                    public Integer apply(final Method method) {
+                        return method.getAnnotation(Start.class).priority();
+                    }
+                }, Start.class);
 
             // schedule all tasks
             final JAlphaNodeConfig config = this.injector.getInstance(JAlphaNodeConfig.class);
@@ -180,7 +185,13 @@ public class DefaultTaskManager implements TaskManager {
         }
 
         try {
-            invoke(Status.STOPPED);
+            invoke(new Function<Method, Integer>() {
+
+                    public Integer apply(final Method method) {
+                        return method.getAnnotation(Stop.class).priority();
+                    }
+
+                }, Stop.class);
 
             status.set(Status.STOPPED);
 
@@ -192,7 +203,8 @@ public class DefaultTaskManager implements TaskManager {
 
     }
 
-    private void invoke(final Status status) {
+    private void invoke(final Function<Method, Integer> priorityExtractor,
+            final Class<? extends Annotation> annotation) {
         final Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
         if (!bindings.isEmpty()) {
             final IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
@@ -205,20 +217,9 @@ public class DefaultTaskManager implements TaskManager {
                 // check if binding is singleton
                 if (entry.getValue().acceptScopingVisitor(isSingletonVisitor)) {
                     Object instance = injector.getInstance(entry.getKey());
-                    if (status == Status.RUNNING) {
-                        List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), Start.class);
-                        for (Method method : methods) {
-                            int priority = method.getAnnotation(Start.class).priority();
-                            toInvoke.add(new LifecycleInvocation(priority, instance, method));
-                        }
-                    } else if (status == Status.STOPPED) {
-                        List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), Stop.class);
-                        for (Method method : methods) {
-                            int priority = method.getAnnotation(Stop.class).priority();
-                            toInvoke.add(new LifecycleInvocation(priority, instance, method));
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Status not supported: " + status);
+                    List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), annotation);
+                    for (Method method : methods) {
+                        toInvoke.add(new LifecycleInvocation(priorityExtractor.apply(method), instance, method));
                     }
                 }
             }
