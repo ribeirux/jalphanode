@@ -22,6 +22,9 @@ package org.jalphanode.inject;
 
 import java.util.concurrent.Executor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.jalphanode.annotation.NotifierExecutor;
 import org.jalphanode.annotation.SchedulerExecutor;
 
@@ -36,8 +39,11 @@ import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.executors.LazyInitializingNotifierExecutor;
 import org.jalphanode.executors.LazyInitializingSchedulerExecutor;
 
+import org.jalphanode.jmx.DefaultMBeanRegistry;
 import org.jalphanode.jmx.MBeanAnnotationScanner;
 import org.jalphanode.jmx.MBeanMetadata;
+import org.jalphanode.jmx.MBeanRegistry;
+import org.jalphanode.jmx.ResourceDynamicMBean;
 
 import org.jalphanode.notification.Notifier;
 import org.jalphanode.notification.NotifierImpl;
@@ -64,7 +70,10 @@ import com.google.inject.spi.TypeListener;
  */
 public class InjectorModule extends AbstractModule {
 
+    private static final Log LOG = LogFactory.getLog(InjectorModule.class);
+
     private final JAlphaNodeConfig config;
+    private final MBeanRegistry mBeanRegistry;
 
     /**
      * Creates a new binder instance.
@@ -72,7 +81,12 @@ public class InjectorModule extends AbstractModule {
      * @param  config  the configuration
      */
     public InjectorModule(final JAlphaNodeConfig config) {
+        this(config, new DefaultMBeanRegistry());
+    }
+
+    public InjectorModule(final JAlphaNodeConfig config, final MBeanRegistry mBeanRegistry) {
         this.config = Preconditions.checkNotNull(config, "config");
+        this.mBeanRegistry = Preconditions.checkNotNull(mBeanRegistry, "mBeanRegistry");
     }
 
     public JAlphaNodeConfig getConfig() {
@@ -84,6 +98,9 @@ public class InjectorModule extends AbstractModule {
 
         // bind config
         this.bindConfig();
+
+        // bind MBean registry
+        this.bindMBeanRegistry();
 
         // bind notifier
         this.bindNotifier();
@@ -112,6 +129,10 @@ public class InjectorModule extends AbstractModule {
 
     protected void bindConfig() {
         this.bind(JAlphaNodeConfig.class).toInstance(this.config);
+    }
+
+    protected void bindMBeanRegistry() {
+        this.bind(MBeanRegistry.class).toInstance(this.mBeanRegistry);
     }
 
     protected void bindNotifier() {
@@ -158,15 +179,12 @@ public class InjectorModule extends AbstractModule {
                                 @Override
                                 public void afterInjection(final I injectee) {
                                     try {
-                                        // final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
-                                        // metadata);
+                                        final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
+                                                metadata);
 
-                                        // TODO cleanup mBeanServer
-                                        // create interface JMX registration
-                                        // jmx.registerMBean(dynamicMBean,
-                                        // new ObjectName(metadata.getObjectName()));
+                                        mBeanRegistry.register(dynamicMBean, metadata.getObjectName());
                                     } catch (Exception e) {
-                                        encounter.addError(e);
+                                        LOG.error(e);
                                     }
                                 }
                             });

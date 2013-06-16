@@ -42,6 +42,9 @@ import org.jalphanode.cluster.NodeAddress;
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.MembershipConfig;
 
+import org.jalphanode.jmx.annotation.MBean;
+import org.jalphanode.jmx.annotation.ManagedAttribute;
+
 import org.jalphanode.notification.Notifier;
 
 import org.jgroups.Address;
@@ -56,14 +59,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 /**
- * An encapsulation of a JGroups membership manager.
+ * JGroups membership manager.
  *
  * @author   ribeirux
  * @version  $Revision: 274 $
  */
+@MBean(objectName = JGroupsMembershipManager.OBJECT_NAME, description = "Component that manages group members")
 public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
     private static final Log LOG = LogFactory.getLog(JGroupsMembershipManager.class);
+
+    public static final String OBJECT_NAME = "MembershipManager";
 
     private final CountDownLatch connectedLatch = new CountDownLatch(1);
     private final ReentrantLock lock = new ReentrantLock();
@@ -100,6 +106,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
+    @ManagedAttribute(name = "Cluster name", description = "Returns the name of the cluster")
     public String getClusterName() {
         return this.config.getMembership().getClusterName();
     }
@@ -108,6 +115,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
+    @ManagedAttribute(name = "Node address", description = "Returns the node address")
     public NodeAddress getNodeAddress() {
         return this.address;
     }
@@ -124,6 +132,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
+    @ManagedAttribute(name = "Master node", description = "Checks whether the node is the master node of the group")
     public boolean isMasterNode() {
         return this.master;
     }
@@ -132,6 +141,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
+    @ManagedAttribute(name = "Group members", description = "Returns the group members")
     public List<NodeAddress> getMembers() {
         return this.members;
     }
@@ -159,6 +169,9 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
                 this.connectedLatch.await();
             } catch (final InterruptedException e) {
                 LOG.error("Connection thread interrupted while waiting for members to be set", e);
+
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
             } catch (final Exception e) {
                 throw new MembershipException("Unable to start JGroups Channel", e);
             }

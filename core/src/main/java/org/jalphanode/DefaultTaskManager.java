@@ -45,6 +45,8 @@ import org.jalphanode.inject.InjectorModule;
 import org.jalphanode.inject.IsSingletonBindingScopingVisitor;
 import org.jalphanode.inject.LifecycleInvocation;
 
+import org.jalphanode.jmx.MBeanRegistry;
+
 import org.jalphanode.notification.Notifier;
 
 import org.jalphanode.scheduler.TaskScheduler;
@@ -185,6 +187,10 @@ public class DefaultTaskManager implements TaskManager {
         }
 
         try {
+
+            // unregister all beans
+            this.injector.getInstance(MBeanRegistry.class).unregisterAll();
+
             invoke(new Function<Method, Integer>() {
 
                     public Integer apply(final Method method) {

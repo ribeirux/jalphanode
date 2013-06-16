@@ -275,4 +275,8 @@ public class JAlphaNodeGui {
                 }
             });
     }
+
+    public static void main(final String[] args) {
+        startGui();
+    }
 }
