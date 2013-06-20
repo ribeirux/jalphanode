@@ -23,9 +23,7 @@ package org.jalphanode.scheduler;
 import java.text.MessageFormat;
 
 import java.util.Date;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.Executor;
@@ -40,26 +38,17 @@ import org.jalphanode.cluster.MembershipManager;
 
 import org.jalphanode.config.TaskConfig;
 
-import org.jalphanode.jmx.annotation.MBean;
-import org.jalphanode.jmx.annotation.ManagedAttribute;
-
 import org.jalphanode.notification.Notifier;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 import com.google.inject.Inject;
 
-@MBean(objectName = TaskSchedulerImpl.OBJECT_NAME, description = "Component that schedules tasks")
 public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
     private static final Log LOG = LogFactory.getLog(TaskSchedulerImpl.class);
 
-    public static final String OBJECT_NAME = "TaskScheduler";
-
     private final BlockingQueue<RecurrentTask> queue = new DelayQueue<RecurrentTask>();
-    private final Set<String> inProgress = Sets.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
     private volatile boolean running = true;
 
@@ -85,11 +74,6 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
         // TODO return future
         new RecurrentTask(task).schedule();
-    }
-
-    @ManagedAttribute(name = "In progress tasks", description = "Returns in progress tasks")
-    public Set<String> getInProgressTasks() {
-        return ImmutableSet.copyOf(inProgress);
     }
 
     @Override
@@ -151,7 +135,6 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
             String taskName = taskConfig.getTaskName();
 
             notifier.beforeTask(taskName);
-            inProgress.add(taskName);
 
             try {
                 taskConfig.getTask().onTimeout(taskConfig);
@@ -159,7 +142,6 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
                 LOG.error(MessageFormat.format("Task execution failed: {0}", t.getMessage()), t);
             }
 
-            inProgress.remove(taskName);
             notifier.afterTask(taskConfig.getTaskName());
 
             schedule();

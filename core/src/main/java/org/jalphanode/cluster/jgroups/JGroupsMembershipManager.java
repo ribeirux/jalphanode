@@ -141,7 +141,6 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    @ManagedAttribute(name = "Group members", description = "Returns the group members")
     public List<NodeAddress> getMembers() {
         return this.members;
     }

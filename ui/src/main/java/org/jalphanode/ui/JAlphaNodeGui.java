@@ -213,18 +213,18 @@ public class JAlphaNodeGui {
 
     @BeforeTask
     public void setTaskRunning(final Event event) {
-        JComponent label = tasks.get(event.getComponentName());
-        label.setBackground(Color.GREEN);
-        label.repaint();
-        label.revalidate();
+        JComponent component = tasks.get(event.getComponentName());
+        component.setBackground(Color.GREEN);
+        component.repaint();
+        component.revalidate();
     }
 
     @AfterTask
     public void setTaskStopped(final Event event) {
-        JComponent label = tasks.get(event.getComponentName());
-        label.setBackground(Color.LIGHT_GRAY);
-        label.repaint();
-        label.revalidate();
+        JComponent component = tasks.get(event.getComponentName());
+        component.setBackground(Color.LIGHT_GRAY);
+        component.repaint();
+        component.revalidate();
     }
 
     private void stopTaskManager() {

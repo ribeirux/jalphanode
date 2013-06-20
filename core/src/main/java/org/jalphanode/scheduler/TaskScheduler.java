@@ -20,8 +20,6 @@
  *******************************************************************************/
 package org.jalphanode.scheduler;
 
-import java.util.Set;
-
 import org.jalphanode.annotation.Stop;
 
 import org.jalphanode.config.TaskConfig;
@@ -29,8 +27,6 @@ import org.jalphanode.config.TaskConfig;
 public interface TaskScheduler {
 
     void schedule(TaskConfig task);
-
-    Set<String> getInProgressTasks();
 
     @Stop(priority = 50)
     void stop();
