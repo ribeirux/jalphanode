@@ -92,7 +92,7 @@ public class MBeanAnnotationScanner {
     protected void buildAttributeMetadata(final Class<?> klass, final BeanInfo beanInfo,
             final MBeanMetadata.Builder builder) {
 
-        final List<Field> fields = ReflectionUtils.getAnnotatedAttributes(klass, ManagedAttribute.class);
+        final List<Field> fields = ReflectionUtils.getAnnotatedFields(klass, ManagedAttribute.class);
         final Map<String, Field> indexFields = Maps.newHashMapWithExpectedSize(fields.size());
         for (Field field : fields) {
             indexFields.put(field.getName(), field);

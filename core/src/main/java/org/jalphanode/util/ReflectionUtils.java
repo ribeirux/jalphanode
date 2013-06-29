@@ -64,13 +64,11 @@ public final class ReflectionUtils {
      * Inspects the class passed in for the class level annotation specified. If the annotation is not available, this
      * method recursively inspects super classes and interfaces until it finds the required annotation.
      *
-     * <p/>Returns null if the annotation cannot be found.
-     *
      * @param   <T>         annotation type
      * @param   clazz       class to inspect
-     * @param   annotation  annotation to search for. Must be a class-level annotation.
+     * @param   annotation  annotation to search for
      *
-     * @return  the annotation instance, or null
+     * @return  the annotation instance, or null if the annotation cannot be found.
      */
     public static <T extends Annotation> T getAnnotation(final Class<?> clazz, final Class<T> annotation) {
         Preconditions.checkNotNull(clazz, "clazz");
@@ -105,6 +103,15 @@ public final class ReflectionUtils {
         return classAnnotation;
     }
 
+    /**
+     * Inspects the parameter for the specified annotation.
+     *
+     * @param   method           method
+     * @param   index            parameter index
+     * @param   annotationClass  annotation to search for
+     *
+     * @return  the annotation instance, or null if the annotation cannot be found.
+     */
     public static <A extends Annotation> A getParameterAnnotation(final Method method, final int index,
             final Class<A> annotationClass) {
         Preconditions.checkNotNull(method, "method");
@@ -125,6 +132,15 @@ public final class ReflectionUtils {
         return annotation;
     }
 
+    /**
+     * Inspects the class passed in for methods annotated with the specified class. This method recursively inspects
+     * super classes and interfaces.
+     *
+     * @param   clazz       class to inspect
+     * @param   annotation  annotation to search for
+     *
+     * @return  A {@link List} of methods with the specified annotation
+     */
     public static List<Method> getAllMethods(final Class<?> clazz, final Class<? extends Annotation> annotation) {
         Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
@@ -163,20 +179,29 @@ public final class ReflectionUtils {
         }
     }
 
-    public static List<Field> getAnnotatedAttributes(final Class<?> clazz,
+    /**
+     * Inspects the class passed in for fields annotated with the specified class. This method recursively inspects
+     * super classes and interfaces.
+     *
+     * @param   clazz       class to inspect
+     * @param   annotation  annotation to search for
+     *
+     * @return  A {@link List} of fields with the specified annotation
+     */
+    public static List<Field> getAnnotatedFields(final Class<?> clazz,
             final Class<? extends Annotation> annotation) {
         Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
 
         List<Field> annotated = new LinkedList<Field>();
 
-        getAnnotatedAttributesRecursively(clazz, annotated, annotation);
+        getAnnotatedFieldsRecursively(clazz, annotated, annotation);
 
         return annotated;
 
     }
 
-    private static void getAnnotatedAttributesRecursively(final Class<?> clazz, final List<Field> fields,
+    private static void getAnnotatedFieldsRecursively(final Class<?> clazz, final List<Field> fields,
             final Class<? extends Annotation> annotationType) {
 
         if (clazz != null && !clazz.equals(Object.class)) {
@@ -186,7 +211,7 @@ public final class ReflectionUtils {
                 }
             }
 
-            getAnnotatedAttributesRecursively(clazz.getSuperclass(), fields, annotationType);
+            getAnnotatedFieldsRecursively(clazz.getSuperclass(), fields, annotationType);
         }
     }
 
