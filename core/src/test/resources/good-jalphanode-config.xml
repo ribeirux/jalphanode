@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jalphanode xmlns="urn:jalphanode:config"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd">
-    
+<jalphanode xmlns="urn:jalphanode:config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd">
+
     <tasks>
-    	<task class="org.jalphanode.config.TestTask" taskName="TestName">
-    		<trigger>
-    			<expression>10 1 * * * ?</expression>
-    			<timezone>Europe/Lisbon</timezone>
-    		</trigger>
-    		<properties>
-            	<property name="name" value="value" />
-        	</properties>
-   	 	</task>
+        <task class="org.jalphanode.config.TestTask" taskName="TestName">
+            <trigger>
+                <expression>10 1 * * * ?</expression>
+                <timezone>Europe/Lisbon</timezone>
+            </trigger>
+            <properties>
+                <property name="name" value="value" />
+            </properties>
+        </task>
     </tasks>
-    
+
     <taskScheduler poolSize="5">
-    	<properties>
-    		<property name="threadNamePrefix" value="task-pool" />
-    		<property name="threadPriority" value="5" />
-    	</properties>
+        <properties>
+            <property name="threadNamePrefix" value="task-pool" />
+            <property name="threadPriority" value="5" />
+        </properties>
     </taskScheduler>
-    
+
     <asyncNotificationExecutor poolSize="5">
-    	<properties>
+        <properties>
             <property name="threadNamePrefix" value="async-pool" />
             <property name="threadPriority" value="5" />
         </properties>
     </asyncNotificationExecutor>
-    
+
     <membership nodeName="nodeName" clusterName="clusterName">
         <properties>
             <property name="configurationFile" value="jgroups-udp.xml" />

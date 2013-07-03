@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jalphanode xmlns="urn:jalphanode:config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd">
+    xsi:schemaLocation="urn:jalphanode:config https://raw.github.com/ribeirux/jalphanode/master/core/src/main/resources/schema/jalphanode-config.xsd">
 
-	<tasks>
-		<task class="org.jalphanode.task.NoTask" taskName="task-1">
-			<trigger>
-				<expression>*/1 * * * * ?</expression>
-				<timezone>Europe/Lisbon</timezone>
-			</trigger>
-		</task>
-		<task class="org.jalphanode.task.NoTask" taskName="task-2">
-			<trigger>
-				<expression>*/1 * * * * ?</expression>
-				<timezone>Europe/Lisbon</timezone>
-			</trigger>
-		</task>
-		<task class="org.jalphanode.task.NoTask" taskName="task-3">
-			<trigger>
-				<expression>*/1 * * * * ?</expression>
-				<timezone>Europe/Lisbon</timezone>
-			</trigger>
-		</task>
-		<task class="org.jalphanode.task.NoTask" taskName="task-4">
-			<trigger>
-				<expression>*/1 * * * * ?</expression>
-				<timezone>Europe/Lisbon</timezone>
-			</trigger>
-		</task>
-	</tasks>
+    <tasks>
+        <task class="org.jalphanode.task.NoTask" taskName="task-1">
+            <trigger>
+                <expression>*/1 * * * * ?</expression>
+                <timezone>Europe/Lisbon</timezone>
+            </trigger>
+        </task>
+        <task class="org.jalphanode.task.NoTask" taskName="task-2">
+            <trigger>
+                <expression>*/1 * * * * ?</expression>
+                <timezone>Europe/Lisbon</timezone>
+            </trigger>
+        </task>
+        <task class="org.jalphanode.task.NoTask" taskName="task-3">
+            <trigger>
+                <expression>*/1 * * * * ?</expression>
+                <timezone>Europe/Lisbon</timezone>
+            </trigger>
+        </task>
+        <task class="org.jalphanode.task.NoTask" taskName="task-4">
+            <trigger>
+                <expression>*/1 * * * * ?</expression>
+                <timezone>Europe/Lisbon</timezone>
+            </trigger>
+        </task>
+    </tasks>
 
-	<taskScheduler poolSize="5">
-		<properties>
-			<property name="threadPrefix" value="task-pool" />
-			<property name="threadPriority" value="5" />
-		</properties>
-	</taskScheduler>
+    <taskScheduler poolSize="5">
+        <properties>
+            <property name="threadPrefix" value="task-pool" />
+            <property name="threadPriority" value="5" />
+        </properties>
+    </taskScheduler>
 
-	<asyncNotificationExecutor poolSize="5">
-		<properties>
-			<property name="threadPrefix" value="async-pool" />
-			<property name="threadPriority" value="5" />
-		</properties>
-	</asyncNotificationExecutor>
+    <asyncNotificationExecutor poolSize="5">
+        <properties>
+            <property name="threadPrefix" value="async-pool" />
+            <property name="threadPriority" value="5" />
+        </properties>
+    </asyncNotificationExecutor>
 
-	<membership nodeName="nodeName" clusterName="clusterName">
-		<properties>
-			<property name="configurationFile" value="jgroups-udp.xml" />
-		</properties>
-	</membership>
+    <membership nodeName="nodeName" clusterName="clusterName">
+        <properties>
+            <property name="configurationFile" value="jgroups-udp.xml" />
+        </properties>
+    </membership>
 </jalphanode>

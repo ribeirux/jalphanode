@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema xmlns:tns="urn:jalphanode:config" xmlns="urn:jalphanode:config" targetNamespace="urn:jalphanode:config"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    attributeFormDefault="unqualified" version="1.0">
+<xs:schema xmlns:tns="urn:jalphanode:config" xmlns="urn:jalphanode:config"
+    targetNamespace="urn:jalphanode:config" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" attributeFormDefault="unqualified"
+    version="1.0">
 
     <xs:element name="jalphanode" type="jalphanodeConfiguration" />
 
     <xs:complexType name="jalphanodeConfiguration">
         <xs:sequence>
-            <xs:element name="tasks" type="tasksType" >
+            <xs:element name="tasks" type="tasksType">
                 <xs:unique name="uniqueTaskName">
-                    <xs:selector xpath="tns:task" /> 
-                    <xs:field xpath="@taskName" /> 
+                    <xs:selector xpath="tns:task" />
+                    <xs:field xpath="@taskName" />
                 </xs:unique>
             </xs:element>
             <xs:element name="taskScheduler" type="taskSchedulerType" minOccurs="0" />

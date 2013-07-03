@@ -6,6 +6,4 @@
   - Thread pools
   - Running tasks
   - Mean time
-  
-
-  - remove inheritance annotations.
+  - replace commons-logging by slf4j
