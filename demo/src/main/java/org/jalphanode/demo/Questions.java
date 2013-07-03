@@ -1,0 +1,54 @@
+package org.jalphanode.demo;
+
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
+import org.jalphanode.config.TaskConfig;
+
+import org.jalphanode.task.Task;
+
+public class Questions implements Task {
+
+    private static class QuestionsFrame extends JFrame {
+
+        private static final long serialVersionUID = 5709851257707006758L;
+
+        private String textMessage = "Questions?";
+
+        public QuestionsFrame() {
+            setLocationRelativeTo(null);
+
+            JTextField label = new JTextField(textMessage);
+            label.setAlignmentX(JTextField.CENTER_ALIGNMENT);
+            label.setAlignmentY(JTextField.CENTER_ALIGNMENT);
+            label.setHorizontalAlignment(JTextField.CENTER);
+            label.setEditable(false);
+            label.setFont(new Font("Impact", Font.BOLD, 250));
+            getContentPane().add(label);
+        }
+    }
+
+    private static void run() {
+        EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    final QuestionsFrame window = new QuestionsFrame();
+                    window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    window.setVisible(true);
+                }
+            });
+    }
+
+    @Override
+    public void onTimeout(final TaskConfig config) {
+        run();
+    }
+
+    public static void main(final String[] args) {
+        run();
+    }
+}
