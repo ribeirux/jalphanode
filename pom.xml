@@ -438,7 +438,7 @@
                         <executions>
                             <execution>
                                 <id>javadoc</id>
-                                <phase>package</phase>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>aggregate</goal>
                                 </goals>
