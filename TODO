@@ -6,4 +6,3 @@
   - Thread pools
   - Running tasks
   - Mean time
-  - replace commons-logging by slf4j
