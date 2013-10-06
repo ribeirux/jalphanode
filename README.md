@@ -9,6 +9,10 @@ JAlphaNode provides powerful characteristics such as:
  - Listener API, where clients can be notified when events take place.
  - UI module which includes a CLI and a GUI.
 
+## Support Group
+
+For general discussions please use the [JAlphaNode google group](https://groups.google.com/forum/#!forum/jalphanode).
+
 ## Building jalphanode distribution
 
 ### Requirements

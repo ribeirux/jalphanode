@@ -1,23 +1,18 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: XMLEventHandler.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.config;
 
 import java.text.MessageFormat;
@@ -26,8 +21,8 @@ import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationEventLocator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles XML validation events.
@@ -37,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class XMLEventHandler implements ValidationEventHandler {
 
-    private static final Log LOG = LogFactory.getLog(XMLEventHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XMLEventHandler.class);
 
     /**
      * Validates and event.
@@ -61,9 +56,9 @@ public class XMLEventHandler implements ValidationEventHandler {
 
         boolean result = true;
         if (event.getSeverity() == ValidationEvent.WARNING) {
-            XMLEventHandler.LOG.warn(details);
+            LOG.warn(details);
         } else {
-            XMLEventHandler.LOG.error(details);
+            LOG.error(details);
             result = false;
         }
 

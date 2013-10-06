@@ -1,23 +1,18 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: JalphaNodeCli.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.ui;
 
 import org.apache.commons.cli.CommandLine;
@@ -29,14 +24,15 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.jalphanode.DefaultTaskManager;
 import org.jalphanode.TaskManager;
 
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.JAlphaNodeConfigBuilder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -48,7 +44,7 @@ import com.google.common.base.Strings;
  */
 public class JalphaNodeCli {
 
-    private static final Log LOG = LogFactory.getLog(JalphaNodeCli.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JalphaNodeCli.class);
 
     private static final String SCRIPT_NAME = Messages.getString("cli.script.name");
 
@@ -121,7 +117,7 @@ public class JalphaNodeCli {
                 });
 
         } catch (final Exception e) {
-            JalphaNodeCli.LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 

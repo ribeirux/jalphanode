@@ -1,38 +1,28 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: JGroupsMembershipManager.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.cluster.jgroups;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import java.text.MessageFormat;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.MembershipException;
@@ -53,6 +43,9 @@ import org.jgroups.Message;
 import org.jgroups.Receiver;
 import org.jgroups.View;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
@@ -67,7 +60,7 @@ import com.google.inject.Inject;
 @MBean(objectName = JGroupsMembershipManager.OBJECT_NAME, description = "Component that manages group members")
 public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
-    private static final Log LOG = LogFactory.getLog(JGroupsMembershipManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JGroupsMembershipManager.class);
 
     public static final String OBJECT_NAME = "MembershipManager";
 
@@ -153,10 +146,10 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
         lock.lock();
         try {
             if (this.channel.isConnected()) {
-                throw new IllegalStateException("Channel is already connected.");
+                throw new IllegalStateException("Channel is already connected");
             }
 
-            LOG.info("Starting JGroups Channel...");
+            LOG.info("Starting JGroups Channel");
 
             final int randomInRange = new Random().nextInt();
 
@@ -201,7 +194,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      */
     @Override
     public void viewAccepted(final View newView) {
-        LOG.info(MessageFormat.format("Received new cluster view: {0}", newView));
+        LOG.info("Received new cluster view: {}", newView);
 
         final List<Address> newMembers = newView.getMembers();
 
@@ -222,7 +215,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
             if (oldMembers.isEmpty()) {
                 this.address = new JGroupsAddress(this.channel.getAddress());
-                LOG.info(MessageFormat.format("Local address is {0}.", this.address));
+                LOG.info("Local address is {}.", this.address);
             }
 
             this.members = this.fromJGroupsAddressList(newMembers);
@@ -249,7 +242,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      */
     @Override
     public void suspect(final Address addr) {
-        LOG.warn(MessageFormat.format("Member {0} is suspected of having crashed.", addr));
+        LOG.warn("Member {} is suspected of having crashed.", addr);
     }
 
     /**

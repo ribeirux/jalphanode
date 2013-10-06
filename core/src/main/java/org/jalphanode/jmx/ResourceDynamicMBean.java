@@ -1,23 +1,18 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: ListenerMethodException.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.jmx;
 
 import java.lang.reflect.Method;
@@ -38,8 +33,8 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -50,7 +45,7 @@ import com.google.common.base.Preconditions;
  */
 public class ResourceDynamicMBean implements DynamicMBean {
 
-    private static final Log LOG = LogFactory.getLog(ResourceDynamicMBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceDynamicMBean.class);
 
     private final Object instance;
     private final MBeanMetadata metadata;
@@ -173,8 +168,8 @@ public class ResourceDynamicMBean implements DynamicMBean {
             try {
                 attributeList.add(new Attribute(attributeName, getAttribute(attributeName)));
             } catch (Exception e) {
-                LOG.error(MessageFormat.format("Could not get attribute {0} on MBean {1}", attributeName,
-                        metadata.getInstanceClass().getName()), e);
+                LOG.error("Could not get attribute {} on MBean {}", attributeName,
+                    metadata.getInstanceClass().getName(), e);
             }
         }
 
@@ -193,8 +188,8 @@ public class ResourceDynamicMBean implements DynamicMBean {
                 setAttribute(attribute);
                 attributeList.add(attribute);
             } catch (Exception e) {
-                LOG.error(MessageFormat.format("Could not set attribute {0} to {1} on MBean {2}", attribute.getName(),
-                        attribute.getValue(), metadata.getInstanceClass().getName()), e);
+                LOG.error("Could not set attribute {} to {} on MBean {}", attribute.getName(), attribute.getValue(),
+                    metadata.getInstanceClass().getName(), e);
             }
         }
 

@@ -1,23 +1,18 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: JAlphaNodeGui.java 280 2013-01-06 19:28:26Z ribeirux $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.ui;
 
 import java.awt.BorderLayout;
@@ -42,9 +37,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.jalphanode.DefaultTaskManager;
 import org.jalphanode.TaskManager;
 
@@ -64,6 +56,9 @@ import org.jalphanode.config.TaskConfig;
 import org.jalphanode.notification.Event;
 import org.jalphanode.notification.ViewChangedEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -75,7 +70,7 @@ import com.google.common.collect.ImmutableMap;
 @Listener
 public class JAlphaNodeGui {
 
-    private static final Log LOG = LogFactory.getLog(JAlphaNodeGui.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JAlphaNodeGui.class);
 
     private JFrame frmTaskManager;
     private JPanel taskContainer;
@@ -179,7 +174,7 @@ public class JAlphaNodeGui {
     }
 
     private void dispatchException(final Throwable exception, final String messageKey) {
-        JAlphaNodeGui.LOG.error(exception.getMessage(), exception);
+        LOG.error(exception.getMessage(), exception);
 
         JOptionPane.showMessageDialog(this.frmTaskManager, Messages.getString(messageKey),
             Messages.getString("gui.frmTaskManager.title"), JOptionPane.ERROR_MESSAGE);
@@ -270,7 +265,7 @@ public class JAlphaNodeGui {
                         final JAlphaNodeGui window = new JAlphaNodeGui();
                         window.frmTaskManager.setVisible(true);
                     } catch (final Exception e) {
-                        JAlphaNodeGui.LOG.error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                     }
                 }
             });

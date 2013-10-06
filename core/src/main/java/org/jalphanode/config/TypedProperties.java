@@ -1,31 +1,24 @@
-/*******************************************************************************
- * JAlphaNode: Java Clustered Timer
- * Copyright (C) 2011 Pedro Ribeiro
+/**
+ *    Copyright 2011 Pedro Ribeiro
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *        http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * $Id: TypedProperties.java 274 2012-07-01 23:04:24Z ribeirux@gmail.com $
- *******************************************************************************/
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.config;
-
-import java.text.MessageFormat;
 
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -43,9 +36,9 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
      */
     private static final long serialVersionUID = 2284916991567398693L;
 
-    private static final Log LOG = LogFactory.getLog(TypedProperties.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TypedProperties.class);
 
-    private static final String NULL_PROP_MSG = "Property [{0}] is null. Using default value [{1}]";
+    private static final String NULL_PROP_MSG = "Property [{}] is null. Using default value [{}]";
 
     /**
      * Default constructor that returns an empty instance.
@@ -95,14 +88,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         boolean result = defaultValue;
         if (property == null) {
-            TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
+            LOG.warn(TypedProperties.NULL_PROP_MSG, key, defaultValue);
         } else {
             try {
                 result = Boolean.parseBoolean(property);
             } catch (final Exception e) {
-                TypedProperties.LOG.warn(MessageFormat.format(
-                        "Unable to convert string property [{0}] to a boolean! Using default value [{1}]", property,
-                        defaultValue), e);
+                LOG.warn("Unable to convert string property [{}] to a boolean! Using default value [{}]", property,
+                    defaultValue, e);
             }
         }
 
@@ -138,14 +130,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         int result = defaultValue;
         if (property == null) {
-            TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
+            LOG.warn(TypedProperties.NULL_PROP_MSG, key, defaultValue);
         } else {
             try {
                 result = Integer.parseInt(property);
             } catch (final NumberFormatException e) {
-                TypedProperties.LOG.warn(MessageFormat.format(
-                        "Unable to convert string property [{0}] to an int! Using default value [{1}]", property,
-                        defaultValue), e);
+                LOG.warn("Unable to convert string property [{0}] to an int! Using default value [{1}]", property,
+                    defaultValue, e);
             }
         }
 
@@ -181,14 +172,13 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         long result = defaultValue;
         if (property == null) {
-            TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
+            LOG.warn(TypedProperties.NULL_PROP_MSG, key, defaultValue);
         } else {
             try {
                 result = Long.parseLong(property);
             } catch (final NumberFormatException e) {
-                TypedProperties.LOG.warn(MessageFormat.format(
-                        "Unable to convert string property [{0}] to a long! Using default value [{1}]", property,
-                        defaultValue), e);
+                LOG.warn("Unable to convert string property [{0}] to a long! Using default value [{1}]", property,
+                    defaultValue, e);
             }
         }
 
@@ -211,7 +201,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
 
         String result = defaultValue;
         if (property == null) {
-            TypedProperties.LOG.warn(MessageFormat.format(TypedProperties.NULL_PROP_MSG, key, defaultValue));
+            LOG.warn(TypedProperties.NULL_PROP_MSG, key, defaultValue);
         } else {
             result = property;
         }

@@ -12,18 +12,23 @@ version: 1.2
 project: http://commons.apache.org/cli/
 license: Apache License 2.0
 
-name:    log4j-1.2.17.jar
-version: 1.2.17
-project: http://logging.apache.org/log4j/1.2/
-license: Apache License 2.0
+name:    slf4j-api-1.7.5.jar
+version: 1.7.5
+project: http://www.slf4j.org/
+license: MIT License
 
-name:    commons-logging-1.1.1.jar
-version: 1.1.1
-project: http://commons.apache.org/logging/
-license: Apache License 2.0
+name:    jul-to-slf4j-1.7.5.jar
+version: 1.7.5
+project: http://www.slf4j.org/
+license: MIT License
 
-name:    guava-14.0.jar
-version: 14.0
+name:    slf4j-log4j12-1.7.5.jar
+version: 1.7.5
+project: http://www.slf4j.org/
+license: MIT License
+
+name:    guava-15.0.jar
+version: 15.0
 project: http://code.google.com/p/guava-libraries/
 license: Apache License 2.0
 
@@ -32,15 +37,15 @@ version: 3.0
 project: http://code.google.com/p/google-guice/
 license: Apache License 2.0
 
-name:    jgroups-3.2.7.Final.jar
-version: 3.2.7.Final
+name:    jgroups-3.4.0.Final.jar
+version: 3.4.0.Final
 project: http://www.jgroups.org/
-license: LGPL
+license: Apache License 2.0
 
 test
 
-name:    testng-6.8.jar
-version: 6.8
+name:    testng-6.8.5.jar
+version: 6.8.7
 project: http://testng.org
 license: Apache License 2.0
 
@@ -58,17 +63,27 @@ version: 1
 project: http://code.google.com/p/atinject/
 license: Apache License 2.0
 
+name:    log4j-1.2.17.jar
+version: 1.2.17
+project: http://logging.apache.org/log4j/1.2/
+license: Apache License 2.0
+
 test
 
 name:    junit-4.10.jar
 version: 4.10
 project: http://junit.org/
-license: Common Public License Version 1.0
+license: BSD License
+
+name:    hamcrest-core-1.1.jar
+version: 1.1
+project: https://code.google.com/p/hamcrest/
+license: BSD License
 
 name:    bsh-2.0b4.jar
 version: 2.0b4
 project: http://www.beanshell.org/
-license: LGPL
+license: SPL/LGPL
 
 name:    jcommander-1.27.jar
 version: 1.27

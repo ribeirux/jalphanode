@@ -75,14 +75,11 @@
 
             <!-- Now, select which projects to include in this module-set. -->
             <includes>
-                <include>org.jalphanode:jalphanode-core</include>
                 <include>org.jalphanode:jalphanode-ui</include>
             </includes>
             <sources>
                 <includeModuleDirectory>false</includeModuleDirectory>
-
                 <fileSets>
-
                     <!-- Schema -->
                     <fileSet>
                         <directory>src/main/resources/schema</directory>
@@ -92,7 +89,6 @@
                             <include>*.xsd</include>
                         </includes>
                     </fileSet>
-
                 </fileSets>
             </sources>
             <binaries>
@@ -101,13 +97,9 @@
                 <outputFileNameMapping>${module.artifactId}.${module.extension}</outputFileNameMapping>
                 <dependencySets>
                     <dependencySet>
-                        <excludes>
-                            <exclude>org.jalphanode:jalphanode-core</exclude>
-                        </excludes>
                         <useTransitiveDependencies>true</useTransitiveDependencies>
                         <useTransitiveFiltering>false</useTransitiveFiltering>
                         <outputDirectory>lib</outputDirectory>
-                        <scope>runtime</scope>
                     </dependencySet>
                 </dependencySets>
             </binaries>

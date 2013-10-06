@@ -1,3 +1,18 @@
+/**
+ *    Copyright 2011 Pedro Ribeiro
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package org.jalphanode.jmx;
 
 import java.lang.management.ManagementFactory;
@@ -10,8 +25,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -23,7 +38,7 @@ import com.google.common.collect.Sets;
  */
 public class DefaultMBeanRegistry implements MBeanRegistry {
 
-    private static final Log LOG = LogFactory.getLog(DefaultMBeanRegistry.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultMBeanRegistry.class);
 
     public static final String DOMAIN = "org.jalphanode";
     public static final String COMPONENT_KEY = "component";
@@ -60,10 +75,8 @@ public class DefaultMBeanRegistry implements MBeanRegistry {
             ObjectName name = getObjectName(objectName);
             unregister(name);
         } catch (JMException e) {
-            LOG.warn("Could not revolve object name for class: " + instance.getClass() + " with name: " + objectName,
-                e);
+            LOG.warn("Could not revolve object name for class {} with name {}", instance.getClass(), objectName, e);
         }
-
     }
 
     @Override
@@ -73,7 +86,7 @@ public class DefaultMBeanRegistry implements MBeanRegistry {
         try {
             mBeanServer.unregisterMBean(name);
         } catch (JMException e) {
-            LOG.warn("Could not unregister MBean: " + name, e);
+            LOG.warn("Could not unregister MBean: {}", name, e);
         }
 
         registeredBeans.remove(name);
