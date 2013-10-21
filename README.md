@@ -88,7 +88,7 @@ Jalphanode comes with a demo. This demo automatically creates a cluster of N ins
 Example: demo/bin/setup-environment.sh 10
 
 The above command creates 10 instances in folder **demo/inst**. To start all instances you can run for example:
-`for inst in $(find . -mindepth 1 -maxdepth 1 -type d); do $inst/bin/jalphanode.sh -s $inst/etc/jalphanode-config.xml & done`
+`for f in $(find . -mindepth 1 -maxdepth 1 -type d); do $f/bin/jalphanode.sh -s $f/etc/jalphanode-config.xml & done`
 
 This will start all 10 instances. Only one instance will execute the tasks (the master) while the other 9 are waiting (begging) for the master to fail (to have a chance to execute).
 
