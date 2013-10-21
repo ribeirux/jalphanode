@@ -47,15 +47,15 @@ Since jalphanode was designed to be extensible, each configuration abstraction s
 
 To run jalphanode, you can start with the sample configuration file **etc/jalphanode-config.xml** and change it according to your requirements. If you don't specify a configuration file, the default configuration will be used.
 
-Currently, to reload the configuration you should restart jalphanode although this is highly likely to change in the future. 
+To reload the configuration you should restart jalphanode. Hopefully this is highly likely to change in the future. 
 
 ## Show me what I like
 
-You can launch jalphanode as a service, or for testing proposes, from a command line interface (CLI) or a graphical user interface (GUI).
+You can launch jalphanode as a service, from a command line interface (CLI) or for testing proposes from a graphical user interface (GUI).
 
-When the application is started, a log folder is automatically created with all log files. You can check through the log files, the current members of the cluster, the running tasks, etc...
+When the application starts a log folder is automatically created with all log files. You can check through the log files, the current members of the cluster, the running tasks, etc...
 
-If you want to start several instances on the same machine, you should copy the distribution folder and use this copy to start a new instance.
+If you want to start several instances on the same machine, be aware that each instance should run on its own distribution folder.
 
 ### Service
 
@@ -90,7 +90,7 @@ Example: demo/bin/setup-environment.sh 10
 The above command creates 10 instances in folder **demo/inst**. To start all instances you can run for example:
 `for inst in $(find . -mindepth 1 -maxdepth 1 -type d); do $inst/bin/jalphanode.sh -s $inst/etc/jalphanode-config.xml & done`
 
-This will start all 10 instances. Only one instance will execute the tasks (the master) while other the 9 are waiting (begging) for the master to fail.
+This will start all 10 instances. Only one instance will execute the tasks (the master) while the other 9 are waiting (begging) for the master to fail (to have a chance to execute).
 
 If you kill the master, a new view will be installed and another instance will assume the lead of the group and execute the tasks.
 
