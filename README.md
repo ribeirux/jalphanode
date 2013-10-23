@@ -1,6 +1,6 @@
 # Quick Start
 
-Jalphanode is a clustered cron job scheduler that can survive to node failures written entirely in Java. The propose of jalphanode is to provide a reliable mechanism of task scheduling which can be deployed on several nodes connected to each other.
+Jalphanode is a lightweight cron job scheduler that can survive to node failures written entirely in Java. The propose of jalphanode is to provide a reliable mechanism of task scheduling which can be deployed on several nodes connected to each other.
 When jalphanode starts, one of the nodes is elected as the master and only that node can execute the scheduled tasks. If this node fails, another one is elected as the master. Using a cluster ensures that as long as one of the nodes in the cluster is available, the scheduled task has a high-availability characteristic and will be executed.
 
 Jalphanode provides powerful characteristics such as:
