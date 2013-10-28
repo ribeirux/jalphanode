@@ -5,8 +5,8 @@ When jalphanode starts, one of the nodes is elected as the master and only that 
 
 Jalphanode provides powerful characteristics such as:
 
- - High-availability. If at least one node in the cluster is available the scheduled tasks will be executed.
- - Configuration mechanism. Jalphanode not only can be configured declaratively through a XML file, but also programmatically (org.jalphanode.config.JAlphaNodeConfigBuilder).
+ - Highly available. If at least one node in the cluster is available the scheduled tasks will be executed.
+ - Advanced configuration mechanism. Jalphanode not only can be configured declaratively through a XML file, but also programmatically (org.jalphanode.config.JAlphaNodeConfigBuilder).
  - Listener API. Clients can be notified when a new view is installed and before/after a task is executed. 
  - UI module which includes a CLI and a GUI.
 

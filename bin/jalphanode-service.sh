@@ -98,8 +98,15 @@ case $1 in
         ;;
     status)
         if [ -f "$PID_FILE" ]; then
-            echo "jalphanode is running with PID: $(cat $PID_FILE)"
-            exit 0
+            # Read PID
+            read PID < $PID_FILE
+            if kill -0 $PID > /dev/null 2>&1; then
+                echo "jalphanode is running with PID: $PID"
+                exit 0
+            else
+                echo "jalphanode is stopped"
+                exit 5
+            fi
         else
             echo "jalphanode is stopped"
             exit 5
