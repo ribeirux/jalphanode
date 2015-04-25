@@ -26,7 +26,7 @@ public class JAlphaNodeException extends Exception {
     private static final long serialVersionUID = 7295643998529869454L;
 
     /**
-     * Constructs a new exception with <code>null</code> as its detail message.
+     * Constructs a new exception with {@code null} as its detail message.
      */
     public JAlphaNodeException() {
         super();

@@ -15,15 +15,14 @@
  */
 package org.jalphanode.demo;
 
-import java.awt.EventQueue;
-import java.awt.Font;
+import org.jalphanode.config.TaskConfig;
+import org.jalphanode.task.Task;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import java.awt.EventQueue;
+import java.awt.Font;
 
-import org.jalphanode.config.TaskConfig;
-
-import org.jalphanode.task.Task;
 
 public class Questions implements Task {
 
@@ -31,7 +30,7 @@ public class Questions implements Task {
 
         private static final long serialVersionUID = 5709851257707006758L;
 
-        private String textMessage = "Questions?";
+        private final String textMessage = "Questions?";
 
         public QuestionsFrame() {
             setLocationRelativeTo(null);
@@ -47,15 +46,11 @@ public class Questions implements Task {
     }
 
     private static void run() {
-        EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    final QuestionsFrame window = new QuestionsFrame();
-                    window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                    window.setVisible(true);
-                }
-            });
+        EventQueue.invokeLater(() -> {
+            final QuestionsFrame window = new QuestionsFrame();
+            window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            window.setVisible(true);
+        });
     }
 
     @Override

@@ -36,10 +36,10 @@ public class NotifierImplTest {
 
     @BeforeMethod
     public void initNotifier() {
-        notifier = new NotifierImpl(MoreExecutors.sameThreadExecutor());
+        notifier = new NotifierImpl(MoreExecutors.directExecutor());
     }
 
-    @Test(expectedExceptions = {MalformedListenerException.class})
+    @Test(expectedExceptions = MalformedListenerException.class)
     public void testListenerException() throws ConfigException {
         notifier.addListener(new Object());
     }
@@ -51,7 +51,7 @@ public class NotifierImplTest {
         void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = {MalformedListenerException.class})
+    @Test(expectedExceptions = MalformedListenerException.class)
     public void testListenerMethod() throws ConfigException {
         notifier.addListener(new MethodTest());
     }
@@ -63,7 +63,7 @@ public class NotifierImplTest {
         public void viewChanged(final ViewChangedEvent event) { }
     }
 
-    @Test(expectedExceptions = {MalformedListenerException.class})
+    @Test(expectedExceptions = MalformedListenerException.class)
     public void testListenerPublicModifier() throws ConfigException {
         notifier.addListener(new ClassTest());
     }

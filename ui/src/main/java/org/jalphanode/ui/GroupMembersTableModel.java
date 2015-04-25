@@ -15,21 +15,20 @@
  */
 package org.jalphanode.ui;
 
-import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
-
-import org.jalphanode.cluster.NodeAddress;
-
-import org.jalphanode.notification.ViewChangedEvent;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import org.jalphanode.cluster.NodeAddress;
+import org.jalphanode.notification.ViewChangedEvent;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
 
 public class GroupMembersTableModel extends AbstractTableModel {
 
-    List<String> collumnNames = ImmutableList.of(Messages.getString("gui.group.local.address.title"),
-            Messages.getString("gui.group.local.title"), Messages.getString("gui.group.master.title"));
+    private static final List<String> COLUMN_NAMES = ImmutableList.of(
+            Messages.getString("gui.group.local.address.title"),
+            Messages.getString("gui.group.local.title"),
+            Messages.getString("gui.group.master.title"));
 
     private Object[][] data;
 
@@ -39,12 +38,12 @@ public class GroupMembersTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return collumnNames.size();
+        return COLUMN_NAMES.size();
     }
 
     @Override
     public String getColumnName(final int column) {
-        return collumnNames.get(column);
+        return COLUMN_NAMES.get(column);
     }
 
     @Override
@@ -70,11 +69,11 @@ public class GroupMembersTableModel extends AbstractTableModel {
 
         int rowIndex = 0;
         for (NodeAddress node : members) {
-            int collumnIndex = 0;
-            Object[] row = new Object[collumnNames.size()];
-            row[collumnIndex++] = node.toString();
-            row[collumnIndex++] = node.equals(event.getLocalAddress());
-            row[collumnIndex++] = node.equals(event.getMasterAddress());
+            int columnIndex = 0;
+            Object[] row = new Object[COLUMN_NAMES.size()];
+            row[columnIndex++] = node.toString();
+            row[columnIndex++] = node.equals(event.getLocalAddress());
+            row[columnIndex++] = node.equals(event.getMasterAddress());
 
             newData[rowIndex++] = row;
         }

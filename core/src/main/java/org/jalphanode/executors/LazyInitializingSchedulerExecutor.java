@@ -15,27 +15,23 @@
  */
 package org.jalphanode.executors;
 
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.config.TaskSchedulerConfig;
+import org.jalphanode.config.TypedPropertiesConfig;
+import org.jalphanode.util.DaemonThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.jalphanode.config.JAlphaNodeConfig;
-import org.jalphanode.config.TaskSchedulerConfig;
-import org.jalphanode.config.TypedPropertiesConfig;
-
-import org.jalphanode.util.DaemonThreadFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
-
-import com.google.inject.Inject;
-
 public class LazyInitializingSchedulerExecutor extends LazyInitializingThreadPoolExecutor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LazyInitializingNotifierExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LazyInitializingSchedulerExecutor.class);
 
     protected static final String KEEP_ALIVE_PROPERTY = "keepAlive";
     protected static final int DEFAULT_KEEP_ALIVE = 600000;
@@ -75,7 +71,7 @@ public class LazyInitializingSchedulerExecutor extends LazyInitializingThreadPoo
         final ThreadFactory factory = DaemonThreadFactory.newInstance(threadPrefix, priority);
 
         final ThreadPoolExecutor pool = new ThreadPoolExecutor(poolSize, poolSize, keepAlive, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(queueSize), factory, new ThreadPoolExecutor.CallerRunsPolicy());
+                new LinkedBlockingQueue<>(queueSize), factory, new ThreadPoolExecutor.CallerRunsPolicy());
         pool.allowCoreThreadTimeOut(true);
 
         return pool;
@@ -108,7 +104,5 @@ public class LazyInitializingSchedulerExecutor extends LazyInitializingThreadPoo
             // Preserve interrupt status
             Thread.currentThread().interrupt();
         }
-
     }
-
 }

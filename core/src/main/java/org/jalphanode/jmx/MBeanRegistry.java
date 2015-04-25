@@ -29,6 +29,8 @@ public interface MBeanRegistry {
      *
      * @param  instance    instance to register
      * @param  objectName  name
+     * @return the the object instance
+     * @exception  JMException thrown by JMX implementation
      */
     ObjectInstance register(Object instance, String objectName) throws JMException;
 

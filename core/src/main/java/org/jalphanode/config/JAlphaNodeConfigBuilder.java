@@ -15,19 +15,15 @@
  */
 package org.jalphanode.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.google.common.base.Preconditions;
 import org.jalphanode.scheduler.ScheduleIterator;
-
 import org.jalphanode.task.Task;
-
 import org.jalphanode.util.ConfigurationUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * JAlphanode configuration builder.
@@ -112,9 +108,8 @@ public class JAlphaNodeConfigBuilder {
      * Factory method to create an instance of jalphanode configuration. If users want to verify configuration file
      * correctness against schema then appropriate schema file name should be provided as well.
      *
-     * <p/>Both configuration file and schema file are looked up in following order:
+     * <p>Both configuration file and schema file are looked up in following order:
      *
-     * <p/>
      * <ol>
      *   <li>using current thread's context ClassLoader</li>
      *   <li>if fails, the system ClassLoader</li>
@@ -147,9 +142,8 @@ public class JAlphaNodeConfigBuilder {
      * Factory method to create an instance of jalphanode configuration. If users want to verify configuration file
      * correctness against schema then appropriate schema file name should be provided as well.
      *
-     * <p/>Both configuration file and schema file are looked up in following order:
+     * <p>Both configuration file and schema file are looked up in following order:
      *
-     * <p/>
      * <ol>
      *   <li>using current thread's context ClassLoader</li>
      *   <li>if fails, the system ClassLoader</li>

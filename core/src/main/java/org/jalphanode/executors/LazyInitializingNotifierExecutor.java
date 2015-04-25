@@ -15,23 +15,19 @@
  */
 package org.jalphanode.executors;
 
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import org.jalphanode.config.AsyncNotificationExecutorConfig;
+import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.config.TypedPropertiesConfig;
+import org.jalphanode.util.DaemonThreadFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.jalphanode.config.AsyncNotificationExecutorConfig;
-import org.jalphanode.config.JAlphaNodeConfig;
-import org.jalphanode.config.TypedPropertiesConfig;
-
-import org.jalphanode.util.DaemonThreadFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
-
-import com.google.inject.Inject;
 
 /**
  * Lazily constructs and initializes a thread pool executor.
@@ -79,7 +75,7 @@ public class LazyInitializingNotifierExecutor extends LazyInitializingThreadPool
         final ThreadFactory factory = DaemonThreadFactory.newInstance(threadPrefix, priority);
 
         final ThreadPoolExecutor pool = new ThreadPoolExecutor(poolSize, poolSize, keepAlive, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(queueSize), factory, new ThreadPoolExecutor.CallerRunsPolicy());
+                new LinkedBlockingQueue<>(queueSize), factory, new ThreadPoolExecutor.CallerRunsPolicy());
         pool.allowCoreThreadTimeOut(true);
 
         return pool;

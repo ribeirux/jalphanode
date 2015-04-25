@@ -15,14 +15,12 @@
  */
 package org.jalphanode.ui;
 
-import java.net.URL;
-
-import java.text.MessageFormat;
+import org.jalphanode.util.FileUtils;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-
-import org.jalphanode.util.FileUtils;
+import java.net.URL;
+import java.text.MessageFormat;
 
 /**
  * Node images.
@@ -61,9 +59,9 @@ public enum NodeTypeImage {
         return new ImageIcon(url);
     }
 
-    private Icon image;
+    private final Icon image;
 
-    private NodeTypeImage(final Icon image) {
+    NodeTypeImage(final Icon image) {
         this.image = image;
     }
 

@@ -26,7 +26,7 @@ public class JAlphaNodeRuntimeException extends RuntimeException {
     private static final long serialVersionUID = -1166885175645334638L;
 
     /**
-     * Constructs a new exception with <code>null</code> as its detail message.
+     * Constructs a new exception with {@code null} as its detail message.
      */
     public JAlphaNodeRuntimeException() {
         super();

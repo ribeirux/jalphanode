@@ -15,41 +15,34 @@
  */
 package org.jalphanode.cluster.jgroups;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.ReentrantLock;
-
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 import org.jalphanode.cluster.MasterNodeElectionPolicy;
 import org.jalphanode.cluster.MembershipException;
 import org.jalphanode.cluster.MembershipManager;
 import org.jalphanode.cluster.NodeAddress;
-
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.MembershipConfig;
-
 import org.jalphanode.jmx.annotation.MBean;
 import org.jalphanode.jmx.annotation.ManagedAttribute;
-
 import org.jalphanode.notification.Notifier;
-
 import org.jgroups.Address;
 import org.jgroups.Channel;
 import org.jgroups.Message;
 import org.jgroups.Receiver;
 import org.jgroups.View;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-
-import com.google.inject.Inject;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * JGroups membership manager.
@@ -65,7 +58,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
     public static final String OBJECT_NAME = "MembershipManager";
 
     private final CountDownLatch connectedLatch = new CountDownLatch(1);
-    private final ReentrantLock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
     private final JAlphaNodeConfig config;
     private final Channel channel;
@@ -153,7 +146,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
 
             final int randomInRange = new Random().nextInt();
 
-            this.channel.setName(this.config.getMembership().getNodeName() + "-" + randomInRange);
+            this.channel.setName(this.config.getMembership().getNodeName() + '-' + randomInRange);
             this.channel.setReceiver(this);
 
             try {
@@ -273,7 +266,7 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    public void getState(final OutputStream output) throws Exception {
+    public void getState(final OutputStream output) {
         throw new UnsupportedOperationException("This functionality is not supported");
     }
 
@@ -281,15 +274,13 @@ public class JGroupsMembershipManager implements MembershipManager, Receiver {
      * {@inheritDoc}
      */
     @Override
-    public void setState(final InputStream input) throws Exception {
+    public void setState(final InputStream input) {
         throw new UnsupportedOperationException("This functionality is not supported");
     }
 
-    private List<NodeAddress> fromJGroupsAddressList(final List<Address> list) {
+    private List<NodeAddress> fromJGroupsAddressList(final Iterable<Address> list) {
         final ImmutableList.Builder<NodeAddress> builder = ImmutableList.builder();
-        for (final Address addr : list) {
-            builder.add(new JGroupsAddress(addr));
-        }
+        list.forEach(address -> builder.add(new JGroupsAddress(address)));
 
         return builder.build();
     }

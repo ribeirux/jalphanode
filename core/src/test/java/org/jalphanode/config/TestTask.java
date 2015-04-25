@@ -15,15 +15,13 @@
  */
 package org.jalphanode.config;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
 import org.jalphanode.task.Task;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Dummy task.
@@ -40,7 +38,7 @@ public final class TestTask implements Task {
         final Date currentTime = new Date();
         final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss SSS");
 
-        LOG.warn("Dummy task: {0} -> {1}", config.getTaskName(), dateFormat.format(currentTime));
+        LOG.warn("Dummy task: {} -> {}", config.getTaskName(), dateFormat.format(currentTime));
     }
 
 }

@@ -33,7 +33,7 @@ public interface TaskManager extends Listenable {
         RUNNING,
         STOPPING,
         STOPPED,
-        FAILED;
+        FAILED
     }
 
     /**

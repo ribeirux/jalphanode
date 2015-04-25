@@ -15,6 +15,10 @@
  */
 package org.jalphanode.config;
 
+import org.jalphanode.scheduler.ScheduleIterator;
+import org.jalphanode.task.NoTask;
+import org.jalphanode.task.Task;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -23,11 +27,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.jalphanode.scheduler.ScheduleIterator;
-
-import org.jalphanode.task.NoTask;
-import org.jalphanode.task.Task;
-
 /**
  * Task configuration.
  *
@@ -35,7 +34,7 @@ import org.jalphanode.task.Task;
  * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "taskType", propOrder = {"scheduleIterator"})
+@XmlType(name = "taskType", propOrder = "scheduleIterator")
 public class TaskType extends AbstractPropertiesContainer implements TaskConfig {
 
     private static final String DEFAULT_TASK_NAME = "NoTask";
@@ -126,12 +125,12 @@ public class TaskType extends AbstractPropertiesContainer implements TaskConfig 
     static class Adapter extends XmlAdapter<TaskType, TaskConfig> {
 
         @Override
-        public TaskConfig unmarshal(final TaskType v) throws Exception {
+        public TaskConfig unmarshal(final TaskType v) {
             return v;
         }
 
         @Override
-        public TaskType marshal(final TaskConfig v) throws Exception {
+        public TaskType marshal(final TaskConfig v) {
             return (TaskType) v;
         }
     }

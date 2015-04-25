@@ -15,15 +15,14 @@
  */
 package org.jalphanode.config;
 
-import java.util.Collections;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Properties configuration.
@@ -32,7 +31,7 @@ import com.google.common.collect.Lists;
  * @version  $Revision: 274 $
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "properties", propOrder = {"property"})
+@XmlType(name = "properties", propOrder = "property")
 public class PropertiesType {
 
     @XmlElement(required = true)

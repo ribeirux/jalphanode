@@ -15,25 +15,21 @@
  */
 package org.jalphanode.notification;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.MoreExecutors;
+import org.jalphanode.annotation.Listener;
+import org.jalphanode.util.ReflectionUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
 import java.text.MessageFormat;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
-
-import org.jalphanode.annotation.Listener;
-
-import org.jalphanode.util.ReflectionUtils;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.MoreExecutors;
+import java.util.stream.Collectors;
 
 /**
  * Generic listener.
@@ -51,9 +47,9 @@ public abstract class AbstractListener {
      *
      * @param  asyncExecutor  asynchronous executor
      */
-    public AbstractListener(final Executor asyncExecutor) {
+    protected AbstractListener(final Executor asyncExecutor) {
         this.asyncExecutor = Preconditions.checkNotNull(asyncExecutor, "asyncExecutor");
-        this.syncExecutor = MoreExecutors.sameThreadExecutor();
+        this.syncExecutor = MoreExecutors.directExecutor();
     }
 
     /**
@@ -82,7 +78,7 @@ public abstract class AbstractListener {
      * @return  all listeners
      */
     public Set<Object> getListeners() {
-        final ImmutableSet.Builder<Object> builder = new ImmutableSet.Builder<Object>();
+        final ImmutableSet.Builder<Object> builder = new ImmutableSet.Builder<>();
         for (final List<ListenerInvocation> list : this.getListenersMap().values()) {
             for (final ListenerInvocation li : list) {
                 builder.add(li.getTarget());
@@ -96,11 +92,7 @@ public abstract class AbstractListener {
      * Removes all listeners from the notifier.
      */
     public void removeAllListeners() {
-        for (final List<ListenerInvocation> list : this.getListenersMap().values()) {
-            if (list != null) {
-                list.clear();
-            }
-        }
+        this.getListenersMap().values().stream().filter(list -> list != null).forEach(List<ListenerInvocation>::clear);
     }
 
     /**
@@ -127,15 +119,9 @@ public abstract class AbstractListener {
         Preconditions.checkNotNull(listener, "listener");
 
         final List<ListenerInvocation> listeners = this.getListenerCollectionForAnnotation(annotation);
-
-        final Set<Object> markedForRemoval = Sets.newHashSet();
-        for (final ListenerInvocation li : listeners) {
-            if (listener.equals(li.getTarget())) {
-                markedForRemoval.add(li);
-            }
-        }
-
-        listeners.removeAll(markedForRemoval);
+        listeners.removeAll(listeners.stream()
+                .filter(li -> listener.equals(li.getTarget()))
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -227,14 +213,11 @@ public abstract class AbstractListener {
     }
 
     private void addListenerInvocation(final Class<? extends Annotation> annotation, final ListenerInvocation li) {
-        final List<ListenerInvocation> result = this.getListenerCollectionForAnnotation(annotation);
-        result.add(li);
+        this.getListenerCollectionForAnnotation(annotation).add(li);
     }
 
-    protected void invokeListeners(final List<ListenerInvocation> listeners, final Object event) {
-        for (final ListenerInvocation listener : listeners) {
-            listener.invoke(event);
-        }
+    protected void invokeListeners(final Iterable<ListenerInvocation> listeners, final Object event) {
+        listeners.forEach(l -> l.invoke(event));
     }
 
     /**

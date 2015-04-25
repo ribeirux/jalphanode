@@ -15,12 +15,16 @@
  */
 package org.jalphanode.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.text.MessageFormat;
-
-import java.util.ResourceBundle;
+import com.google.common.base.Preconditions;
+import org.jalphanode.config.ClassNotAssignableException;
+import org.jalphanode.config.ConfigBindingException;
+import org.jalphanode.config.ConfigClassNotFoundException;
+import org.jalphanode.config.ConfigException;
+import org.jalphanode.config.ConfigFileNotFoundException;
+import org.jalphanode.config.JAlphaNodeType;
+import org.jalphanode.config.XMLEventHandler;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -29,19 +33,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
-
-import org.jalphanode.config.ClassNotAssignableException;
-import org.jalphanode.config.ConfigBindingException;
-import org.jalphanode.config.ConfigClassNotFoundException;
-import org.jalphanode.config.ConfigException;
-import org.jalphanode.config.ConfigFileNotFoundException;
-import org.jalphanode.config.JAlphaNodeType;
-import org.jalphanode.config.XMLEventHandler;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.base.Preconditions;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  * Utility methods for configurations.
@@ -89,7 +84,7 @@ public final class ConfigurationUtils {
     /**
      * Instantiates a class based on the provided class name.
      *
-     * <p />Any exceptions encountered loading and instantiating the class is wrapped in a {@link ConfigException}.
+     * <p>Any exceptions encountered loading and instantiating the class is wrapped in a {@link ConfigException}.
      *
      * @param   <T>              assignable class
      * @param   classname        class to instantiate
@@ -108,7 +103,7 @@ public final class ConfigurationUtils {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         try {
-            final Class<? extends Object> loadedClass = classLoader.loadClass(classname);
+            final Class<?> loadedClass = classLoader.loadClass(classname);
 
             if (!assignableClass.isAssignableFrom(loadedClass)) {
                 throw new ClassNotAssignableException(MessageFormat.format(
@@ -177,13 +172,10 @@ public final class ConfigurationUtils {
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
 
-            final ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes(JAlphaNodeType.CONFIG_CHARSET));
-            try {
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes(JAlphaNodeType.CONFIG_CHARSET))) {
                 final Document document = builder.parse(bais);
 
                 return document.getDocumentElement();
-            } finally {
-                bais.close();
             }
         } catch (final Exception e) {
             throw new ConfigBindingException(e);

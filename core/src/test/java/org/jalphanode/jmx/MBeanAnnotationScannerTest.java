@@ -15,19 +15,17 @@
  */
 package org.jalphanode.jmx;
 
-import javax.management.MBeanOperationInfo;
-
 import org.jalphanode.jmx.mbean.MBean1;
 import org.jalphanode.jmx.mbean.MBean2;
 import org.jalphanode.jmx.mbean.MBean3;
 import org.jalphanode.jmx.mbean.MBean4;
 import org.jalphanode.jmx.mbean.MBean5;
 import org.jalphanode.jmx.mbean.MBean6;
-
 import org.testng.Assert;
-
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.management.MBeanOperationInfo;
 
 /**
  * {@link MBeanAnnotationScanner} tests.
@@ -50,7 +48,7 @@ public class MBeanAnnotationScannerTest {
         MBeanMetadata.Builder builder = new MBeanMetadata.Builder(testClass);
 
         builder.putAttribute(new ManagedAttributeMetadata.Builder("field")      //
-            .withReadMethod(testClass.getMethod("getField", new Class<?>[] {})) //
+            .withReadMethod(testClass.getMethod("getField")) //
             .withWriteMethod(testClass.getMethod("setField", String.class)).build());
 
         builder.putOperation(new ManagedOperationMetadata.Builder(testClass.getMethod("operation", String.class))
@@ -69,7 +67,7 @@ public class MBeanAnnotationScannerTest {
         builder.withObjectName("objectName").withDescription("beanDescription");
 
         builder.putAttribute(new ManagedAttributeMetadata.Builder("fieldName").withDescription("fieldDescription") //
-            .withReadMethod(testClass.getMethod("getField", new Class<?>[] {}))                   //
+            .withReadMethod(testClass.getMethod("getField"))                   //
             .withWriteMethod(testClass.getMethod("setField", String.class)).build());
 
         builder.putOperation(new ManagedOperationMetadata.Builder(testClass.getMethod("operation", String.class))
@@ -89,7 +87,7 @@ public class MBeanAnnotationScannerTest {
         MBeanMetadata.Builder builder = new MBeanMetadata.Builder(testClass);
 
         builder.putAttribute(new ManagedAttributeMetadata.Builder("field") //
-            .withReadMethod(testClass.getMethod("getField", new Class<?>[] {})).build());
+            .withReadMethod(testClass.getMethod("getField")).build());
 
         builder.putOperation(new ManagedOperationMetadata.Builder(testClass.getMethod("operation", String.class))
                 .addParameterMetadata(new ManagedParameterMetadata.Builder(String.class.getName()).build()).build());
@@ -123,7 +121,7 @@ public class MBeanAnnotationScannerTest {
         MBeanMetadata.Builder builder = new MBeanMetadata.Builder(testClass);
 
         builder.putAttribute(new ManagedAttributeMetadata.Builder("fieldName").withDescription("fieldDescription")
-                .withReadMethod(testClass.getMethod("getField", new Class<?>[] {})) //
+                .withReadMethod(testClass.getMethod("getField")) //
             .withWriteMethod(testClass.getMethod("setField", String.class)).build());
 
         MBeanMetadata metadata = scanner.scan(testClass);

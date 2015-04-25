@@ -15,21 +15,18 @@
  */
 package org.jalphanode.jmx;
 
-import java.lang.management.ManagementFactory;
-
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
+import java.lang.management.ManagementFactory;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * By default all MBeans are registered in platform MBean server.
@@ -44,7 +41,7 @@ public class DefaultMBeanRegistry implements MBeanRegistry {
     public static final String COMPONENT_KEY = "component";
     public static final String SCHEDULER_JMX_GROUP = "type=Scheduler";
 
-    private final Set<ObjectName> registeredBeans = Sets.newSetFromMap(new ConcurrentHashMap<ObjectName, Boolean>());
+    private final Set<ObjectName> registeredBeans = Sets.newSetFromMap(new ConcurrentHashMap<>());
 
     private final MBeanServer mBeanServer;
 
@@ -94,10 +91,7 @@ public class DefaultMBeanRegistry implements MBeanRegistry {
 
     @Override
     public void unregisterAll() {
-        for (ObjectName name : registeredBeans) {
-            unregister(name);
-        }
-
+        registeredBeans.forEach(this::unregister);
         registeredBeans.clear();
     }
 

@@ -15,15 +15,13 @@
  */
 package org.jalphanode.notification;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import java.util.concurrent.Executor;
-
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.concurrent.Executor;
 
 /**
  * Invokes a listener method.
@@ -81,18 +79,14 @@ public class ListenerInvocation {
     }
 
     private Runnable buildRunnable(final Object event) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    method.invoke(target, event);
-                } catch (final InvocationTargetException e) {
-                    LOG.error("Caught exception invoking listener method {} on instance {}", method, target,
-                        e.getTargetException());
-                } catch (final IllegalAccessException e) {
-                    LOG.error("Unable to invoke listener method {} on instance {}.", method, target, e);
-                }
+        return () -> {
+            try {
+                method.invoke(target, event);
+            } catch (final InvocationTargetException e) {
+                LOG.error("Caught exception invoking listener method {} on instance {}", method, target,
+                    e.getTargetException());
+            } catch (final IllegalAccessException e) {
+                LOG.error("Unable to invoke listener method {} on instance {}.", method, target, e);
             }
         };
     }

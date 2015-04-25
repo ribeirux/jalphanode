@@ -1,83 +1,67 @@
 /**
- *    Copyright 2011 Pedro Ribeiro
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2011 Pedro Ribeiro
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.jalphanode;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.jalphanode.annotation.Start;
-import org.jalphanode.annotation.Stop;
-
-import org.jalphanode.config.JAlphaNodeConfig;
-import org.jalphanode.config.JAlphaNodeType;
-import org.jalphanode.config.TaskConfig;
-
-import org.jalphanode.inject.InjectorModule;
-import org.jalphanode.inject.IsSingletonBindingScopingVisitor;
-import org.jalphanode.inject.LifecycleInvocation;
-
-import org.jalphanode.jmx.MBeanRegistry;
-
-import org.jalphanode.notification.Notifier;
-
-import org.jalphanode.scheduler.TaskScheduler;
-
-import org.jalphanode.util.ReflectionUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
-
 import com.google.inject.Binding;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Stage;
+import org.jalphanode.annotation.Start;
+import org.jalphanode.annotation.Stop;
+import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.config.JAlphaNodeType;
+import org.jalphanode.inject.InjectorModule;
+import org.jalphanode.inject.IsSingletonBindingScopingVisitor;
+import org.jalphanode.inject.LifecycleInvocation;
+import org.jalphanode.jmx.MBeanRegistry;
+import org.jalphanode.notification.Notifier;
+import org.jalphanode.scheduler.TaskScheduler;
+import org.jalphanode.util.ReflectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Default task manager.
  *
- * @author   ribeirux
- * @version  $Revision: 274 $
+ * @author ribeirux
+ * @version $Revision: 274 $
  */
 public class DefaultTaskManager implements TaskManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTaskManager.class);
 
-    private static final Comparator<LifecycleInvocation> PRIORITY_COMPARATOR = Ordering.natural().onResultOf(
-            new Function<LifecycleInvocation, Integer>() {
+    private static final Comparator<LifecycleInvocation> PRIORITY_COMPARATOR = Ordering
+            .natural().onResultOf(LifecycleInvocation::getPriority);
 
-                @Override
-                public Integer apply(final LifecycleInvocation obj) {
-                    return obj.getPriority();
-                }
-            });
-
-    private final AtomicReference<Status> status = new AtomicReference<Status>(Status.INSTANTIATED);
+    private final AtomicReference<Status> status = new AtomicReference<>(Status.INSTANTIATED);
 
     private final Injector injector;
 
@@ -144,18 +128,12 @@ public class DefaultTaskManager implements TaskManager {
         try {
 
             // start all registered components
-            invoke(new Function<Method, Integer>() {
-                    public Integer apply(final Method method) {
-                        return method.getAnnotation(Start.class).priority();
-                    }
-                }, Start.class);
+            invoke(method -> method.getAnnotation(Start.class).priority(), Start.class);
 
             // schedule all tasks
             final JAlphaNodeConfig config = this.injector.getInstance(JAlphaNodeConfig.class);
             final TaskScheduler scheduler = this.injector.getInstance(TaskScheduler.class);
-            for (TaskConfig task : config.getTasks().getTask()) {
-                scheduler.schedule(task);
-            }
+            config.getTasks().getTask().forEach(scheduler::schedule);
 
             status.set(Status.RUNNING);
 
@@ -186,13 +164,7 @@ public class DefaultTaskManager implements TaskManager {
             // unregister all beans
             this.injector.getInstance(MBeanRegistry.class).unregisterAll();
 
-            invoke(new Function<Method, Integer>() {
-
-                    public Integer apply(final Method method) {
-                        return method.getAnnotation(Stop.class).priority();
-                    }
-
-                }, Stop.class);
+            invoke(method -> method.getAnnotation(Stop.class).priority(), Stop.class);
 
             status.set(Status.STOPPED);
 
@@ -205,25 +177,25 @@ public class DefaultTaskManager implements TaskManager {
     }
 
     private void invoke(final Function<Method, Integer> priorityExtractor,
-            final Class<? extends Annotation> annotation) {
+                        final Class<? extends Annotation> annotation) {
         final Map<Key<?>, Binding<?>> bindings = injector.getAllBindings();
         if (!bindings.isEmpty()) {
             final IsSingletonBindingScopingVisitor isSingletonVisitor = new IsSingletonBindingScopingVisitor();
-            final PriorityQueue<LifecycleInvocation> toInvoke = new PriorityQueue<LifecycleInvocation>(bindings.size(),
+            final Queue<LifecycleInvocation> toInvoke = new PriorityQueue<>(bindings.size(),
                     PRIORITY_COMPARATOR);
 
             // collect all methods to start
-            for (Entry<Key<?>, Binding<?>> entry : bindings.entrySet()) {
-
-                // check if binding is singleton
-                if (entry.getValue().acceptScopingVisitor(isSingletonVisitor)) {
-                    Object instance = injector.getInstance(entry.getKey());
-                    List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), annotation);
-                    for (Method method : methods) {
-                        toInvoke.add(new LifecycleInvocation(priorityExtractor.apply(method), instance, method));
-                    }
-                }
-            }
+            bindings.entrySet().stream()
+                    // check if binding is singleton
+                    .filter(entry -> entry.getValue().acceptScopingVisitor(isSingletonVisitor))
+                    .forEach(entry -> {
+                        final Object instance = injector.getInstance(entry.getKey());
+                        final List<Method> methods = ReflectionUtils.getAllMethods(instance.getClass(), annotation);
+                        toInvoke.addAll(methods.stream()
+                                .map(method -> new LifecycleInvocation(
+                                        priorityExtractor.apply(method), instance, method))
+                                .collect(Collectors.toList()));
+                    });
 
             LifecycleInvocation invocation = toInvoke.poll();
             while (invocation != null) {

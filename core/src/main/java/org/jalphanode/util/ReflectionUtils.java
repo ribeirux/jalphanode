@@ -15,16 +15,15 @@
  */
 package org.jalphanode.util;
 
+import com.google.common.base.Preconditions;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Basic reflection utilities to enhance what the JDK provides.
@@ -43,7 +42,7 @@ public final class ReflectionUtils {
      * specified class, this method recursively inspects super classes and interfaces until it finds the required
      * annotation.
      *
-     * <p/>Returns false if the annotation cannot be found.
+     * <p>Returns false if the annotation cannot be found.
      *
      * @param   <T>         annotation type
      * @param   clazz       class to inspect
@@ -104,7 +103,8 @@ public final class ReflectionUtils {
      * @param   method           method
      * @param   index            parameter index
      * @param   annotationClass  annotation to search for
-     *
+     * @param   <A>              annotation type
+     * 
      * @return  the annotation instance, or null if the annotation cannot be found.
      */
     public static <A extends Annotation> A getParameterAnnotation(final Method method, final int index,
@@ -112,12 +112,12 @@ public final class ReflectionUtils {
         Preconditions.checkNotNull(method, "method");
         Preconditions.checkNotNull(annotationClass, "annotationClass");
 
-        Annotation[][] annotations = method.getParameterAnnotations();
+        final Annotation[][] annotations = method.getParameterAnnotations();
         Preconditions.checkPositionIndex(index, annotations.length, "index");
 
         A annotation = null;
 
-        for (Annotation a : method.getParameterAnnotations()[index]) {
+        for (final Annotation a : method.getParameterAnnotations()[index]) {
             if (annotationClass.isInstance(a)) {
                 annotation = annotationClass.cast(a);
                 break;
@@ -140,7 +140,7 @@ public final class ReflectionUtils {
         Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
 
-        List<Method> annotated = new LinkedList<Method>();
+        final List<Method> annotated = new LinkedList<>();
         getAllMethodsRecursively(clazz, annotated, annotation);
 
         return annotated;
@@ -188,8 +188,7 @@ public final class ReflectionUtils {
         Preconditions.checkNotNull(clazz, "clazz");
         Preconditions.checkNotNull(annotation, "annotation");
 
-        List<Field> annotated = new LinkedList<Field>();
-
+        final List<Field> annotated = new LinkedList<>();
         getAnnotatedFieldsRecursively(clazz, annotated, annotation);
 
         return annotated;

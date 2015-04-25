@@ -15,19 +15,19 @@
  */
 package org.jalphanode.jmx;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSortedMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * MBean metadata.
  *
  * @author  ribeirux
  */
-public class MBeanMetadata {
+public final class MBeanMetadata {
 
     // required fields
     private final Class<?> instanceClass;
@@ -52,8 +52,8 @@ public class MBeanMetadata {
         public Builder(final Class<?> instanceClass) {
             this.instanceClass = Preconditions.checkNotNull(instanceClass, "instanceClass");
             this.objectName = instanceClass.getSimpleName();
-            this.attributes = new HashMap<String, ManagedAttributeMetadata>();
-            this.operations = new HashMap<String, ManagedOperationMetadata>();
+            this.attributes = new HashMap<>();
+            this.operations = new HashMap<>();
         }
 
         public Builder withObjectName(final String objectName) {

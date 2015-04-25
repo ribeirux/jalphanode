@@ -26,7 +26,7 @@ import java.util.Date;
 public interface ScheduleIterator {
 
     /**
-     * Builds the next execution time according the specified <code>date</code>.
+     * Builds the next execution time according the specified {@code date}.
      *
      * @param   date  the date to begin the search for the next valid date
      *

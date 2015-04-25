@@ -15,28 +15,21 @@
  */
 package org.jalphanode.cluster.jgroups;
 
-import java.net.URL;
-
-import java.text.MessageFormat;
-
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.jalphanode.cluster.MembershipException;
-
 import org.jalphanode.config.JAlphaNodeConfig;
 import org.jalphanode.config.TypedPropertiesConfig;
-
 import org.jalphanode.util.ConfigurationUtils;
 import org.jalphanode.util.FileUtils;
-
 import org.jgroups.Channel;
 import org.jgroups.JChannel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.net.URL;
+import java.text.MessageFormat;
 
 /**
  * Creates a new channel according to the jalphanode configuration.
@@ -65,9 +58,7 @@ public class ChannelProvider implements Provider<Channel> {
      */
     @Override
     public Channel get() {
-
-        Channel channel = null;
-
+        Channel channel;
         final TypedPropertiesConfig props = this.config.getMembership().getProperties();
 
         if (props.containsKey(JGroupsProperties.CONFIGURATION_FILE.getKey())) {
@@ -141,7 +132,7 @@ public class ChannelProvider implements Provider<Channel> {
 
         private final String key;
 
-        private JGroupsProperties(final String key) {
+        JGroupsProperties(final String key) {
             this.key = key;
         }
 

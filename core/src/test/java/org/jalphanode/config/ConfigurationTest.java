@@ -15,18 +15,15 @@
  */
 package org.jalphanode.config;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import java.util.List;
-import java.util.TimeZone;
-
 import org.jalphanode.scheduler.CronIterator;
 import org.jalphanode.scheduler.SchedulerParseException;
-
 import org.testng.Assert;
-
 import org.testng.annotations.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Configuration tests.
@@ -134,13 +131,9 @@ public class ConfigurationTest {
                 + "<property name=\"configurationFile\" value=\"jgroups-udp.xml\" />"
                 + "</properties></membership></jalphanode>";
 
-        final InputStream is = new ByteArrayInputStream(xml.getBytes());
-
-        try {
+        try (InputStream is = new ByteArrayInputStream(xml.getBytes())) {
             final JAlphaNodeConfig config = JAlphaNodeConfigBuilder.buildFromStream(is);
             this.validateConfig(config);
-        } finally {
-            is.close();
         }
     }
 
@@ -171,7 +164,7 @@ public class ConfigurationTest {
         this.validateConfig(config);
     }
 
-    @Test(expectedExceptions = {ConfigException.class})
+    @Test(expectedExceptions = ConfigException.class)
     public void testBadFileConfig() throws ConfigException {
         JAlphaNodeConfigBuilder.buildFromFile("bad-jalphanode-config.xml");
     }

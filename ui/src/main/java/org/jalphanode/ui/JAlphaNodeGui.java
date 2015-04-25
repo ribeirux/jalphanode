@@ -15,14 +15,23 @@
  */
 package org.jalphanode.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import com.google.common.collect.ImmutableMap;
+import org.jalphanode.DefaultTaskManager;
+import org.jalphanode.TaskManager;
+import org.jalphanode.TaskManager.Status;
+import org.jalphanode.annotation.AfterTask;
+import org.jalphanode.annotation.BeforeTask;
+import org.jalphanode.annotation.Listener;
+import org.jalphanode.annotation.ViewChanged;
+import org.jalphanode.config.ConfigException;
+import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.config.JAlphaNodeConfigBuilder;
+import org.jalphanode.config.JAlphaNodeType;
+import org.jalphanode.config.TaskConfig;
+import org.jalphanode.notification.Event;
+import org.jalphanode.notification.ViewChangedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -35,31 +44,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.jalphanode.DefaultTaskManager;
-import org.jalphanode.TaskManager;
-
-import org.jalphanode.TaskManager.Status;
-
-import org.jalphanode.annotation.AfterTask;
-import org.jalphanode.annotation.BeforeTask;
-import org.jalphanode.annotation.Listener;
-import org.jalphanode.annotation.ViewChanged;
-
-import org.jalphanode.config.ConfigException;
-import org.jalphanode.config.JAlphaNodeConfig;
-import org.jalphanode.config.JAlphaNodeConfigBuilder;
-import org.jalphanode.config.JAlphaNodeType;
-import org.jalphanode.config.TaskConfig;
-
-import org.jalphanode.notification.Event;
-import org.jalphanode.notification.ViewChangedEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableMap;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * JAlphaNode GUI.
@@ -72,11 +66,11 @@ public class JAlphaNodeGui {
 
     private static final Logger LOG = LoggerFactory.getLogger(JAlphaNodeGui.class);
 
-    private JFrame frmTaskManager;
-    private JPanel taskContainer;
-    private GroupMembersTableModel groupMembersModel;
-    private JButton btnStart;
-    private JButton btnStop;
+    private final JFrame frmTaskManager;
+    private final JPanel taskContainer;
+    private final GroupMembersTableModel groupMembersModel;
+    private final JButton btnStart;
+    private final JButton btnStop;
     private TaskManager taskManager;
     private ImmutableMap<String, JComponent> tasks;
 
@@ -88,7 +82,7 @@ public class JAlphaNodeGui {
         this.frmTaskManager = new JFrame();
         this.frmTaskManager.setTitle(Messages.getString("gui.frmTaskManager.title")); // $NON-NLS-1$
         this.frmTaskManager.setBounds(100, 100, 600, 300);
-        this.frmTaskManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frmTaskManager.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.frmTaskManager.addWindowListener(new WindowAdapter() {
 
                 @Override
@@ -116,41 +110,57 @@ public class JAlphaNodeGui {
 
         this.frmTaskManager.getContentPane().add(splitPane, BorderLayout.CENTER);
 
-        final JPanel commandPannel = new JPanel();
-        frmTaskManager.getContentPane().add(commandPannel, BorderLayout.SOUTH);
-        commandPannel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        final JPanel commandPanel = new JPanel();
+        frmTaskManager.getContentPane().add(commandPanel, BorderLayout.SOUTH);
+        commandPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         this.btnStart = new JButton(Messages.getString("gui.button.text")); // $NON-NLS-1$
-        commandPannel.add(this.btnStart);
+        commandPanel.add(this.btnStart);
         this.btnStart.addMouseListener(new MouseAdapter() {
 
-                @Override
-                public void mouseClicked(final MouseEvent event) {
-                    if (btnStart.isEnabled()) {
-                        btnStart.setEnabled(false);
+            private JFileChooser createFileChooser() {
+                final JFileChooser chooser = new JFileChooser();
+                final FileNameExtensionFilter filter = new FileNameExtensionFilter(Messages.getString(
+                        "gui.fileChooserExtensionDescription.text"), JAlphaNodeType.FILE_EXTENSIONS);
+                chooser.setFileFilter(filter);
 
-                        boolean started = false;
+                return chooser;
+            }
 
-                        JFileChooser chooser = createFileChooser();
-                        final int returnVal = chooser.showOpenDialog(frmTaskManager);
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            try {
-                                startTaskManager(chooser.getSelectedFile().getAbsolutePath());
-                                btnStop.setEnabled(true);
-                                started = true;
-                            } catch (final ConfigException e) {
-                                dispatchException(e, "error.invalidConfig");
-                            } catch (final Throwable e) {
-                                dispatchException(e, "error.unexpected");
-                            }
-                        }
+            private void dispatchException(final Throwable exception, final String messageKey) {
+                LOG.error(exception.getMessage(), exception);
 
-                        if (!started) {
-                            btnStart.setEnabled(true);
+                JOptionPane.showMessageDialog(frmTaskManager, Messages.getString(messageKey),
+                        Messages.getString("gui.frmTaskManager.title"), JOptionPane.ERROR_MESSAGE);
+            }
+
+            @Override
+            public void mouseClicked(final MouseEvent event) {
+                if (btnStart.isEnabled()) {
+                    btnStart.setEnabled(false);
+
+                    boolean started = false;
+
+                    JFileChooser chooser = createFileChooser();
+                    final int returnVal = chooser.showOpenDialog(frmTaskManager);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            startTaskManager(chooser.getSelectedFile().getAbsolutePath());
+                            btnStop.setEnabled(true);
+                            started = true;
+                        } catch (final ConfigException e) {
+                            dispatchException(e, "error.invalidConfig");
+                        } catch (final Throwable e) {
+                            dispatchException(e, "error.unexpected");
                         }
                     }
+
+                    if (!started) {
+                        btnStart.setEnabled(true);
+                    }
                 }
-            });
+            }
+        });
 
         this.btnStop = new JButton(Messages.getString("gui.btnStop.text"));
         this.btnStop.setEnabled(false);
@@ -161,23 +171,7 @@ public class JAlphaNodeGui {
                     stopTaskManager();
                 }
             });
-        commandPannel.add(this.btnStop);
-    }
-
-    private JFileChooser createFileChooser() {
-        final JFileChooser chooser = new JFileChooser();
-        final FileNameExtensionFilter filter = new FileNameExtensionFilter(Messages.getString(
-                    "gui.fileChooserExtensionDescription.text"), JAlphaNodeType.FILE_EXTENSIONS);
-        chooser.setFileFilter(filter);
-
-        return chooser;
-    }
-
-    private void dispatchException(final Throwable exception, final String messageKey) {
-        LOG.error(exception.getMessage(), exception);
-
-        JOptionPane.showMessageDialog(this.frmTaskManager, Messages.getString(messageKey),
-            Messages.getString("gui.frmTaskManager.title"), JOptionPane.ERROR_MESSAGE);
+        commandPanel.add(this.btnStop);
     }
 
     private void startTaskManager(final String path) throws ConfigException {
@@ -187,7 +181,7 @@ public class JAlphaNodeGui {
         taskManager.start();
 
         // add tasks
-        ImmutableMap.Builder<String, JComponent> builder = new ImmutableMap.Builder<String, JComponent>();
+        ImmutableMap.Builder<String, JComponent> builder = new ImmutableMap.Builder<>();
         for (TaskConfig task : config.getTasks().getTask()) {
             String taskName = task.getTaskName();
             JTextField label = new JTextField(taskName);
@@ -233,7 +227,6 @@ public class JAlphaNodeGui {
                 this.btnStart.setEnabled(true);
             } catch (RuntimeException r) {
                 this.btnStop.setEnabled(true);
-
                 throw r;
             } finally {
 
@@ -257,18 +250,14 @@ public class JAlphaNodeGui {
      * Launch the application.
      */
     public static void startGui() {
-        EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        final JAlphaNodeGui window = new JAlphaNodeGui();
-                        window.frmTaskManager.setVisible(true);
-                    } catch (final Exception e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                }
-            });
+        EventQueue.invokeLater(() -> {
+            try {
+                final JAlphaNodeGui window = new JAlphaNodeGui();
+                window.frmTaskManager.setVisible(true);
+            } catch (final Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        });
     }
 
     public static void main(final String[] args) {

@@ -15,13 +15,12 @@
  */
 package org.jalphanode.config;
 
-import java.util.Properties;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.Properties;
 
 /**
  * Properties configuration.
@@ -135,7 +134,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
             try {
                 result = Integer.parseInt(property);
             } catch (final NumberFormatException e) {
-                LOG.warn("Unable to convert string property [{0}] to an int! Using default value [{1}]", property,
+                LOG.warn("Unable to convert string property [{}] to an int! Using default value [{}]", property,
                     defaultValue, e);
             }
         }
@@ -177,7 +176,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
             try {
                 result = Long.parseLong(property);
             } catch (final NumberFormatException e) {
-                LOG.warn("Unable to convert string property [{0}] to a long! Using default value [{1}]", property,
+                LOG.warn("Unable to convert string property [{}] to a long! Using default value [{}]", property,
                     defaultValue, e);
             }
         }
@@ -210,7 +209,7 @@ public class TypedProperties extends Properties implements TypedPropertiesConfig
     }
 
     /**
-     * Gets a property for specified <code>key</code>.
+     * Gets a property for specified {@code key}.
      *
      * @param   key             property key
      * @param   resolveSysProp  if true checks if the property value exists as system property

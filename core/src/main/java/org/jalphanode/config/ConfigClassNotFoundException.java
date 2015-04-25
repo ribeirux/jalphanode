@@ -26,7 +26,7 @@ public class ConfigClassNotFoundException extends ConfigException {
     private static final long serialVersionUID = -6858598278230636743L;
 
     /**
-     * Constructs a new exception with <code>null</code> as its detail message.
+     * Constructs a new exception with {@code null} as its detail message.
      */
     public ConfigClassNotFoundException() {
         super();

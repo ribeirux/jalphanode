@@ -15,22 +15,20 @@
  */
 package org.jalphanode.jmx;
 
-import java.lang.reflect.Method;
-
-import java.util.List;
-
-import javax.management.MBeanOperationInfo;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+
+import javax.management.MBeanOperationInfo;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * MBean operation metadata.
  *
  * @author  ribeirux
  */
-public class ManagedOperationMetadata {
+public final class ManagedOperationMetadata {
 
     // required fields
     private final Method method;
@@ -56,7 +54,7 @@ public class ManagedOperationMetadata {
             this.method = Preconditions.checkNotNull(method, "method");
             this.name = method.getName();
             this.impact = MBeanOperationInfo.UNKNOWN;
-            this.parameters = new ImmutableList.Builder<ManagedParameterMetadata>();
+            this.parameters = new ImmutableList.Builder<>();
         }
 
         public Builder withImpact(final int impact) {

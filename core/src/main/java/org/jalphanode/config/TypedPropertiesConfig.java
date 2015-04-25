@@ -87,7 +87,7 @@ public interface TypedPropertiesConfig {
     long getLongProperty(final String key, final long defaultValue, final boolean resolveSysProp);
 
     /**
-     * Gets a property for specified <code>key</code>.
+     * Gets a property for specified {@code key}.
      *
      * @param   key  property key
      *
@@ -106,7 +106,7 @@ public interface TypedPropertiesConfig {
     String getProperty(final String key, final String defaultValue);
 
     /**
-     * Gets a property for specified <code>key</code>.
+     * Gets a property for specified {@code key}.
      *
      * @param   key             property key
      * @param   resolveSysProp  if true checks if the property value exists as system property

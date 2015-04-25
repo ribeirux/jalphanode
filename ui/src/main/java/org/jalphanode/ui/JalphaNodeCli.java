@@ -50,7 +50,7 @@ public class JalphaNodeCli {
 
     private static final boolean HELP_AUTO_USAGE = true;
 
-    private enum ComandLineOptions {
+    private enum CommandLineOptions {
 
         /**
          * Path to the configuration file.
@@ -73,7 +73,7 @@ public class JalphaNodeCli {
 
         private final Option option;
 
-        private ComandLineOptions(final Option option) {
+        CommandLineOptions(final Option option) {
             this.option = option;
         }
 
@@ -86,9 +86,9 @@ public class JalphaNodeCli {
 
         final OptionGroup optionGroup = new OptionGroup();
         optionGroup.setRequired(true);
-        optionGroup.addOption(ComandLineOptions.CONFIG_PATH.getOption());
-        optionGroup.addOption(ComandLineOptions.GUI.getOption());
-        optionGroup.addOption(ComandLineOptions.HELP.getOption());
+        optionGroup.addOption(CommandLineOptions.CONFIG_PATH.getOption());
+        optionGroup.addOption(CommandLineOptions.GUI.getOption());
+        optionGroup.addOption(CommandLineOptions.HELP.getOption());
 
         final Options options = new Options();
         options.addOptionGroup(optionGroup);
@@ -128,9 +128,9 @@ public class JalphaNodeCli {
 
         try {
             final CommandLine cmd = parser.parse(options, args);
-            if (cmd.hasOption(ComandLineOptions.CONFIG_PATH.getOption().getOpt())) {
-                this.startCmd(cmd.getOptionValue(ComandLineOptions.CONFIG_PATH.getOption().getOpt()));
-            } else if (cmd.hasOption(ComandLineOptions.GUI.getOption().getOpt())) {
+            if (cmd.hasOption(CommandLineOptions.CONFIG_PATH.getOption().getOpt())) {
+                this.startCmd(cmd.getOptionValue(CommandLineOptions.CONFIG_PATH.getOption().getOpt()));
+            } else if (cmd.hasOption(CommandLineOptions.GUI.getOption().getOpt())) {
                 JAlphaNodeGui.startGui();
             } else {
                 formatter.printHelp(JalphaNodeCli.SCRIPT_NAME, options, JalphaNodeCli.HELP_AUTO_USAGE);
@@ -143,7 +143,7 @@ public class JalphaNodeCli {
     /**
      * Starts the ui.
      *
-     * @param  args
+     * @param  args command line options
      */
     public static void main(final String[] args) {
         final JalphaNodeCli jalphaNodeCli = new JalphaNodeCli();

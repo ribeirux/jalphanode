@@ -15,11 +15,11 @@
  */
 package org.jalphanode.annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
 
 /**
  * Method level annotation that indicates a (no param) method should be executed when jalphanode stops.
@@ -34,5 +34,5 @@ public @interface Stop {
      *
      * @return  execution priority
      */
-    public abstract int priority() default 100;
+     int priority() default 100;
 }

@@ -15,12 +15,11 @@
  */
 package org.jalphanode.jmx.annotation;
 
+import javax.management.MBeanOperationInfo;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import javax.management.MBeanOperationInfo;
 
 /**
  * Indicates that a public method should be exposed as a MBean operation. This annotation can be applied to a public
@@ -30,7 +29,7 @@ import javax.management.MBeanOperationInfo;
  * @author  pribeiro
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target(ElementType.METHOD)
 public @interface ManagedOperation {
 
     String name() default "";

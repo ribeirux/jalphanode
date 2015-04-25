@@ -15,6 +15,15 @@
  */
 package org.jalphanode.scheduler;
 
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import org.jalphanode.annotation.SchedulerExecutor;
+import org.jalphanode.cluster.MembershipManager;
+import org.jalphanode.config.TaskConfig;
+import org.jalphanode.notification.Notifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.DelayQueue;
@@ -22,26 +31,11 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
-import org.jalphanode.annotation.SchedulerExecutor;
-
-import org.jalphanode.cluster.MembershipManager;
-
-import org.jalphanode.config.TaskConfig;
-
-import org.jalphanode.notification.Notifier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
-
-import com.google.inject.Inject;
-
 public class TaskSchedulerImpl implements TaskScheduler, Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TaskSchedulerImpl.class);
 
-    private final BlockingQueue<RecurrentTask> queue = new DelayQueue<RecurrentTask>();
+    private final BlockingQueue<RecurrentTask> queue = new DelayQueue<>();
 
     private volatile boolean running = true;
 
@@ -75,6 +69,7 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
         runner.interrupt();
     }
 
+    @Override
     public void run() {
         try {
             while (running) {
@@ -110,7 +105,7 @@ public class TaskSchedulerImpl implements TaskScheduler, Runnable {
         }
 
         /**
-         * Note: this class has a natural ordering that is inconsistent with equals."
+         * Note: this class has a natural ordering that is inconsistent with equals"
          */
         @Override
         public int compareTo(final Delayed o) {

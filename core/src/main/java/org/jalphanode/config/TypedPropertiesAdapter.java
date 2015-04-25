@@ -15,9 +15,8 @@
  */
 package org.jalphanode.config;
 
-import java.util.Map.Entry;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Map.Entry;
 
 /**
  * TypedPropertiesAdapter is JAXB XmlAdapter for TypedProperties.
@@ -28,7 +27,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 public class TypedPropertiesAdapter extends XmlAdapter<PropertiesType, TypedProperties> {
 
     @Override
-    public PropertiesType marshal(final TypedProperties tProps) throws Exception {
+    public PropertiesType marshal(final TypedProperties tProps) {
 
         final PropertiesType pxml = new PropertiesType();
 
@@ -45,7 +44,7 @@ public class TypedPropertiesAdapter extends XmlAdapter<PropertiesType, TypedProp
     }
 
     @Override
-    public TypedProperties unmarshal(final PropertiesType props) throws Exception {
+    public TypedProperties unmarshal(final PropertiesType props) {
 
         final TypedProperties tProps = new TypedProperties();
 

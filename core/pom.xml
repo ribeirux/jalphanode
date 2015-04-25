@@ -36,7 +36,9 @@
          <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+             <scope>test</scope>
         </dependency>
+
         <!-- add guava and guice logs -->
         <dependency>
             <groupId>org.slf4j</groupId>

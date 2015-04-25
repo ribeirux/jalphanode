@@ -35,7 +35,7 @@ public abstract class AbstractPropertiesContainer implements PropertiesContainer
     /**
      * Initializes internal fields.
      */
-    public AbstractPropertiesContainer() {
+    protected AbstractPropertiesContainer() {
         this.properties = new TypedProperties();
     }
 

@@ -15,17 +15,17 @@
  */
 package org.jalphanode.jmx;
 
-import java.lang.reflect.Method;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+
+import java.lang.reflect.Method;
 
 /**
  * MBean attribute metadata.
  *
  * @author  ribeirux
  */
-public class ManagedAttributeMetadata {
+public final class ManagedAttributeMetadata {
 
     // required fields
     private final String name;

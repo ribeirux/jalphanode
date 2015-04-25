@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * @version  $Revision: 274 $
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target(ElementType.TYPE)
 @Inherited
 public @interface MBean {
 

@@ -32,7 +32,7 @@ public enum ResourceKeys {
 
     private final String key;
 
-    private ResourceKeys(final String key) {
+    ResourceKeys(final String key) {
         this.key = key;
     }
 

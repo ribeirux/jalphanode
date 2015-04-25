@@ -27,9 +27,7 @@ public interface Listenable {
 
     /**
      * Adds a listener to the component.
-     *
-     * <p/>
-     *
+     * <p>
      * @param  listener  must not be null.
      */
     void addListener(Object listener);

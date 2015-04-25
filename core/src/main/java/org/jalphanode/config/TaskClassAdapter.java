@@ -15,13 +15,11 @@
  */
 package org.jalphanode.config;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-
+import com.google.common.base.Preconditions;
 import org.jalphanode.task.Task;
-
 import org.jalphanode.util.ConfigurationUtils;
 
-import com.google.common.base.Preconditions;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * Converts a class name into a java Class.
@@ -32,13 +30,13 @@ import com.google.common.base.Preconditions;
 public class TaskClassAdapter extends XmlAdapter<String, Task> {
 
     @Override
-    public String marshal(final Task task) throws Exception {
+    public String marshal(final Task task) {
         return Preconditions.checkNotNull(task, "task").getClass().getName();
     }
 
     @Override
-    public Task unmarshal(final String taskClass) throws Exception {
-        return ConfigurationUtils.getClass(Preconditions.checkNotNull(taskClass, "taskClass"), Task.class)
-                                 .newInstance();
+    public Task unmarshal(final String taskClass) throws ConfigException, ReflectiveOperationException {
+        Preconditions.checkNotNull(taskClass, "taskClass");
+        return ConfigurationUtils.getClass(taskClass, Task.class).newInstance();
     }
 }

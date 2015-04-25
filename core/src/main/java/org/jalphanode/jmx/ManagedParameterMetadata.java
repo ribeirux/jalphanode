@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
  *
  * @author  ribeirux
  */
-public class ManagedParameterMetadata {
+public final class ManagedParameterMetadata {
 
     // required fields
     private final String type;

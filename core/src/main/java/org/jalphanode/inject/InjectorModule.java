@@ -15,47 +15,37 @@
  */
 package org.jalphanode.inject;
 
-import java.util.concurrent.Executor;
-
-import org.jalphanode.annotation.NotifierExecutor;
-import org.jalphanode.annotation.SchedulerExecutor;
-
-import org.jalphanode.cluster.MasterNodeElectionPolicy;
-import org.jalphanode.cluster.MembershipManager;
-import org.jalphanode.cluster.SimpleMasterNodeElectionPolicy;
-import org.jalphanode.cluster.jgroups.ChannelProvider;
-import org.jalphanode.cluster.jgroups.JGroupsMembershipManager;
-
-import org.jalphanode.config.JAlphaNodeConfig;
-
-import org.jalphanode.executors.LazyInitializingNotifierExecutor;
-import org.jalphanode.executors.LazyInitializingSchedulerExecutor;
-
-import org.jalphanode.jmx.DefaultMBeanRegistry;
-import org.jalphanode.jmx.MBeanAnnotationScanner;
-import org.jalphanode.jmx.MBeanMetadata;
-import org.jalphanode.jmx.MBeanRegistry;
-import org.jalphanode.jmx.ResourceDynamicMBean;
-
-import org.jalphanode.notification.Notifier;
-import org.jalphanode.notification.NotifierImpl;
-
-import org.jalphanode.scheduler.TaskScheduler;
-import org.jalphanode.scheduler.TaskSchedulerImpl;
-
-import org.jgroups.Channel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Preconditions;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import org.jalphanode.annotation.NotifierExecutor;
+import org.jalphanode.annotation.SchedulerExecutor;
+import org.jalphanode.cluster.MasterNodeElectionPolicy;
+import org.jalphanode.cluster.MembershipManager;
+import org.jalphanode.cluster.SimpleMasterNodeElectionPolicy;
+import org.jalphanode.cluster.jgroups.ChannelProvider;
+import org.jalphanode.cluster.jgroups.JGroupsMembershipManager;
+import org.jalphanode.config.JAlphaNodeConfig;
+import org.jalphanode.executors.LazyInitializingNotifierExecutor;
+import org.jalphanode.executors.LazyInitializingSchedulerExecutor;
+import org.jalphanode.jmx.DefaultMBeanRegistry;
+import org.jalphanode.jmx.MBeanAnnotationScanner;
+import org.jalphanode.jmx.MBeanMetadata;
+import org.jalphanode.jmx.MBeanRegistry;
+import org.jalphanode.jmx.ResourceDynamicMBean;
+import org.jalphanode.notification.Notifier;
+import org.jalphanode.notification.NotifierImpl;
+import org.jalphanode.scheduler.TaskScheduler;
+import org.jalphanode.scheduler.TaskSchedulerImpl;
+import org.jgroups.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Executor;
 
 /**
  * Binds interfaces to the implementation.
@@ -169,20 +159,16 @@ public class InjectorModule extends AbstractModule {
                     final MBeanMetadata metadata = scanner.scan(type.getRawType());
 
                     if (metadata != null) {
-                        encounter.register(new InjectionListener<I>() {
+                        encounter.register((InjectionListener<I>) injectee -> {
+                            try {
+                                final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
+                                        metadata);
 
-                                @Override
-                                public void afterInjection(final I injectee) {
-                                    try {
-                                        final ResourceDynamicMBean dynamicMBean = new ResourceDynamicMBean(injectee,
-                                                metadata);
-
-                                        mBeanRegistry.register(dynamicMBean, metadata.getObjectName());
-                                    } catch (Exception e) {
-                                        LOG.error("Could not register MBean {}", metadata.getObjectName(), e);
-                                    }
-                                }
-                            });
+                                mBeanRegistry.register(dynamicMBean, metadata.getObjectName());
+                            } catch (Exception e) {
+                                LOG.error("Could not register MBean {}", metadata.getObjectName(), e);
+                            }
+                        });
                     }
                 }
             });

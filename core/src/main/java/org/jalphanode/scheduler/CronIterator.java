@@ -15,7 +15,9 @@
  */
 package org.jalphanode.scheduler;
 
-import java.util.Arrays;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Collections;
@@ -23,9 +25,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 /**
  * Cron iterator. The pattern is a list of six single space-separated fields: representing second, minute, hour, day,
@@ -196,7 +195,7 @@ public class CronIterator implements ScheduleIterator {
     }
 
     private int findNextDay(final Calendar calendar, final BitSet daysOfMonth, final int dayOfMonth,
-            final BitSet daysOfWeek, final int dayOfWeek, final List<Integer> resets) {
+            final BitSet daysOfWeek, final int dayOfWeek, final Iterable<Integer> resets) {
 
         int count = 0;
 
@@ -235,13 +234,13 @@ public class CronIterator implements ScheduleIterator {
      * @return  the value of the calendar field that is next in the sequence
      */
     private int findNext(final BitSet bits, final int value, final Calendar calendar, final int field,
-            final int nextField, final List<Integer> lowerOrders) {
+            final int nextField, final Iterable<Integer> lowerOrders) {
         int nextValue = bits.nextSetBit(value);
 
         // roll over if needed
         if (nextValue == -1) {
             calendar.add(nextField, 1);
-            this.reset(calendar, Arrays.asList(field));
+            this.reset(calendar, Collections.singletonList(field));
             nextValue = bits.nextSetBit(0);
         }
 
@@ -256,10 +255,8 @@ public class CronIterator implements ScheduleIterator {
     /**
      * Reset the calendar setting all the fields provided to zero.
      */
-    private void reset(final Calendar calendar, final List<Integer> fields) {
-        for (final int field : fields) {
-            calendar.set(field, (field == Calendar.DAY_OF_MONTH) ? 1 : 0);
-        }
+    private void reset(final Calendar calendar, final Iterable<Integer> fields) {
+        fields.forEach(field -> calendar.set(field, (field == Calendar.DAY_OF_MONTH) ? 1 : 0));
     }
 
     /**

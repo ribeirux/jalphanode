@@ -23,17 +23,15 @@ import java.lang.annotation.Target;
 /**
  * Class-level annotation used to annotate an object as being a valid listener.
  *
- * <p/>Note that even if a class is annotated with this annotation, it still needs method-level annotation to actually
+ * <p>Note that even if a class is annotated with this annotation, it still needs method-level annotation to actually
  * receive notifications.
  *
- * <p/>
- * <h4>Delivery Semantics</h4>
+ * Delivery Semantics:
  *
- * <p/>An event is delivered immediately after the respective operation, but before the underlying call returns. For
+ * <p>An event is delivered immediately after the respective operation, but before the underlying call returns. For
  * this reason it is important to keep listener processing logic short-lived. If a long running task needs to be
  * performed, it's recommended to use option sync = false, to execute the task asynchronously.
  *
- * <p/>
  *
  * @author   ribeirux
  * @version  $Revision: 274 $

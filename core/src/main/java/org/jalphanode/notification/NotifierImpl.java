@@ -15,23 +15,19 @@
  */
 package org.jalphanode.notification;
 
-import java.lang.annotation.Annotation;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import org.jalphanode.annotation.AfterTask;
 import org.jalphanode.annotation.BeforeTask;
 import org.jalphanode.annotation.NotifierExecutor;
 import org.jalphanode.annotation.ViewChanged;
-
 import org.jalphanode.cluster.NodeAddress;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-
-import com.google.inject.Inject;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * Notifier implementation.
@@ -97,7 +93,7 @@ public class NotifierImpl extends AbstractListener implements Notifier {
         this.dispatchTask(taskName, this.afterTaskRunListeners);
     }
 
-    private void dispatchTask(final String taskName, final List<ListenerInvocation> listeners) {
+    private void dispatchTask(final String taskName, final Iterable<ListenerInvocation> listeners) {
         final EventImpl event = new EventImpl(taskName, null, null, null, null, null, null);
         this.invokeListeners(listeners, event);
     }

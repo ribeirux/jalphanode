@@ -15,12 +15,9 @@
  */
 package org.jalphanode.jmx;
 
-import java.lang.reflect.Method;
-
-import java.text.MessageFormat;
-
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -32,11 +29,10 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
+import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Creates an dynamic MBean which exposes resources according to the MBean metadata.
@@ -64,17 +60,16 @@ public class ResourceDynamicMBean implements DynamicMBean {
         final MBeanAttributeInfo[] attributeInfo = new MBeanAttributeInfo[attributes.size()];
 
         int i = 0;
-        for (final String propertyName : attributes.keySet()) {
-            final ManagedAttributeMetadata property = attributes.get(propertyName);
-
+        for (final Map.Entry<String, ManagedAttributeMetadata> entry : attributes.entrySet()) {
+            final ManagedAttributeMetadata property = entry.getValue();
             try {
-                MBeanAttributeInfo info = new MBeanAttributeInfo(propertyName, property.getDescription(),
+                MBeanAttributeInfo info = new MBeanAttributeInfo(entry.getKey(), property.getDescription(),
                         property.getReadMethod(), property.getWriteMethod());
 
                 attributeInfo[i++] = info;
             } catch (IntrospectionException e) {
                 throw new MalformedMBeanException(MessageFormat.format(
-                        "Consistency problem in the definition of attribute: {0}", propertyName), e);
+                        "Consistency problem in the definition of attribute: {0}", entry.getKey()), e);
             }
         }
 
@@ -83,9 +78,7 @@ public class ResourceDynamicMBean implements DynamicMBean {
         final MBeanOperationInfo[] operationInfo = new MBeanOperationInfo[operations.size()];
 
         i = 0;
-        for (final String methodName : operations.keySet()) {
-            final ManagedOperationMetadata operationMetadata = operations.get(methodName);
-
+        for (final ManagedOperationMetadata operationMetadata : operations.values()) {
             final List<ManagedParameterMetadata> parametersMetadata = operationMetadata.getParameters();
             final MBeanParameterInfo[] signature = new MBeanParameterInfo[parametersMetadata.size()];
 
